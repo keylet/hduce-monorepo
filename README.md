@@ -1,77 +1,133 @@
-# HduceMonorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+# 🏥 HDUCE - Hospital Digital UCE  
+## Medical Appointment Management System - Microservices
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+**Status:** ✅ **PHASE 3 COMPLETED - Notification Service 100% Functional**  
+**Last Updated:** January 2026 - Full system with 4 microservices
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+---
 
-## Finish your remote caching setup
+## 📊 UPDATED STATUS SUMMARY
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/560fYvroaq)
+### ✅ **IMPLEMENTED AND VALIDATED SERVICES**
 
+| Service | Port | Status | Functionality |
+|---------|------|--------|---------------|
+| 🔐 Auth Service | 8000 | 🟢 **100%** | JWT Authentication |
+| 👤 User Service | 8001 | 🟢 **100%** | User CRUD |
+| 📅 Appointment Service | 8002 | 🟢 **100%** | Medical appointment management |
+| 📧 Notification Service | 8003 | 🟢 **100%** | Email & SMS notifications |
+| 🗄️ PostgreSQL | 5432 | 🟢 **100%** | Main database |
+| 🧠 Redis | 6379 | 🟢 **100%** | Cache/sessions |
+| 🌐 Adminer | 8080 | 🟢 **100%** | DB web interface |
 
-## Run tasks
+---
 
-To run tasks with Nx use:
+## 🎯 **ACHIEVEMENTS - PHASES 1, 2 & 3 COMPLETED**
 
-```sh
-npx nx <target> <project-name>
-```
+### **✅ PHASE 1: Auth & User Services**
+- Full JWT authentication system
+- Complete user CRUD
+- PostgreSQL + Redis integration
 
-For example:
+### **✅ PHASE 2: Appointment Service**
+- Medical appointment management microservice
+- Models: Appointment, Doctor, Specialty
+- Full RESTful endpoints
+- Complete test dataset
 
-```sh
-npx nx build myproject
-```
+### **✅ PHASE 3: Notification Service** *(NEW)*
+- Email and SMS notification microservice
+- Simulated email/SMS for development
+- Appointment reminder automation
+- Background task processing
+- Notification statistics and logging
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+---
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🚀 **STARTING THE COMPLETE SYSTEM**
 
-## Add new projects
+```bash
+# Start all services
+docker-compose up -d
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+# Check status
+docker-compose ps
 
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
+# View logs of a specific service
+docker-compose logs -f appointment-service
+📡 AVAILABLE ENDPOINTS
+🔐 Auth Service (http://localhost:8000)
+bash
+# Health check
+curl http://localhost:8000/health
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+# Register user
+curl -X POST "http://localhost:8000/register?username=new&email=new@example.com&password=123"
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+# Login
+curl -X POST "http://localhost:8000/login?username=admin&password=admin123"
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
+# Verify token
+curl "http://localhost:8000/verify/TOKEN_HERE"
+👤 User Service (http://localhost:8001)
+bash
+# List users
+curl http://localhost:8001/users
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+# Create user
+curl -X POST http://localhost:8001/users   -H "Content-Type: application/json"   -d '{"name":"John Doe","email":"john@example.com","age":30}'
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Get specific user
+curl http://localhost:8001/users/UUID_HERE
+📅 Appointment Service (http://localhost:8002)
+bash
+# Health check
+curl http://localhost:8002/health
 
+# Medical specialties
+curl http://localhost:8002/specialties
+curl -X POST http://localhost:8002/specialties   -H "Content-Type: application/json"   -d '{"name":"Cardiology","description":"Heart specialist"}'
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Doctors
+curl http://localhost:8002/doctors
+curl -X POST http://localhost:8002/doctors   -H "Content-Type: application/json"   -d '{"user_id":"UUID_USER","license_number":"MED-12345","specialty_id":1}'
 
-## Install Nx Console
+# Medical appointments
+curl http://localhost:8002/appointments
+curl -X POST http://localhost:8002/appointments   -H "Content-Type: application/json"   -d '{"patient_id":"UUID_PATIENT","doctor_id":1,"appointment_date":"2026-01-10T10:00:00","reason":"Annual checkup"}'
+📧 **NOTIFICATION SERVICE ENDPOINTS** (http://localhost:8003)
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+```bash
+# Health checks
+curl http://localhost:8003/health
+curl http://localhost:8003/api/v1/notifications/health/detailed
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Send email notification
+curl -X POST "http://localhost:8003/api/v1/notifications/email?user_id=UUID&subject=Test&message=Hello&recipient_email=test@example.com"
 
-## Useful links
+# Send SMS notification  
+curl -X POST "http://localhost:8003/api/v1/notifications/sms?user_id=UUID&message=Hello&recipient_phone=+1234567890"
 
-Learn more:
+# Send appointment reminder (automated)
+curl -X POST "http://localhost:8003/api/v1/notifications/appointment/reminder?patient_id=UUID&patient_email=patient@example.com&patient_phone=+1234567890&doctor_name=Dr.+Smith&appointment_date=2026-01-10+10:00:00"
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# List notifications
+curl http://localhost:8003/api/v1/notifications
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Get statistics
+curl http://localhost:8003/api/v1/notifications/stats/simple
+
+# Test endpoint
+curl -X POST http://localhost:8003/api/v1/notifications/test
+🗄️ UPDATED DATABASE STRUCTURE
+sql
+-- PostgreSQL tables
+users            # User table (User Service)
+auth_users       # Authentication table (Auth Service)
+specialties      # Medical specialties
+doctors          # Doctors (related to users)
+appointments     # Medical appointments
+notifications    # Notification records (NEW)
+email_logs       # Email sending logs (NEW)
+sms_logs         # SMS sending logs (NEW)

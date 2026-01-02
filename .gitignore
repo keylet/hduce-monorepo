@@ -1,0 +1,48 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Docker
+docker-data/
+*.log
+
+# Database
+*.sql
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporal
+temp/
+tmp/
+
+# Logs
+*.log
+
+# Backup files
+*_backup.py
+backup_*.sql
+
+# Environment variables
+.env
+.secrets
+
+# Large files
+*.zip
+*.tar.gz

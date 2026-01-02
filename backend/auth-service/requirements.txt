@@ -1,0 +1,7 @@
+﻿fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+hduce-shared-libs>=0.1.0
+python-dotenv>=1.0.0
+# python-jose REMOVED - Using PyJWT from shared-libraries instead
+# passlib[bcrypt] REMOVED - Only include if you're using password hashing
+python-multipart>=0.0.6

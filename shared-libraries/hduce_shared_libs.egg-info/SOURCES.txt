@@ -1,0 +1,8 @@
+__init__.py
+setup.py
+./__init__.py
+hduce_shared_libs.egg-info/PKG-INFO
+hduce_shared_libs.egg-info/SOURCES.txt
+hduce_shared_libs.egg-info/dependency_links.txt
+hduce_shared_libs.egg-info/requires.txt
+hduce_shared_libs.egg-info/top_level.txt

@@ -1,0 +1,88 @@
+﻿# backend/auth-service/main.py
+from fastapi import FastAPI, HTTPException
+from routes import router as auth_router  # <-- Ya tienes esto bien
+from datetime import datetime, timedelta
+import jwt
+from jwt.exceptions import PyJWTError as JWTError
+from pydantic import BaseModel
+
+app = FastAPI(
+    title="HDUCE Auth Service",  # <-- Mejor título
+    version="1.0.0",
+    docs_url="/docs",  # <-- Asegurar que Swagger esté en /docs
+    redoc_url="/redoc"
+)
+
+# ✅ CORREGIDO: Cambiar el prefix para que NGINX funcione mejor
+app.include_router(auth_router, prefix="/auth")  # <-- CAMBIADO de "/api/auth" a "/auth"
+
+# Simple config
+SECRET_KEY = "dev-secret-key-change-in-production"
+ALGORITHM = "HS256"
+
+# Simple in-memory database
+users_db = {
+    "admin": {
+        "username": "admin",
+        "email": "admin@example.com",
+        "password": "admin123",
+        "is_active": True
+    }
+}
+
+@app.get("/")
+def read_root():
+    return {"service": "auth-service", "status": "running"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "auth-service"}
+
+# ✅ Mover los endpoints principales aquí para que estén en / (raíz)
+@app.post("/login")
+def login(username: str, password: str):
+    user = users_db.get(username)
+    
+    if not user or user["password"] != password:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    
+    # Create JWT token
+    token_data = {
+        "sub": username,
+        "email": user["email"],
+        "exp": datetime.utcnow() + timedelta(hours=24)
+    }
+    
+    token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
+    
+    return {"access_token": token, "token_type": "bearer"}
+
+@app.get("/verify/{token}")
+def verify_token_endpoint(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {"valid": True, "user": payload.get("sub"), "expires": payload.get("exp")}
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid token")
+
+# ====== ENDPOINTS DE PRUEBA ======
+class TestUser(BaseModel):
+    username: str
+    email: str
+    password: str
+
+@app.post("/test-json")
+def test_json_endpoint(user: TestUser):
+    return {
+        "status": "success",
+        "message": "✅ JSON recibido correctamente",
+        "data": {
+            "username": user.username,
+            "email": user.email,
+            "password": user.password
+        }
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)  # <-- Cambiado a 8000

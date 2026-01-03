@@ -1,18 +1,20 @@
-﻿from fastapi import APIRouter, Depends, HTTPException
+﻿# backend/notification-service/routes.py
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta  # <-- IMPORTANTE: agregar timedelta
 from sqlalchemy import func
 
 from database import get_db
 import models
 import schemas
 
+# ✅ CORREGIDO: Router sin prefix, las rutas están en raíz
 router = APIRouter()
 
 # ==================== NOTIFICACIONES BÁSICAS ====================
 
-@router.get("/notifications", response_model=List[schemas.Notification])
+@router.get("/", response_model=List[schemas.Notification])  # <-- CAMBIADO de "/notifications" a "/"
 async def list_notifications(
     skip: int = 0,
     limit: int = 100,
@@ -33,7 +35,7 @@ async def list_notifications(
     
     return query.order_by(models.Notification.created_at.desc()).offset(skip).limit(limit).all()
 
-@router.get("/notifications/{notification_id}", response_model=schemas.Notification)
+@router.get("/{notification_id}", response_model=schemas.Notification)  # <-- CAMBIADO
 async def get_notification(
     notification_id: int,
     db: Session = Depends(get_db)
@@ -44,9 +46,9 @@ async def get_notification(
         raise HTTPException(status_code=404, detail="Notification not found")
     return notification
 
-# ==================== ENVÍO DE EMAIL (QUERY PARAMS) ====================
+# ==================== ENVÍO DE EMAIL ====================
 
-@router.post("/notifications/email")
+@router.post("/email")  # <-- CAMBIADO de "/notifications/email" a "/email"
 async def send_email_notification(
     user_id: str,
     subject: str = "Notification from HDUCE",
@@ -54,7 +56,7 @@ async def send_email_notification(
     recipient_email: str = "",
     db: Session = Depends(get_db)
 ):
-    """Enviar notificación por email (usando query params)"""
+    """Enviar notificación por email"""
     
     if not recipient_email:
         raise HTTPException(status_code=400, detail="Recipient email is required")
@@ -73,7 +75,6 @@ async def send_email_notification(
     db.commit()
     db.refresh(notification)
     
-    # Simulación de envío
     print(f"[SIMULATION] Email sent to: {recipient_email}")
     
     return {
@@ -83,16 +84,16 @@ async def send_email_notification(
         "status": "pending"
     }
 
-# ==================== ENVÍO DE SMS (QUERY PARAMS) ====================
+# ==================== ENVÍO DE SMS ====================
 
-@router.post("/notifications/sms")
+@router.post("/sms")  # <-- CAMBIADO
 async def send_sms_notification(
     user_id: str,
     message: str = "",
     recipient_phone: str = "",
     db: Session = Depends(get_db)
 ):
-    """Enviar notificación por SMS (usando query params)"""
+    """Enviar notificación por SMS"""
     
     if not recipient_phone:
         raise HTTPException(status_code=400, detail="Recipient phone is required")
@@ -110,7 +111,6 @@ async def send_sms_notification(
     db.commit()
     db.refresh(notification)
     
-    # Simulación de envío
     print(f"[SIMULATION] SMS sent to: {recipient_phone}")
     
     return {
@@ -122,7 +122,7 @@ async def send_sms_notification(
 
 # ==================== ENVÍO CON JSON BODY ====================
 
-@router.post("/notifications/send")
+@router.post("/send")  # <-- CAMBIADO
 async def send_notification_json(
     user_id: str,
     notification_type: str,
@@ -132,7 +132,7 @@ async def send_notification_json(
     recipient_phone: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    """Enviar notificación usando JSON body (más flexible)"""
+    """Enviar notificación usando JSON body"""
     
     if notification_type == "email" and not recipient_email:
         raise HTTPException(status_code=400, detail="Email requires recipient_email")
@@ -158,7 +158,6 @@ async def send_notification_json(
     db.commit()
     db.refresh(notification)
     
-    # Simulación
     recipient = recipient_email if notification_type == "email" else recipient_phone
     print(f"[SIMULATION] {notification_type.upper()} sent to: {recipient}")
     
@@ -172,7 +171,7 @@ async def send_notification_json(
 
 # ==================== RECORDATORIOS AUTOMÁTICOS ====================
 
-@router.post("/notifications/appointment/reminder")
+@router.post("/appointment/reminder")  # <-- CAMBIADO
 async def send_appointment_reminder(
     patient_id: str,
     doctor_name: str,
@@ -218,7 +217,7 @@ async def send_appointment_reminder(
             created_at=datetime.now()
         )
         db.add(email_notif)
-        db.flush()  # Para obtener el ID
+        db.flush()
         results.append({"type": "email", "id": email_notif.id})
         print(f"[SIMULATION] Appointment reminder email sent to {patient_email}")
     
@@ -251,7 +250,7 @@ async def send_appointment_reminder(
 
 # ==================== ESTADÍSTICAS ====================
 
-@router.get("/notifications/stats")
+@router.get("/stats")  # <-- CAMBIADO
 async def get_notification_stats(db: Session = Depends(get_db)):
     """Obtener estadísticas detalladas"""
     
@@ -266,7 +265,7 @@ async def get_notification_stats(db: Session = Depends(get_db)):
     failed = db.query(models.Notification).filter(models.Notification.status == "failed").count()
     
     # Últimas 24 horas
-    last_24h = datetime.now() - datetime.timedelta(hours=24)
+    last_24h = datetime.now() - timedelta(hours=24)  # <-- CORREGIDO: usar timedelta
     recent = db.query(models.Notification).filter(models.Notification.created_at >= last_24h).count()
     
     return {
@@ -284,9 +283,9 @@ async def get_notification_stats(db: Session = Depends(get_db)):
         "success_rate": round((sent / total * 100), 2) if total > 0 else 0
     }
 
-@router.get("/notifications/stats/simple")
+@router.get("/stats/simple")  # <-- CAMBIADO
 async def get_simple_stats(db: Session = Depends(get_db)):
-    """Estadísticas simples (para compatibilidad)"""
+    """Estadísticas simples"""
     total = db.query(models.Notification).count()
     emails = db.query(models.Notification).filter(models.Notification.notification_type == "email").count()
     sms_count = db.query(models.Notification).filter(models.Notification.notification_type == "sms").count()
@@ -301,7 +300,7 @@ async def get_simple_stats(db: Session = Depends(get_db)):
 
 # ==================== UTILIDAD ====================
 
-@router.post("/notifications/test")
+@router.post("/test")  # <-- CAMBIADO
 async def create_test_notification(db: Session = Depends(get_db)):
     """Crear notificación de prueba"""
     notification = models.Notification(
@@ -325,7 +324,7 @@ async def create_test_notification(db: Session = Depends(get_db)):
         "created_at": notification.created_at.isoformat()
     }
 
-@router.get("/notifications/health/detailed")
+@router.get("/health/detailed")  # <-- CAMBIADO
 async def detailed_health_check(db: Session = Depends(get_db)):
     """Health check detallado"""
     from sqlalchemy import text
@@ -351,11 +350,11 @@ async def detailed_health_check(db: Session = Depends(get_db)):
             "notifications_count": table_count
         },
         "endpoints_available": [
-            "GET /api/v1/notifications",
-            "POST /api/v1/notifications/email",
-            "POST /api/v1/notifications/sms",
-            "POST /api/v1/notifications/send",
-            "POST /api/v1/notifications/appointment/reminder",
-            "GET /api/v1/notifications/stats"
+            "GET /",
+            "POST /email",
+            "POST /sms",
+            "POST /send",
+            "POST /appointment/reminder",
+            "GET /stats"
         ]
     }

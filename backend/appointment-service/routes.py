@@ -1,4 +1,5 @@
-﻿from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+﻿# backend/appointment-service/routes.py
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -8,13 +9,14 @@ from database import get_db
 import models
 import schemas
 from notification_integration import send_appointment_notification
-from rabbitmq_publisher import event_publisher  # NUEVO: RabbitMQ
+from rabbitmq_publisher import event_publisher
 
+# ✅ CORREGIDO: Router sin prefix
 router = APIRouter()
 
 # ==================== CITAS MÉDICAS ====================
 
-@router.post("/appointments", response_model=schemas.Appointment)
+@router.post("/", response_model=schemas.Appointment)  # <-- CAMBIADO de "/appointments" a "/"
 async def create_appointment(
     appointment: schemas.AppointmentCreate,
     background_tasks: BackgroundTasks,
@@ -50,15 +52,13 @@ async def create_appointment(
         "reason": appointment.reason or "Consulta médica"
     }
     
-    # 4. OPCIÓN A: Enviar notificación por RabbitMQ (NUEVO)
+    # 4. OPCIÓN A: Enviar notificación por RabbitMQ
     try:
-        # Publicar evento en RabbitMQ
         rabbitmq_success = event_publisher.publish_appointment_created(appointment_data)
         if rabbitmq_success:
             print(f"✅ Evento publicado en RabbitMQ para cita {db_appointment.id}")
         else:
             print(f"⚠️  Falló RabbitMQ, usando HTTP fallback")
-            # Fallback a HTTP
             background_tasks.add_task(
                 send_appointment_notification,
                 appointment_data=appointment_data,
@@ -66,7 +66,6 @@ async def create_appointment(
             )
     except Exception as e:
         print(f"⚠️  Error con RabbitMQ: {e}. Usando HTTP fallback")
-        # Fallback a HTTP
         background_tasks.add_task(
             send_appointment_notification,
             appointment_data=appointment_data,
@@ -75,5 +74,110 @@ async def create_appointment(
     
     return db_appointment
 
-# ... (el resto del routes.py se mantiene igual - copia el contenido actual aquí) ...
+# ==================== LISTAR CITAS ====================
 
+@router.get("/", response_model=List[schemas.Appointment])  # <-- CAMBIADO
+async def list_appointments(
+    skip: int = 0,
+    limit: int = 100,
+    patient_id: Optional[str] = None,
+    doctor_id: Optional[int] = None,
+    status: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Listar citas médicas con filtros"""
+    query = db.query(models.Appointment)
+    
+    if patient_id:
+        query = query.filter(models.Appointment.patient_id == patient_id)
+    if doctor_id:
+        query = query.filter(models.Appointment.doctor_id == doctor_id)
+    if status:
+        query = query.filter(models.Appointment.status == status)
+    
+    return query.order_by(models.Appointment.appointment_date.desc()).offset(skip).limit(limit).all()
+
+@router.get("/{appointment_id}", response_model=schemas.Appointment)  # <-- CAMBIADO
+async def get_appointment(appointment_id: int, db: Session = Depends(get_db)):
+    """Obtener una cita específica"""
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return appointment
+
+# ==================== DOCTORES ====================
+
+@router.get("/doctors", response_model=List[schemas.Doctor])
+async def list_doctors(db: Session = Depends(get_db)):
+    """Listar todos los doctores"""
+    return db.query(models.Doctor).all()
+
+@router.get("/doctors/{doctor_id}", response_model=schemas.Doctor)
+async def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
+    """Obtener un doctor específico"""
+    doctor = db.query(models.Doctor).filter(models.Doctor.id == doctor_id).first()
+    if not doctor:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return doctor
+
+# ==================== ESPECIALIDADES ====================
+
+@router.get("/specialties", response_model=List[schemas.Specialty])
+async def list_specialties(db: Session = Depends(get_db)):
+    """Listar todas las especialidades"""
+    return db.query(models.Specialty).all()
+
+@router.get("/specialties/{specialty_id}", response_model=schemas.Specialty)
+async def get_specialty(specialty_id: int, db: Session = Depends(get_db)):
+    """Obtener una especialidad específica"""
+    specialty = db.query(models.Specialty).filter(models.Specialty.id == specialty_id).first()
+    if not specialty:
+        raise HTTPException(status_code=404, detail="Specialty not found")
+    return specialty
+
+# ==================== ESTADÍSTICAS ====================
+
+@router.get("/stats/today")
+async def get_today_stats(db: Session = Depends(get_db)):
+    """Estadísticas de citas para hoy"""
+    today = datetime.now().date()
+    
+    total_today = db.query(models.Appointment).filter(
+        db.func.date(models.Appointment.appointment_date) == today
+    ).count()
+    
+    completed_today = db.query(models.Appointment).filter(
+        db.func.date(models.Appointment.appointment_date) == today,
+        models.Appointment.status == "completed"
+    ).count()
+    
+    pending_today = db.query(models.Appointment).filter(
+        db.func.date(models.Appointment.appointment_date) == today,
+        models.Appointment.status == "pending"
+    ).count()
+    
+    return {
+        "date": today.isoformat(),
+        "total_appointments": total_today,
+        "completed": completed_today,
+        "pending": pending_today
+    }
+
+# ==================== HEALTH CHECK ====================
+
+@router.get("/health/db")
+async def health_check_db(db: Session = Depends(get_db)):
+    """Verificar conexión a base de datos"""
+    try:
+        db.execute("SELECT 1")
+        appointments_count = db.query(models.Appointment).count()
+        doctors_count = db.query(models.Doctor).count()
+        
+        return {
+            "database": "connected",
+            "appointments": appointments_count,
+            "doctors": doctors_count,
+            "status": "healthy"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Database error: {str(e)}")

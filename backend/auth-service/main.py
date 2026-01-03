@@ -1,13 +1,19 @@
-﻿from fastapi import FastAPI, HTTPException
-from routes import router as auth_router  # <-- Cambiado a routes (NO routes_fixed)
+﻿# backend/auth-service/main.py
+from fastapi import FastAPI, HTTPException
+from routes import router as auth_router
 from datetime import datetime, timedelta
-import jwt
-from jwt.exceptions import PyJWTError as JWTError
+from jose import jwt
+from jose.exceptions import JWTError
+from pydantic import BaseModel
 
-app = FastAPI(title="Auth Service", version="1.0.0")
+app = FastAPI(
+    title="HDUCE Auth Service",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
-# ¡¡¡ESTO ES LO MÁS IMPORTANTE!!! 
-app.include_router(auth_router, prefix="/api/auth")
+app.include_router(auth_router, prefix="/auth")
 
 # Simple config
 SECRET_KEY = "dev-secret-key-change-in-production"
@@ -23,122 +29,38 @@ users_db = {
     }
 }
 
-@app.get("/")
-def read_root():
-    return {"service": "auth-service", "status": "running"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "auth-service"}
-
-@app.post("/register")
-def register(username: str, email: str, password: str):
-    if username in users_db:
-        raise HTTPException(status_code=400, detail="Username already exists")
-    
-    users_db[username] = {
-        "username": username,
-        "email": email,
-        "password": password,
-        "is_active": True
-    }
-    
-    return {"message": "User registered successfully", "username": username}
+class User(BaseModel):
+    username: str
+    password: str
 
 @app.post("/login")
-def login(username: str, password: str):
-    user = users_db.get(username)
+async def login(user: User):
+    db_user = users_db.get(user.username)
+    if not db_user or db_user["password"] != user.password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    if not user or user["password"] != password:
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-    
-    # Create JWT token
+    # Create token
     token_data = {
-        "sub": username,
-        "email": user["email"],
+        "sub": user.username,
+        "email": db_user["email"],
         "exp": datetime.utcnow() + timedelta(hours=24)
     }
-    
     token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
     
     return {"access_token": token, "token_type": "bearer"}
 
-@app.get("/verify/{token}")
-def verify_token_endpoint(token: str):
+@app.get("/verify")
+async def verify_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return {"valid": True, "user": payload.get("sub"), "expires": payload.get("exp")}
+        return {"valid": True, "username": payload.get("sub")}
     except JWTError:
-        raise HTTPException(status_code=400, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "auth-service"}
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8007)  # <-- Puerto NUEVO 8006
-
-# === ENDPOINT DE PRUEBA SIMPLE ===
-from pydantic import BaseModel
-
-class TestData(BaseModel):
-    username: str
-    email: str
-    password: str
-
-@app.post("/test-json")
-def test_json(data: TestData):
-    return {
-        "status": "success",
-        "received": {
-            "username": data.username,
-            "email": data.email,
-            "password": data.password
-        },
-        "message": "JSON recibido correctamente"
-    }
-
-@app.post("/test-raw")
-def test_raw(body: dict):
-    return {
-        "status": "success", 
-        "raw_body": body,
-        "message": "Raw body recibido"
-    }
-
-# ====== ENDPOINTS DE PRUEBA ======
-from pydantic import BaseModel
-
-class TestUser(BaseModel):
-    username: str
-    email: str
-    password: str
-
-@app.post("/test-json")
-def test_json_endpoint(user: TestUser):
-    return {
-        "status": "success",
-        "message": "✅ JSON recibido correctamente",
-        "data": {
-            "username": user.username,
-            "email": user.email,
-            "password": user.password
-        }
-    }
-
-@app.post("/test-raw")
-def test_raw_endpoint(body: dict):
-    return {
-        "status": "success",
-        "message": "✅ Raw body recibido",
-        "raw_data": body
-    }
-
-@app.post("/test-simple")
-def test_simple_endpoint(username: str, email: str, password: str):
-    return {
-        "status": "success",
-        "message": "✅ Parámetros simples recibidos",
-        "data": {"username": username, "email": email, "password": password}
-    }
-
-
-
-
+    uvicorn.run(app, host="0.0.0.0", port=8000)

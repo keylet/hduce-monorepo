@@ -1,4 +1,5 @@
-﻿from fastapi import FastAPI
+﻿# backend/notification-service/main.py
+from fastapi import FastAPI
 import uvicorn
 from datetime import datetime
 import threading
@@ -24,7 +25,6 @@ def start_simple_consumer():
         
         while True:
             try:
-                print("Conectando a RabbitMQ...")
                 connection = pika.BlockingConnection(
                     pika.ConnectionParameters(
                         host='rabbitmq',
@@ -34,17 +34,14 @@ def start_simple_consumer():
                 )
                 channel = connection.channel()
                 
-                # Exchange
                 channel.exchange_declare(
                     exchange='appointment_events',
                     exchange_type='direct',
                     durable=True
                 )
                 
-                # Queue
                 channel.queue_declare(queue='notification_queue', durable=True)
                 
-                # Binding
                 channel.queue_bind(
                     exchange='appointment_events',
                     queue='notification_queue',
@@ -53,14 +50,9 @@ def start_simple_consumer():
                 
                 print("✅ Consumer configurado. Esperando mensajes...")
                 
-                # Callback simple
                 def simple_callback(ch, method, properties, body):
-                    print("\n" + "🎉" * 20)
-                    print("🎉 ¡MENSAJE RECIBIDO DE RABBITMQ!")
-                    print(f"Body: {body.decode('utf-8')[:100]}...")
-                    print("🎉" * 20)
+                    print("\n🎉 ¡MENSAJE RECIBIDO DE RABBITMQ!")
                     
-                    # Intentar guardar en DB
                     try:
                         message = json.loads(body.decode('utf-8'))
                         data = message.get('data', {})
@@ -68,13 +60,12 @@ def start_simple_consumer():
                         from database import SessionLocal
                         db = SessionLocal()
                         
-                        # Usar 'APPOINTMENT_CREATED' que ya existe en el ENUM
                         notification = models.Notification(
                             user_id=data.get('patient_id', 'test'),
                             notification_type='APPOINTMENT_CREATED',
                             status='pending',
                             subject='Cita creada via RabbitMQ',
-                            message=f"Evento: {message.get('event_type', 'unknown')} - Cita: {data.get('appointment_id', 'N/A')}",
+                            message=f"Evento: {message.get('event_type', 'unknown')}",
                             created_at=datetime.now()
                         )
                         
@@ -84,9 +75,7 @@ def start_simple_consumer():
                         db.close()
                         
                     except Exception as e:
-                        print(f"⚠️  Error guardando en DB: {e}")
-                        import traceback
-                        traceback.print_exc()
+                        print(f"⚠️  Error: {e}")
                 
                 channel.basic_consume(
                     queue='notification_queue',
@@ -94,31 +83,16 @@ def start_simple_consumer():
                     auto_ack=True
                 )
                 
-                # Esto es BLOQUEANTE - importante
-                print("🚀 Iniciando consumo BLOQUEANTE...")
                 channel.start_consuming()
                 
             except Exception as e:
                 print(f"❌ Error: {e}")
-                import traceback
-                traceback.print_exc()
-                print("🔄 Reintentando en 5 segundos...")
                 time.sleep(5)
-    
-    # Iniciar en thread separado
-    thread = threading.Thread(target=consumer_loop, daemon=True)
-    thread.start()
-    print("✅ Thread del consumer iniciado")
 
-# ========== INICIAR EL CONSUMER INMEDIATAMENTE ==========
-print("\n" + "🚀" * 25)
-print("🚀 NOTIFICATION SERVICE - INICIANDO")
-print("🚀" * 25)
-
-# Iniciar consumer inmediatamente
+# ========== INICIAR EL CONSUMER ==========
 start_simple_consumer()
 
-# Crear tablas de BD si no existen
+# Crear tablas de BD
 try:
     models.Base.metadata.create_all(bind=engine)
     print("✅ Tablas de BD verificadas")
@@ -128,8 +102,10 @@ except Exception as e:
 # Crear app FastAPI
 app = FastAPI(
     title="HDUCE Notification Service",
-    description="Servicio de notificaciones con RabbitMQ integrado",
-    version="3.0.0"
+    description="Servicio de notificaciones con RabbitMQ",
+    version="3.0.0",
+    docs_url="/docs",  # <-- Asegurar Swagger
+    redoc_url="/redoc"
 )
 
 # CORS
@@ -142,8 +118,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Rutas
-app.include_router(notification_router, prefix="/api/v1", tags=["notifications"])
+# ✅ CORREGIDO: Rutas en raíz
+app.include_router(notification_router)  # <-- Sin prefix o con prefix "/"
 
 # Health check
 @app.get("/health")
@@ -153,7 +129,7 @@ async def health():
 @app.get("/")
 async def root():
     return {
-        "message": "Notification Service with RabbitMQ Integration",
+        "message": "Notification Service with RabbitMQ",
         "version": "3.0.0",
         "status": "running",
         "rabbitmq": "active"

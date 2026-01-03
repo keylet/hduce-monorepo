@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# PostgreSQL connection URL
+# ✅ CORREGIDO: Cambiar localhost por postgres (nombre del servicio Docker)
 DATABASE_URL = os.getenv(
     "DATABASE_URL", 
-    "postgresql://hduce_user:hduce_pass@localhost:5432/hduce_db"
+    "postgresql://hduce_user:hduce_pass@postgres:5432/hduce_db"  # <-- postgres, no localhost
 )
 
 # Create SQLAlchemy engine

@@ -1,0 +1,7 @@
+{
+    "patient_id": "ultimate-rabbitmq-test",
+    "doctor_id": 1,
+    "appointment_date": "2026-02-02T11:00:00",
+    "reason": "Test final absoluto de RabbitMQ Integration",
+    "notes": "?Esta es la prueba definitiva!"
+}

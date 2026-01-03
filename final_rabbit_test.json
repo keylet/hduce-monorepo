@@ -1,0 +1,7 @@
+{
+    "patient_id": "final-rabbit-test-" + (Get-Random -Minimum 1000 -Maximum 9999),
+    "doctor_id": 1,
+    "appointment_date": "2026-02-09T14:00:00",
+    "reason": "Test definitivo RabbitMQ",
+    "notes": "Esta deber?a funcionar ahora"
+}

@@ -1,0 +1,7 @@
+{
+    "patient_id": "rabbitmq-robust-test",
+    "doctor_id": 1,
+    "appointment_date": "2026-02-01T10:00:00",
+    "reason": "Test con consumer robusto",
+    "notes": "Esta deber?a funcionar definitivamente"
+}

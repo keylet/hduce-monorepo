@@ -1,0 +1,6 @@
+{
+    "patient_id": "rabbitmq-test-final",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-28T10:00:00",
+    "reason": "Test final RabbitMQ integration"
+}

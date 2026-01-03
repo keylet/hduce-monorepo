@@ -1,0 +1,7 @@
+{
+    "patient_id": "rabbitmq-integration-test-1",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-26T11:30:00",
+    "reason": "Test completo RabbitMQ integration",
+    "notes": "Verificando mensajer?a as?ncrona"
+}

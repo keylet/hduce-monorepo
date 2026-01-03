@@ -1,0 +1,7 @@
+{
+    "patient_id": "curl-powershell-test",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-25T09:00:00",
+    "reason": "Test PowerShell fix",
+    "notes": "Fixed encoding"
+}

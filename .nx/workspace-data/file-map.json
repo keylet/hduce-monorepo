@@ -4,7 +4,422 @@
   "pathMappings": {},
   "nxJsonPlugins": [],
   "fileMap": {
-    "projectFileMap": {},
+    "projectFileMap": {
+      "shared-libraries": [
+        {
+          "file": "shared-libraries/__init__.py",
+          "hash": "4981120459765484811"
+        },
+        {
+          "file": "shared-libraries/auth/jwt_manager.py",
+          "hash": "3899669133123726531"
+        },
+        {
+          "file": "shared-libraries/auth/models.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/config/settings.py",
+          "hash": "3058519710650043404"
+        },
+        {
+          "file": "shared-libraries/database/postgres.py",
+          "hash": "10793333959557329841"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/PKG-INFO",
+          "hash": "11501914608467527398"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/SOURCES.txt",
+          "hash": "14658242499400354058"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/dependency_links.txt",
+          "hash": "4055606894390288348"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/requires.txt",
+          "hash": "9790908558934847393"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/top_level.txt",
+          "hash": "11347852406571221476"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/__init__.py",
+          "hash": "15435631605198919235"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "315125386171267458"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "3899669133123726531"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/models.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "18290969702950614584"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py",
+          "hash": "3058519710650043404"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "6946539282809603498"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "10793333959557329841"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/models.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/project.json",
+          "hash": "8953192372383522997"
+        },
+        {
+          "file": "shared-libraries/schemas_types/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/auth.types.ts",
+          "hash": "9421071837797304375"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/auth_types.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/user.types.ts",
+          "hash": "14862596348516170786"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/user_types.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/setup.py",
+          "hash": "2997861360342530233"
+        },
+        {
+          "file": "shared-libraries/users/models.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/utils/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/utils/src/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/utils/src/jwt.py",
+          "hash": "16458661217267040795"
+        },
+        {
+          "file": "shared-libraries/utils/src/jwt_utils.py",
+          "hash": "16781594649747525202"
+        }
+      ],
+      "notification-service": [
+        {
+          "file": "backend/notification-service/Dockerfile",
+          "hash": "2025816835547426476"
+        },
+        {
+          "file": "backend/notification-service/config.py",
+          "hash": "15643069901623048867"
+        },
+        {
+          "file": "backend/notification-service/database.py",
+          "hash": "14603038357439324077"
+        },
+        {
+          "file": "backend/notification-service/enum_patch.py",
+          "hash": "7387308577653030788"
+        },
+        {
+          "file": "backend/notification-service/main.py",
+          "hash": "12262782330484738092"
+        },
+        {
+          "file": "backend/notification-service/models.py",
+          "hash": "9826604635921558930"
+        },
+        {
+          "file": "backend/notification-service/project.json",
+          "hash": "6006294844967704002"
+        },
+        {
+          "file": "backend/notification-service/requirements.txt",
+          "hash": "6807640176807824436"
+        },
+        {
+          "file": "backend/notification-service/routes.py",
+          "hash": "15710858596772413318"
+        },
+        {
+          "file": "backend/notification-service/schemas.py",
+          "hash": "1775332716993143220"
+        },
+        {
+          "file": "backend/notification-service/simple_consumer.py",
+          "hash": "15739222338785830229"
+        },
+        {
+          "file": "backend/notification-service/src/email_service.py",
+          "hash": "1218877239733707602"
+        },
+        {
+          "file": "backend/notification-service/src/notification_service.py",
+          "hash": "2400844483404615257"
+        },
+        {
+          "file": "backend/notification-service/src/sms_service.py",
+          "hash": "14349014749121023455"
+        }
+      ],
+      "appointment-service": [
+        {
+          "file": "backend/appointment-service/Dockerfile",
+          "hash": "1572270611279350540"
+        },
+        {
+          "file": "backend/appointment-service/__init__.py",
+          "hash": "4325598645965019231"
+        },
+        {
+          "file": "backend/appointment-service/database.py",
+          "hash": "15283404641582230660"
+        },
+        {
+          "file": "backend/appointment-service/docker-compose.yml",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "backend/appointment-service/main.py",
+          "hash": "2208796627516020381"
+        },
+        {
+          "file": "backend/appointment-service/main.py.backup",
+          "hash": "4403892814308585639"
+        },
+        {
+          "file": "backend/appointment-service/main.py.original.bak",
+          "hash": "15128130805481740181"
+        },
+        {
+          "file": "backend/appointment-service/middleware.py",
+          "hash": "6658101648887354059"
+        },
+        {
+          "file": "backend/appointment-service/models.py",
+          "hash": "1646088783352179809"
+        },
+        {
+          "file": "backend/appointment-service/notification_client.py",
+          "hash": "4150882522432535467"
+        },
+        {
+          "file": "backend/appointment-service/notification_integration.py",
+          "hash": "2769060676446241209"
+        },
+        {
+          "file": "backend/appointment-service/project.json",
+          "hash": "17717079254720002390"
+        },
+        {
+          "file": "backend/appointment-service/rabbitmq_publisher.py",
+          "hash": "5843534100430657715"
+        },
+        {
+          "file": "backend/appointment-service/requirements.txt",
+          "hash": "5149434268726876959"
+        },
+        {
+          "file": "backend/appointment-service/routes.py",
+          "hash": "8729886454620704924"
+        },
+        {
+          "file": "backend/appointment-service/routes.py.backup",
+          "hash": "9371792986657526050"
+        },
+        {
+          "file": "backend/appointment-service/routes.py.before_fix",
+          "hash": "10569206828768726238"
+        },
+        {
+          "file": "backend/appointment-service/schemas.py",
+          "hash": "1493795920538871343"
+        }
+      ],
+      "auth-service": [
+        {
+          "file": "backend/auth-service/Dockerfile",
+          "hash": "12440330044922996608"
+        },
+        {
+          "file": "backend/auth-service/VERIFICACION_CAMBIOS.txt",
+          "hash": "1593340062131180043"
+        },
+        {
+          "file": "backend/auth-service/database.py",
+          "hash": "15591299378903220700"
+        },
+        {
+          "file": "backend/auth-service/main.py",
+          "hash": "16616157944869623711"
+        },
+        {
+          "file": "backend/auth-service/main.py.backup",
+          "hash": "12625389348349112855"
+        },
+        {
+          "file": "backend/auth-service/main_alt.py",
+          "hash": "4305483599522798732"
+        },
+        {
+          "file": "backend/auth-service/main_fixed.py",
+          "hash": "4606789809468459484"
+        },
+        {
+          "file": "backend/auth-service/main_shared.py",
+          "hash": "3867301124149447496"
+        },
+        {
+          "file": "backend/auth-service/main_shared_v2.py",
+          "hash": "16616157944869623711"
+        },
+        {
+          "file": "backend/auth-service/main_simple_shared.py",
+          "hash": "8245554188239128019"
+        },
+        {
+          "file": "backend/auth-service/models.py",
+          "hash": "3151537450940841793"
+        },
+        {
+          "file": "backend/auth-service/project.json",
+          "hash": "2916055997013286920"
+        },
+        {
+          "file": "backend/auth-service/requirements.txt",
+          "hash": "15474556119218339927"
+        },
+        {
+          "file": "backend/auth-service/requirements_minimal.txt",
+          "hash": "2278123858734971096"
+        },
+        {
+          "file": "backend/auth-service/routes.py",
+          "hash": "12717209928219549492"
+        },
+        {
+          "file": "backend/auth-service/routes_fixed.py",
+          "hash": "9659319179421054889"
+        },
+        {
+          "file": "backend/auth-service/schemas.py",
+          "hash": "16836489585304163373"
+        },
+        {
+          "file": "backend/auth-service/scripts for executions/auth-service.ps1",
+          "hash": "5308150900095659333"
+        },
+        {
+          "file": "backend/auth-service/shared_libs_report.txt",
+          "hash": "8078401465859398354"
+        },
+        {
+          "file": "backend/auth-service/src/token_validator.py",
+          "hash": "3599898551376000717"
+        },
+        {
+          "file": "backend/auth-service/test.json",
+          "hash": "852125501003671994"
+        },
+        {
+          "file": "backend/auth-service/test_auth.bat",
+          "hash": "13054409368771281113"
+        },
+        {
+          "file": "backend/auth-service/test_auth_service.py",
+          "hash": "7989820770980427303"
+        },
+        {
+          "file": "backend/auth-service/test_routes.py",
+          "hash": "17765676488234645792"
+        },
+        {
+          "file": "backend/auth-service/test_server.py",
+          "hash": "4648593038833943662"
+        },
+        {
+          "file": "backend/auth-service/utils.py",
+          "hash": "8037794753303366042"
+        }
+      ],
+      "user-service": [
+        {
+          "file": "backend/user-service/Dockerfile",
+          "hash": "5834311083796521689"
+        },
+        {
+          "file": "backend/user-service/database.py",
+          "hash": "15811649862747708823"
+        },
+        {
+          "file": "backend/user-service/main.py",
+          "hash": "7556430026644066012"
+        },
+        {
+          "file": "backend/user-service/main.py.backup3",
+          "hash": "13470264413349957418"
+        },
+        {
+          "file": "backend/user-service/main_alt.py",
+          "hash": "8663641232571244304"
+        },
+        {
+          "file": "backend/user-service/models.py",
+          "hash": "17302631129675424291"
+        },
+        {
+          "file": "backend/user-service/project.json",
+          "hash": "17435465511608540165"
+        },
+        {
+          "file": "backend/user-service/requirements.txt",
+          "hash": "6934561576800754738"
+        },
+        {
+          "file": "backend/user-service/schemas.py",
+          "hash": "11584276976982639296"
+        },
+        {
+          "file": "backend/user-service/src/auth_dependency.py",
+          "hash": "7127304821305102353"
+        },
+        {
+          "file": "backend/user-service/src/protected_routes.py",
+          "hash": "6927028533691287353"
+        }
+      ]
+    },
     "nonProjectFiles": [
       {
         "file": ".editorconfig",
@@ -16,187 +431,147 @@
       },
       {
         "file": ".gitignore",
-        "hash": "6147899740314209172"
+        "hash": "6885472829402422964"
       },
       {
-        "file": ".vscode/extensions.json",
-        "hash": "3833545590435012078"
+        "file": "PROGRESO_ACTUAL.md",
+        "hash": "18106151666547769862"
       },
       {
         "file": "README.md",
-        "hash": "4830356384950000319"
+        "hash": "5259497453254201825"
       },
       {
-        "file": "backend/auth-service/.env",
-        "hash": "11405169010720429914"
+        "file": "RESUMEN_PROGRESO.md",
+        "hash": "14274662980505083096"
       },
       {
-        "file": "backend/auth-service/Dockerfile",
-        "hash": "12440330044922996608"
+        "file": "confirmation_test.json",
+        "hash": "16192739938466054665"
       },
       {
-        "file": "backend/auth-service/VERIFICACION_CAMBIOS.txt",
-        "hash": "12650638528960145397"
+        "file": "curl_test.json",
+        "hash": "2101013822730055457"
       },
       {
-        "file": "backend/auth-service/__pycache__/main.cpython-313.pyc",
-        "hash": "2836486517748059989"
+        "file": "curl_test_fixed.json",
+        "hash": "1868709522886446593"
       },
       {
-        "file": "backend/auth-service/__pycache__/main_alt.cpython-313.pyc",
-        "hash": "3987493516081751853"
+        "file": "debug_appointment.py",
+        "hash": "13710462585684228560"
       },
       {
-        "file": "backend/auth-service/__pycache__/routes.cpython-313.pyc",
-        "hash": "16880522235005910844"
+        "file": "debug_server.py",
+        "hash": "6837950609399669104"
       },
       {
-        "file": "backend/auth-service/__pycache__/routes_fixed.cpython-313.pyc",
-        "hash": "10330515182455567713"
+        "file": "definitive_test.json",
+        "hash": "9767365567986609613"
       },
       {
-        "file": "backend/auth-service/database.py",
-        "hash": "15591299378903220700"
+        "file": "demo_flujo_integracion.ps1",
+        "hash": "2361150502957335117"
       },
       {
-        "file": "backend/auth-service/main.py",
-        "hash": "16719037281804284475"
+        "file": "demo_integracion.py",
+        "hash": "5965296435972581187"
       },
       {
-        "file": "backend/auth-service/main_alt.py",
-        "hash": "1878169423085329354"
+        "file": "diagnostic_publisher.py",
+        "hash": "15211076468236966731"
       },
       {
-        "file": "backend/auth-service/models.py",
-        "hash": "3151537450940841793"
-      },
-      {
-        "file": "backend/auth-service/requirements.txt",
-        "hash": "12827972552775831818"
-      },
-      {
-        "file": "backend/auth-service/requirements_minimal.txt",
-        "hash": "16198436772473010998"
-      },
-      {
-        "file": "backend/auth-service/routes.py",
-        "hash": "6287763573291594384"
-      },
-      {
-        "file": "backend/auth-service/routes_fixed.py",
-        "hash": "14602398602033025761"
-      },
-      {
-        "file": "backend/auth-service/schemas.py",
-        "hash": "10294714109561089022"
-      },
-      {
-        "file": "backend/auth-service/scripts for executions/auth-service.ps1",
-        "hash": "5308150900095659333"
-      },
-      {
-        "file": "backend/auth-service/shared_libs_report.txt",
-        "hash": "8078401465859398354"
-      },
-      {
-        "file": "backend/auth-service/src/__pycache__/token_validator.cpython-313.pyc",
-        "hash": "5795907247454928741"
-      },
-      {
-        "file": "backend/auth-service/src/token_validator.py",
-        "hash": "4526664464024688125"
-      },
-      {
-        "file": "backend/auth-service/test.json",
-        "hash": "852125501003671994"
-      },
-      {
-        "file": "backend/auth-service/test_auth.bat",
-        "hash": "8496118308792724853"
-      },
-      {
-        "file": "backend/auth-service/test_auth_service.py",
-        "hash": "7989820770980427303"
-      },
-      {
-        "file": "backend/auth-service/test_routes.py",
-        "hash": "5852725110409069307"
-      },
-      {
-        "file": "backend/auth-service/utils.py",
-        "hash": "11437634624979841443"
-      },
-      {
-        "file": "backend/user-service/.env",
-        "hash": "15971301119271239408"
-      },
-      {
-        "file": "backend/user-service/Dockerfile",
-        "hash": "2250907257165478445"
-      },
-      {
-        "file": "backend/user-service/__pycache__/main.cpython-313.pyc",
-        "hash": "3617262031056203279"
-      },
-      {
-        "file": "backend/user-service/__pycache__/main_alt.cpython-313.pyc",
-        "hash": "1719639941186585817"
-      },
-      {
-        "file": "backend/user-service/database.py",
-        "hash": "4211017594857280003"
-      },
-      {
-        "file": "backend/user-service/main.py",
-        "hash": "18088532449829970729"
-      },
-      {
-        "file": "backend/user-service/main_alt.py",
-        "hash": "8663641232571244304"
-      },
-      {
-        "file": "backend/user-service/models.py",
-        "hash": "17302631129675424291"
-      },
-      {
-        "file": "backend/user-service/requirements.txt",
-        "hash": "16144617639087779791"
-      },
-      {
-        "file": "backend/user-service/schemas.py",
-        "hash": "6469958451086591713"
-      },
-      {
-        "file": "backend/user-service/src/__pycache__/auth_dependency.cpython-313.pyc",
-        "hash": "694381180751821754"
-      },
-      {
-        "file": "backend/user-service/src/__pycache__/protected_routes.cpython-313.pyc",
-        "hash": "15353189864661540667"
-      },
-      {
-        "file": "backend/user-service/src/auth_dependency.py",
-        "hash": "18255536577315698703"
-      },
-      {
-        "file": "backend/user-service/src/protected_routes.py",
-        "hash": "12587807264261540438"
+        "file": "docker-compose.backup.yml",
+        "hash": "10868241999560978070"
       },
       {
         "file": "docker-compose.yml",
-        "hash": "13484781358377528040"
+        "hash": "2392680991545085699"
       },
       {
         "file": "docker/docker-compose.local.yml",
         "hash": "3244421341483603138"
       },
       {
-        "file": "docker/postgres/init.sql",
-        "hash": "17169263094902039433"
+        "file": "external_test.py",
+        "hash": "8752297551976493178"
       },
       {
-        "file": "error.log",
-        "hash": "13790753209625932028"
+        "file": "fastapi_debug.py",
+        "hash": "12185875362884450654"
+      },
+      {
+        "file": "final_rabbit_test.json",
+        "hash": "3530605061581401125"
+      },
+      {
+        "file": "final_rabbitmq_test.json",
+        "hash": "9420768016013508946"
+      },
+      {
+        "file": "final_robust_test.json",
+        "hash": "10936933740475471117"
+      },
+      {
+        "file": "final_success.json",
+        "hash": "9499124313202010487"
+      },
+      {
+        "file": "final_test.json",
+        "hash": "17632795820674577718"
+      },
+      {
+        "file": "hduce-test-report-20260103-143359.json",
+        "hash": "8175496889887281867"
+      },
+      {
+        "file": "initialize-test-data.ps1",
+        "hash": "13267724587315777342"
+      },
+      {
+        "file": "internal_container_test.py",
+        "hash": "15515729344803514228"
+      },
+      {
+        "file": "internal_debug.py",
+        "hash": "9758276226082970323"
+      },
+      {
+        "file": "main.py",
+        "hash": "1240633208161757976"
+      },
+      {
+        "file": "nginx/Dockerfile",
+        "hash": "14416928889897512276"
+      },
+      {
+        "file": "nginx/default.conf",
+        "hash": "10313061310898129451"
+      },
+      {
+        "file": "nginx/gateway-final.conf",
+        "hash": "10313061310898129451"
+      },
+      {
+        "file": "nginx/gateway-full.conf",
+        "hash": "14625873158658458899"
+      },
+      {
+        "file": "nginx/gateway-minimal.conf",
+        "hash": "15955571794406025535"
+      },
+      {
+        "file": "nginx/hduce-gateway.conf",
+        "hash": "10313061310898129451"
+      },
+      {
+        "file": "nginx/nginx.conf",
+        "hash": "964443928957614873"
+      },
+      {
+        "file": "nginx/nginx.conf.example",
+        "hash": "14377400612846621605"
       },
       {
         "file": "nx.json",
@@ -208,115 +583,43 @@
       },
       {
         "file": "package.json",
-        "hash": "7379054456029429361"
+        "hash": "13049042754264559693"
+      },
+      {
+        "file": "practical_test.json",
+        "hash": "649820679659791814"
+      },
+      {
+        "file": "quick_debug.py",
+        "hash": "8452548884649713883"
+      },
+      {
+        "file": "quick_debug_httpx.py",
+        "hash": "1252257594685401365"
+      },
+      {
+        "file": "requirements.txt",
+        "hash": "11530361083375476399"
       },
       {
         "file": "restart.ps1",
         "hash": "15404197546386341410"
       },
       {
-        "file": "shared-libraries/__init__.py",
-        "hash": "4981120459765484811"
+        "file": "schema_check.py",
+        "hash": "15026351998796307534"
       },
       {
-        "file": "shared-libraries/__pycache__/__init__.cpython-313.pyc",
-        "hash": "1383329926893736610"
-      },
-      {
-        "file": "shared-libraries/hduce_shared_libs.egg-info/PKG-INFO",
-        "hash": "10471266953121149503"
-      },
-      {
-        "file": "shared-libraries/hduce_shared_libs.egg-info/SOURCES.txt",
-        "hash": "14968434204545748933"
-      },
-      {
-        "file": "shared-libraries/hduce_shared_libs.egg-info/dependency_links.txt",
-        "hash": "4055606894390288348"
-      },
-      {
-        "file": "shared-libraries/hduce_shared_libs.egg-info/requires.txt",
-        "hash": "17477768081759851671"
-      },
-      {
-        "file": "shared-libraries/hduce_shared_libs.egg-info/top_level.txt",
-        "hash": "2031250222754271689"
-      },
-      {
-        "file": "shared-libraries/setup.py",
-        "hash": "12129000265512914717"
-      },
-      {
-        "file": "shared-libraries/types/__init__.py",
-        "hash": "769905511232003074"
-      },
-      {
-        "file": "shared-libraries/types/__pycache__/__init__.cpython-313.pyc",
-        "hash": "2739125102985870247"
-      },
-      {
-        "file": "shared-libraries/types/src/__init__.py",
-        "hash": "769905511232003074"
-      },
-      {
-        "file": "shared-libraries/types/src/__pycache__/__init__.cpython-313.pyc",
-        "hash": "15621182602450406889"
-      },
-      {
-        "file": "shared-libraries/types/src/__pycache__/auth_types.cpython-313.pyc",
-        "hash": "14429793562921931544"
-      },
-      {
-        "file": "shared-libraries/types/src/__pycache__/user_types.cpython-313.pyc",
-        "hash": "18247943338925836065"
-      },
-      {
-        "file": "shared-libraries/types/src/auth.types.ts",
-        "hash": "9421071837797304375"
-      },
-      {
-        "file": "shared-libraries/types/src/auth_types.py",
-        "hash": "8678223461532486117"
-      },
-      {
-        "file": "shared-libraries/types/src/user.types.ts",
-        "hash": "14862596348516170786"
-      },
-      {
-        "file": "shared-libraries/types/src/user_types.py",
-        "hash": "6326835795734559339"
-      },
-      {
-        "file": "shared-libraries/utils/__init__.py",
-        "hash": "769905511232003074"
-      },
-      {
-        "file": "shared-libraries/utils/__pycache__/__init__.cpython-313.pyc",
-        "hash": "934431792823310670"
-      },
-      {
-        "file": "shared-libraries/utils/src/__init__.py",
-        "hash": "769905511232003074"
-      },
-      {
-        "file": "shared-libraries/utils/src/__pycache__/__init__.cpython-313.pyc",
-        "hash": "18251301974048361334"
-      },
-      {
-        "file": "shared-libraries/utils/src/__pycache__/jwt_utils.cpython-313.pyc",
-        "hash": "10560409932262094259"
-      },
-      {
-        "file": "shared-libraries/utils/src/jwt.py",
-        "hash": "16458661217267040795"
-      },
-      {
-        "file": "shared-libraries/utils/src/jwt_utils.py",
-        "hash": "16781594649747525202"
+        "file": "simple_test.json",
+        "hash": "11518370627226352169"
       },
       {
         "file": "start.ps1",
         "hash": "7211699097718205409"
+      },
+      {
+        "file": "test-nx-commands.ps1",
+        "hash": "17501604688077827282"
       },
       {
         "file": "test-services.ps1",
@@ -325,6 +628,58 @@
       {
         "file": "test_connection.ps1",
         "hash": "11878553574679789112"
+      },
+      {
+        "file": "test_create.json",
+        "hash": "1423561858192759480"
+      },
+      {
+        "file": "test_definitivo.json",
+        "hash": "3531117252563089864"
+      },
+      {
+        "file": "test_final.json",
+        "hash": "17321275971243800043"
+      },
+      {
+        "file": "test_integracion.ps1",
+        "hash": "9982953365596532239"
+      },
+      {
+        "file": "test_integration.json",
+        "hash": "8311986631207626618"
+      },
+      {
+        "file": "test_rabbitmq.json",
+        "hash": "11002057696876491953"
+      },
+      {
+        "file": "ultimate_test.json",
+        "hash": "2167483335314322741"
+      },
+      {
+        "file": "update-services-nginx.ps1",
+        "hash": "2200995766820382305"
+      },
+      {
+        "file": "user-schema.json",
+        "hash": "12314332499887842963"
+      },
+      {
+        "file": "verify_test.json",
+        "hash": "9767365567986609613"
+      },
+      {
+        "file": "workspace-simple.json",
+        "hash": "4125032062845087104"
+      },
+      {
+        "file": "workspace.json",
+        "hash": "16212809426909089792"
+      },
+      {
+        "file": "workspace.json.backup",
+        "hash": "6926226919649981213"
       }
     ]
   },

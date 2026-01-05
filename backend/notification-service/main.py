@@ -1,115 +1,35 @@
-﻿# backend/notification-service/main.py
-from fastapi import FastAPI
-import uvicorn
-from datetime import datetime
-import threading
-import time
+﻿from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import logging
 
-from database import engine, get_db
-import models
-import schemas
-from routes import router as notification_router
-
-# ========== CONSUMER SIMPLIFICADO PERO FUNCIONAL ==========
-def start_simple_consumer():
-    """Consumer simple que SÍ se ejecuta"""
-    print("\n" + "=" * 60)
-    print("🚀 INICIANDO CONSUMER SIMPLE DE RABBITMQ")
-    print("=" * 60)
-    
-    def consumer_loop():
-        import pika
-        import json
-        
-        print("Consumer loop iniciado...")
-        
-        while True:
-            try:
-                connection = pika.BlockingConnection(
-                    pika.ConnectionParameters(
-                        host='rabbitmq',
-                        port=5672,
-                        credentials=pika.PlainCredentials('admin', 'admin123')
-                    )
-                )
-                channel = connection.channel()
-                
-                channel.exchange_declare(
-                    exchange='appointment_events',
-                    exchange_type='direct',
-                    durable=True
-                )
-                
-                channel.queue_declare(queue='notification_queue', durable=True)
-                
-                channel.queue_bind(
-                    exchange='appointment_events',
-                    queue='notification_queue',
-                    routing_key='created'
-                )
-                
-                print("✅ Consumer configurado. Esperando mensajes...")
-                
-                def simple_callback(ch, method, properties, body):
-                    print("\n🎉 ¡MENSAJE RECIBIDO DE RABBITMQ!")
-                    
-                    try:
-                        message = json.loads(body.decode('utf-8'))
-                        data = message.get('data', {})
-                        
-                        from database import SessionLocal
-                        db = SessionLocal()
-                        
-                        notification = models.Notification(
-                            user_id=data.get('patient_id', 'test'),
-                            notification_type='APPOINTMENT_CREATED',
-                            status='pending',
-                            subject='Cita creada via RabbitMQ',
-                            message=f"Evento: {message.get('event_type', 'unknown')}",
-                            created_at=datetime.now()
-                        )
-                        
-                        db.add(notification)
-                        db.commit()
-                        print(f"✅ Guardado en DB: ID {notification.id}")
-                        db.close()
-                        
-                    except Exception as e:
-                        print(f"⚠️  Error: {e}")
-                
-                channel.basic_consume(
-                    queue='notification_queue',
-                    on_message_callback=simple_callback,
-                    auto_ack=True
-                )
-                
-                channel.start_consuming()
-                
-            except Exception as e:
-                print(f"❌ Error: {e}")
-                time.sleep(5)
-
-# ========== INICIAR EL CONSUMER ==========
-start_simple_consumer()
-
-# Crear tablas de BD
+# Importar desde shared libraries
+from hduce_shared.config import settings
 try:
-    models.Base.metadata.create_all(bind=engine)
-    print("✅ Tablas de BD verificadas")
-except Exception as e:
-    print(f"⚠️  Error creando tablas: {e}")
+    from hduce_shared.database import create_all_tables
+    HAS_DATABASE_MODULE = True
+except ImportError:
+    HAS_DATABASE_MODULE = False
+    logging.warning("hduce_shared.database no disponible")
 
-# Crear app FastAPI
+# Importar rutas locales
+try:
+    import routes
+    HAS_ROUTES = True
+except ImportError as e:
+    HAS_ROUTES = False
+    logging.warning(f"No se pudo importar routes: {e}")
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 app = FastAPI(
     title="HDUCE Notification Service",
-    description="Servicio de notificaciones con RabbitMQ",
-    version="3.0.0",
-    docs_url="/docs",  # <-- Asegurar Swagger
-    redoc_url="/redoc"
+    description="Notification microservice using shared-libraries",
+    version="2.0.0"
 )
 
 # CORS
-from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -118,22 +38,102 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ CORREGIDO: Rutas en raíz
-app.include_router(notification_router)  # <-- Sin prefix o con prefix "/"
+# Incluir rutas si están disponibles
+if HAS_ROUTES:
+    app.include_router(routes.router)
 
-# Health check
-@app.get("/health")
-async def health():
-    return {"status": "healthy", "service": "notification", "timestamp": datetime.now().isoformat()}
+# ==================== SOLUCIÓN DEFINITIVA ====================
+def crear_engine_notification():
+    """Solución definitiva - crea engine directamente"""
+    from sqlalchemy import create_engine
+
+    db = settings.database
+    # Usar contraseña EXPLÍCITA para evitar problemas
+    password = 'postgres'  # Contraseña fija y conocida
+    connection_string = f"postgresql://{db.postgres_user}:{password}@{db.postgres_host}:{db.postgres_port}/{db.notification_db}"
+    print(f"Conectando a PostgreSQL: {db.postgres_host}:{db.postgres_port}/{db.notification_db}")
+    return create_engine(connection_string, pool_pre_ping=True)
+# =============================================================
+
+# Variable global para mantener referencia al consumer
+rabbitmq_consumer = None
+
+@app.on_event("startup")
+async def startup_event():
+    """Inicializar base de datos y RabbitMQ consumer al iniciar"""
+    global rabbitmq_consumer
+    
+    # 1. Inicializar base de datos
+    try:
+        # USAR SOLUCIÓN DEFINITIVA
+        engine = crear_engine_notification()
+        if HAS_DATABASE_MODULE:
+            create_all_tables(engine)
+            logger.info("SUCCESS: Database tables verified/created")
+        else:
+            # Probar conexión
+            with engine.connect() as conn:
+                conn.execute("SELECT 1")
+            logger.info("SUCCESS: Conexión a DB establecida")
+    except Exception as e:
+        logger.error(f"ERROR: Database initialization failed: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+
+    # 2. Inicializar RabbitMQ Consumer - ¡ESTA ES LA PARTE QUE FALTA!
+    try:
+        logger.info("INFO: Inicializando RabbitMQ consumer...")
+        from rabbitmq_consumer import start_rabbitmq_consumer
+        rabbitmq_consumer = start_rabbitmq_consumer()
+        
+        if rabbitmq_consumer:
+            logger.info("SUCCESS: RabbitMQ consumer initialized successfully")
+            logger.info(f"Consumer type: {type(rabbitmq_consumer)}")
+        else:
+            logger.warning("WARNING: RabbitMQ consumer could not be initialized")
+            
+    except ImportError as e:
+        logger.warning(f"WARNING: Could not import rabbitmq_consumer: {e}")
+        logger.info("INFO: Running without RabbitMQ (standalone mode)")
+    except Exception as e:
+        logger.error(f"ERROR initializing RabbitMQ consumer: {e}")
+        logger.info("INFO: Running without RabbitMQ (standalone mode)")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Limpiar recursos al apagar"""
+    global rabbitmq_consumer
+    if rabbitmq_consumer:
+        # Si el consumer tiene método close, llamarlo
+        if hasattr(rabbitmq_consumer, 'close'):
+            rabbitmq_consumer.close()
+            logger.info("INFO: RabbitMQ consumer closed")
 
 @app.get("/")
 async def root():
+    """Root endpoint"""
+    global rabbitmq_consumer
     return {
-        "message": "Notification Service with RabbitMQ",
-        "version": "3.0.0",
+        "service": "notification-service",
+        "version": "2.0.0",
         "status": "running",
-        "rabbitmq": "active"
+        "shared_libs": HAS_DATABASE_MODULE,
+        "database": settings.database.notification_db if hasattr(settings.database, 'notification_db') else "N/A",
+        "port": 8003,
+        "rabbitmq_consumer": "active" if rabbitmq_consumer else "inactive"
+    }
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    global rabbitmq_consumer
+    return {
+        "status": "healthy",
+        "service": "notification",
+        "shared_libs": HAS_DATABASE_MODULE,
+        "rabbitmq_consumer": "active" if rabbitmq_consumer else "inactive"
     }
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8003, log_level="info")
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8003)

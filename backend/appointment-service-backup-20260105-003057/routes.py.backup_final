@@ -1,0 +1,125 @@
+﻿# backend/appointment-service/routes.py - VERSIÓN CORREGIDA
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from sqlalchemy.orm import Session
+from typing import List, Optional
+from datetime import datetime
+import asyncio
+
+from database import get_db
+import models
+import schemas
+
+router = APIRouter()
+
+# ==================== HEALTH CHECKS ====================
+
+@router.get("/health/db")
+async def health_check_db(db: Session = Depends(get_db)):
+    """Verificar conexión a base de datos"""
+    try:
+        count = db.query(models.Doctor).count()
+        return {"status": "healthy", "doctor_count": count}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@router.get("/stats/today")
+async def get_today_stats(db: Session = Depends(get_db)):
+    """Estadísticas de citas para hoy"""
+    today = datetime.now().date()
+    
+    today_appointments = db.query(models.Appointment).filter(
+        models.Appointment.appointment_date >= datetime.combine(today, datetime.min.time()),
+        models.Appointment.appointment_date <= datetime.combine(today, datetime.max.time())
+    ).all()
+    
+    return {
+        "date": today.isoformat(),
+        "total_appointments": len(today_appointments),
+        "by_status": {
+            "scheduled": len([a for a in today_appointments if a.status == "scheduled"]),
+            "completed": len([a for a in today_appointments if a.status == "completed"]),
+            "cancelled": len([a for a in today_appointments if a.status == "cancelled"])
+        }
+    }
+
+# ==================== DOCTORES ====================
+# ¡IMPORTANTE! Rutas específicas ANTES de parámetros dinámicos
+
+@router.get("/doctors", response_model=List[schemas.Doctor])
+async def list_doctors(db: Session = Depends(get_db)):
+    """Listar todos los doctores"""
+    doctors = db.query(models.Doctor).all()
+    return doctors
+
+@router.get("/doctors/{doctor_id}", response_model=schemas.Doctor)
+async def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
+    """Obtener un doctor específico"""
+    doctor = db.query(models.Doctor).filter(models.Doctor.id == doctor_id).first()
+    if not doctor:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return doctor
+
+# ==================== ESPECIALIDADES ====================
+
+@router.get("/specialties", response_model=List[schemas.Specialty])
+async def list_specialties(db: Session = Depends(get_db)):
+    """Listar todas las especialidades"""
+    specialties = db.query(models.Specialty).all()
+    return specialties
+
+@router.get("/specialties/{specialty_id}", response_model=schemas.Specialty)
+async def get_specialty(specialty_id: int, db: Session = Depends(get_db)):
+    """Obtener una especialidad específica"""
+    specialty = db.query(models.Specialty).filter(models.Specialty.id == specialty_id).first()
+    if not specialty:
+        raise HTTPException(status_code=404, detail="Specialty not found")
+    return specialty
+
+# ==================== CITAS MÉDICAS ====================
+
+@router.get("", response_model=List[schemas.Appointment])
+async def list_appointments(
+    skip: int = 0, 
+    limit: int = 100,
+    db: Session = Depends(get_db)
+):
+    """Listar todas las citas"""
+    appointments = db.query(models.Appointment).offset(skip).limit(limit).all()
+    return appointments
+
+@router.post("", response_model=schemas.Appointment)
+async def create_appointment(
+    appointment: schemas.AppointmentCreate,
+    db: Session = Depends(get_db)
+):
+    """Crear una nueva cita médica"""
+    
+    # 1. Verificar que el doctor existe
+    doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
+    if not doctor:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    
+    # 2. Crear la cita
+    db_appointment = models.Appointment(
+        patient_id=appointment.patient_id,
+        doctor_id=appointment.doctor_id,
+        appointment_date=appointment.appointment_date,
+        reason=appointment.reason,
+        notes=appointment.notes,
+        status="scheduled",
+        created_at=datetime.now()
+    )
+    
+    db.add(db_appointment)
+    db.commit()
+    db.refresh(db_appointment)
+    
+    return db_appointment
+
+@router.get("/{appointment_id}", response_model=schemas.Appointment)
+async def get_appointment(appointment_id: int, db: Session = Depends(get_db)):
+    """Obtener una cita específica"""
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return appointment

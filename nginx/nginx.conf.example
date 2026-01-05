@@ -1,0 +1,74 @@
+﻿events {
+    worker_connections 1024;
+}
+
+http {
+    upstream auth_service {
+        server auth-service:8000;
+    }
+
+    upstream user_service {
+        server user-service:8001;
+    }
+
+    upstream appointment_service {
+        server appointment-service:8002;
+    }
+
+    upstream notification_service {
+        server notification-service:8003;
+    }
+
+    server {
+        listen 80;
+        server_name localhost;
+
+        # Auth Service
+        location /auth/ {
+            proxy_pass http://auth_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # User Service  
+        location /users/ {
+            proxy_pass http://user_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Appointment Service
+        location /appointments/ {
+            proxy_pass http://appointment_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Notification Service
+        location /notifications/ {
+            proxy_pass http://notification_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Health check endpoint
+        location /health {
+            return 200 "Gateway Healthy";
+            add_header Content-Type text/plain;
+        }
+
+        # Root endpoint
+        location / {
+            return 200 "HDUCE API Gateway - Use specific endpoints: /auth/, /users/, etc.";
+            add_header Content-Type text/plain;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+﻿worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            return 200 "HDUCE API Gateway - Working!";
+            add_header Content-Type text/plain;
+        }
+    }
+}

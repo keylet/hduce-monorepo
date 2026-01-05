@@ -1,78 +1,107 @@
-﻿# backend/user-service/main.py
-from fastapi import FastAPI, Depends, HTTPException, Body
-from src.protected_routes import router as protected_router
-from sqlalchemy.orm import Session
-from sqlalchemy import text
-import models, schemas
-from database import engine, get_db, Base
-from typing import List
-import uuid
+﻿import logging
+from fastapi import FastAPI, HTTPException, Header
+from fastapi.middleware.cors import CORSMiddleware
+from hduce_shared.config import settings
+from auth_client import auth_client
 
-# Create tables in database
-Base.metadata.create_all(bind=engine)
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="HDUCE User Service",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    description="User management microservice",
+    version="2.0.0"
 )
 
-# ✅ CORREGIDO: Agregar prefix a las rutas protegidas
-app.include_router(protected_router, prefix="/users")
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ==================== SOLUCIÓN DEFINITIVA ====================
+def crear_engine_user():
+    """Solución definitiva - crea engine directamente"""
+    from sqlalchemy import create_engine
+    
+    db = settings.database
+    password = 'postgres'
+    connection_string = f"postgresql://{db.postgres_user}:{password}@{db.postgres_host}:{db.postgres_port}/{db.user_db}"
+    logger.info(f"Conectando a PostgreSQL: {db.postgres_host}:{db.postgres_port}/{db.user_db}")
+    return create_engine(connection_string, pool_pre_ping=True)
+# =============================================================
+
+@app.on_event("startup")
+async def startup_event():
+    """Inicializar base de datos al iniciar"""
+    try:
+        engine = crear_engine_user()
+        from hduce_shared.database import HAS_DATABASE_MODULE
+        
+        if HAS_DATABASE_MODULE:
+            from hduce_shared.database import create_all_tables
+            create_all_tables(engine)
+            logger.info("✅ Database tables verified/created")
+        else:
+            with engine.connect() as conn:
+                conn.execute("SELECT 1")
+            logger.info("✅ Conexión a DB establecida")
+    except Exception as e:
+        logger.error(f"❌ Database initialization failed: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "user", "shared_libs": True}
 
 @app.get("/")
-def read_root():
-    return {"service": "user-service", "status": "running", "database": "postgresql"}
+async def root():
+    """Root endpoint"""
+    return {
+        "service": "user-service",
+        "version": "2.0.0",
+        "status": "running",
+        "database": settings.database.user_db,
+        "port": 8001
+    }
 
-# ✅ Health check SIMPLE (sin DB para verificación rápida)
-@app.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "user-service"}
+@app.get("/protected-profile")
+async def get_protected_profile(authorization: str = Header(None)):
+    """Endpoint protegido que valida token con auth-service"""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing authorization header")
+    
+    token = authorization.split(" ")[1]
+    
+    # Llamar al auth-service para validar token
+    user_data = await auth_client.validate_token(token)
+    
+    if not user_data:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    # Simular obtención de perfil de usuario
+    return {
+        "message": "Protected user profile",
+        "user_id": user_data.get("user_id"),
+        "email": user_data.get("email"),
+        "profile": {
+            "name": "John Doe",
+            "role": "user",
+            "created_at": "2024-01-01"
+        }
+    }
 
-# ✅ Health check con DB (CORREGIDO: usando text())
-@app.get("/health/db")
-def health_check_db(db: Session = Depends(get_db)):
-    try:
-        db.execute(text("SELECT 1"))
-        return {"status": "healthy", "service": "user-service", "database": "connected"}
-    except Exception as e:
-        return {"status": "unhealthy", "service": "user-service", "database": "disconnected", "error": str(e)}
-
-# ✅ Mover endpoints principales a raíz (sin /users prefix)
-@app.post("/", response_model=schemas.UserResponse)
-def create_user(user: schemas.UserCreate = Body(...), db: Session = Depends(get_db)):
-    # Check if email already exists
-    existing_user = db.query(models.UserDB).filter(models.UserDB.email == user.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    # Create new user
-    db_user = models.UserDB(**user.dict())
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-
-    return db_user
-
-@app.get("/", response_model=List[schemas.UserResponse])
-def get_all_users(db: Session = Depends(get_db)):
-    users = db.query(models.UserDB).all()
-    return users
-
-@app.get("/{user_id}", response_model=schemas.UserResponse)
-def get_user(user_id: str, db: Session = Depends(get_db)):
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid user ID format")
-
-    user = db.query(models.UserDB).filter(models.UserDB.id == user_uuid).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return user
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cerrar cliente HTTP al apagar"""
+    await auth_client.close()
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)

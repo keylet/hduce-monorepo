@@ -1,183 +1,183 @@
-﻿# backend/appointment-service/routes.py
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List, Optional
-from datetime import datetime
-import asyncio
+from typing import List
 
 from database import get_db
 import models
 import schemas
-from notification_integration import send_appointment_notification
-from rabbitmq_publisher import event_publisher
 
-# ✅ CORREGIDO: Router sin prefix
+# ========== RABBITMQ SIMPLE ==========
+import pika
+import json
+from datetime import datetime
+
+def publish_to_rabbitmq(appointment_data):
+    """Publicar evento a RabbitMQ"""
+    try:
+        credentials = pika.PlainCredentials("admin", "admin123")
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(
+                host="rabbitmq",
+                port=5672,
+                credentials=credentials
+            )
+        )
+        
+        channel = connection.channel()
+        
+        # Exchange y queue
+        channel.exchange_declare(
+            exchange="appointments",
+            exchange_type="direct",
+            durable=True
+        )
+        
+        channel.queue_declare(
+            queue="appointment_notifications",
+            durable=True
+        )
+        
+        channel.queue_bind(
+            exchange="appointments",
+            queue="appointment_notifications",
+            routing_key="appointment.created"
+        )
+        
+        # Mensaje
+        message = {
+            "event_type": "APPOINTMENT_CREATED",
+            "timestamp": datetime.now().isoformat(),
+            "data": appointment_data
+        }
+        
+        channel.basic_publish(
+            exchange="appointments",
+            routing_key="appointment.created",
+            body=json.dumps(message, ensure_ascii=False),
+            properties=pika.BasicProperties(
+                delivery_mode=2,
+                content_type="application/json"
+            )
+        )
+        
+        print("SUCCESS: Evento publicado a RabbitMQ: APPOINTMENT_CREATED")
+        connection.close()
+        return True
+        
+    except Exception as e:
+        print(f"ERROR: Error publicando a RabbitMQ: {e}")
+        return False
+
 router = APIRouter()
 
-# ==================== CITAS MÉDICAS ====================
+# ========== RUTAS DE DOCTORES ==========
+@router.get("/doctors", response_model=List[schemas.Doctor])
+def get_doctors(db: Session = Depends(get_db)):
+    """Obtener todos los doctores"""
+    doctors = db.query(models.Doctor).all()
+    # Si los doctores no tienen nombre, asignar uno
+    for doctor in doctors:
+        if not doctor.name:
+            doctor.name = f"Doctor {doctor.user_id}"
+    return doctors
 
-@router.post("/", response_model=schemas.Appointment)  # <-- CAMBIADO de "/appointments" a "/"
-async def create_appointment(
-    appointment: schemas.AppointmentCreate,
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
-):
-    """Crear una nueva cita médica y enviar notificación"""
-    
-    # 1. Verificar que el doctor existe
+@router.get("/doctors/{doctor_id}", response_model=schemas.Doctor)
+def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
+    """Obtener un doctor por ID"""
+    doctor = db.query(models.Doctor).filter(models.Doctor.id == doctor_id).first()
+    if not doctor:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    if not doctor.name:
+        doctor.name = f"Doctor {doctor.user_id}"
+    return doctor
+
+# ========== RUTAS DE ESPECIALIDADES ==========
+@router.get("/specialties", response_model=List[schemas.Specialty])
+def get_specialties(db: Session = Depends(get_db)):
+    """Obtener todas las especialidades"""
+    return db.query(models.Specialty).all()
+
+@router.get("/specialties/{specialty_id}", response_model=schemas.Specialty)
+def get_specialty(specialty_id: int, db: Session = Depends(get_db)):
+    """Obtener una especialidad por ID"""
+    specialty = db.query(models.Specialty).filter(models.Specialty.id == specialty_id).first()
+    if not specialty:
+        raise HTTPException(status_code=404, detail="Specialty not found")
+    return specialty
+
+# ========== RUTAS DE CITAS ==========
+@router.get("", response_model=List[schemas.Appointment])
+def get_appointments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """Obtener todas las citas"""
+    return db.query(models.Appointment).offset(skip).limit(limit).all()
+
+@router.post("", response_model=schemas.Appointment)
+def create_appointment(appointment: schemas.AppointmentCreate, db: Session = Depends(get_db)):
+    """Crear una nueva cita"""
+
+    # Verificar que el doctor existe
     doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
     if not doctor:
         raise HTTPException(status_code=404, detail="Doctor not found")
-    
-    # 2. Crear la cita en la base de datos
+
+    # Crear la cita
     db_appointment = models.Appointment(
         patient_id=appointment.patient_id,
         doctor_id=appointment.doctor_id,
         appointment_date=appointment.appointment_date,
         reason=appointment.reason,
         notes=appointment.notes,
-        created_at=datetime.now()
+        status="scheduled"
     )
-    
+
     db.add(db_appointment)
     db.commit()
     db.refresh(db_appointment)
     
-    # 3. Preparar datos para notificación
-    appointment_data = {
-        "appointment_id": str(db_appointment.id),
-        "patient_id": appointment.patient_id,
-        "doctor_name": f"Doctor ID {doctor.id}",
-        "appointment_date": appointment.appointment_date.isoformat() if hasattr(appointment.appointment_date, "isoformat") else str(appointment.appointment_date),
-        "reason": appointment.reason or "Consulta médica"
-    }
-    
-    # 4. OPCIÓN A: Enviar notificación por RabbitMQ
+    # ========== PUBLICAR A RABBITMQ ==========
     try:
-        rabbitmq_success = event_publisher.publish_appointment_created(appointment_data)
-        if rabbitmq_success:
-            print(f"✅ Evento publicado en RabbitMQ para cita {db_appointment.id}")
-        else:
-            print(f"⚠️  Falló RabbitMQ, usando HTTP fallback")
-            background_tasks.add_task(
-                send_appointment_notification,
-                appointment_data=appointment_data,
-                notification_type="confirmation"
-            )
+        appointment_event = {
+            "id": db_appointment.id,
+            "patient_id": db_appointment.patient_id,
+            "doctor_id": db_appointment.doctor_id,
+            "appointment_date": db_appointment.appointment_date.isoformat() if db_appointment.appointment_date else None,
+            "reason": db_appointment.reason,
+            "status": db_appointment.status
+        }
+        publish_to_rabbitmq(appointment_event)
     except Exception as e:
-        print(f"⚠️  Error con RabbitMQ: {e}. Usando HTTP fallback")
-        background_tasks.add_task(
-            send_appointment_notification,
-            appointment_data=appointment_data,
-            notification_type="confirmation"
-        )
-    
+        print(f"WARNING: Error en RabbitMQ (cita creada igual): {e}")
+    # =========================================
+
     return db_appointment
 
-# ==================== LISTAR CITAS ====================
-
-@router.get("/", response_model=List[schemas.Appointment])  # <-- CAMBIADO
-async def list_appointments(
-    skip: int = 0,
-    limit: int = 100,
-    patient_id: Optional[str] = None,
-    doctor_id: Optional[int] = None,
-    status: Optional[str] = None,
-    db: Session = Depends(get_db)
-):
-    """Listar citas médicas con filtros"""
-    query = db.query(models.Appointment)
-    
-    if patient_id:
-        query = query.filter(models.Appointment.patient_id == patient_id)
-    if doctor_id:
-        query = query.filter(models.Appointment.doctor_id == doctor_id)
-    if status:
-        query = query.filter(models.Appointment.status == status)
-    
-    return query.order_by(models.Appointment.appointment_date.desc()).offset(skip).limit(limit).all()
-
-@router.get("/{appointment_id}", response_model=schemas.Appointment)  # <-- CAMBIADO
-async def get_appointment(appointment_id: int, db: Session = Depends(get_db)):
-    """Obtener una cita específica"""
-    appointment = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
+# ========== RUTA PARA UNA CITA ESPEC?FICA ==========
+@router.get("/appointment/{app_id}", response_model=schemas.Appointment)
+def get_appointment_by_id(app_id: int, db: Session = Depends(get_db)):
+    """Obtener una cita por ID"""
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == app_id).first()
     if not appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
     return appointment
 
-# ==================== DOCTORES ====================
+# ========== HEALTH CHECKS ==========
+@router.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "appointment"}
 
-@router.get("/doctors", response_model=List[schemas.Doctor])
-async def list_doctors(db: Session = Depends(get_db)):
-    """Listar todos los doctores"""
-    return db.query(models.Doctor).all()
-
-@router.get("/doctors/{doctor_id}", response_model=schemas.Doctor)
-async def get_doctor(doctor_id: int, db: Session = Depends(get_db)):
-    """Obtener un doctor específico"""
-    doctor = db.query(models.Doctor).filter(models.Doctor.id == doctor_id).first()
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Doctor not found")
-    return doctor
-
-# ==================== ESPECIALIDADES ====================
-
-@router.get("/specialties", response_model=List[schemas.Specialty])
-async def list_specialties(db: Session = Depends(get_db)):
-    """Listar todas las especialidades"""
-    return db.query(models.Specialty).all()
-
-@router.get("/specialties/{specialty_id}", response_model=schemas.Specialty)
-async def get_specialty(specialty_id: int, db: Session = Depends(get_db)):
-    """Obtener una especialidad específica"""
-    specialty = db.query(models.Specialty).filter(models.Specialty.id == specialty_id).first()
-    if not specialty:
-        raise HTTPException(status_code=404, detail="Specialty not found")
-    return specialty
-
-# ==================== ESTADÍSTICAS ====================
-
-@router.get("/stats/today")
-async def get_today_stats(db: Session = Depends(get_db)):
-    """Estadísticas de citas para hoy"""
-    today = datetime.now().date()
-    
-    total_today = db.query(models.Appointment).filter(
-        db.func.date(models.Appointment.appointment_date) == today
-    ).count()
-    
-    completed_today = db.query(models.Appointment).filter(
-        db.func.date(models.Appointment.appointment_date) == today,
-        models.Appointment.status == "completed"
-    ).count()
-    
-    pending_today = db.query(models.Appointment).filter(
-        db.func.date(models.Appointment.appointment_date) == today,
-        models.Appointment.status == "pending"
-    ).count()
-    
-    return {
-        "date": today.isoformat(),
-        "total_appointments": total_today,
-        "completed": completed_today,
-        "pending": pending_today
-    }
-
-# ==================== HEALTH CHECK ====================
-
-@router.get("/health/db")
-async def health_check_db(db: Session = Depends(get_db)):
-    """Verificar conexión a base de datos"""
+@router.get("/db-check")
+def db_check(db: Session = Depends(get_db)):
+    """Verificar conexion a base de datos"""
     try:
-        db.execute("SELECT 1")
-        appointments_count = db.query(models.Appointment).count()
-        doctors_count = db.query(models.Doctor).count()
-        
+        doctor_count = db.query(models.Doctor).count()
+        specialty_count = db.query(models.Specialty).count()
+        appointment_count = db.query(models.Appointment).count()
+
         return {
-            "database": "connected",
-            "appointments": appointments_count,
-            "doctors": doctors_count,
-            "status": "healthy"
+            "status": "healthy",
+            "doctor_count": doctor_count,
+            "specialty_count": specialty_count,
+            "appointment_count": appointment_count
         }
     except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Database error: {str(e)}")
+        return {"status": "error", "message": str(e)}

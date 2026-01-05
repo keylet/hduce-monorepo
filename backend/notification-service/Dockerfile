@@ -1,23 +1,27 @@
-FROM python:3.11-slim
+ÔªøFROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalar dependencias del sistema para psycopg2
+# 1. Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     gcc \
-    postgresql-client \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar y instalar dependencias de Python
-COPY requirements.txt .
+# 2. Copiar shared-libraries DESDE LA RA√çZ
+COPY ./shared-libraries ./shared-libraries
+
+# 3. Instalar shared-libraries
+RUN pip install -e ./shared-libraries
+
+# 4. Copiar requirements del servicio
+COPY ./backend/notification-service/requirements.txt .
+
+# 5. Instalar dependencias del servicio
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el cÛdigo de la aplicaciÛn
-COPY . .
+# 6. Copiar el c√≥digo del servicio
+COPY ./backend/notification-service/ .
 
-# Puerto para el servicio de notificaciones
-EXPOSE 8003
-
-# Comando para ejecutar la aplicaciÛn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# 7. Ejecutar servicio
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]

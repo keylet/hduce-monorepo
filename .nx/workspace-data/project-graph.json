@@ -1,5 +1,165 @@
 {
-  "nodes": {},
+  "nodes": {
+    "notification-service": {
+      "name": "notification-service",
+      "type": "app",
+      "data": {
+        "root": "backend/notification-service",
+        "name": "notification-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "backend/notification-service",
+        "projectType": "application",
+        "targets": {
+          "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "uvicorn main:app --host 0.0.0.0 --port 8003",
+              "cwd": "backend/notification-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker-build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t hduce/notification-service:latest .",
+              "cwd": "backend/notification-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "echo 'Tests para notification-service (por implementar)'",
+              "cwd": "backend/notification-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
+    "appointment-service": {
+      "name": "appointment-service",
+      "type": "app",
+      "data": {
+        "root": "backend/appointment-service",
+        "name": "appointment-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "backend/appointment-service",
+        "projectType": "application",
+        "targets": {
+          "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "uvicorn main:app --host 0.0.0.0 --port 8002",
+              "cwd": "backend/appointment-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker-build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t hduce/appointment-service:latest .",
+              "cwd": "backend/appointment-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "echo 'Tests para appointment-service (por implementar)'",
+              "cwd": "backend/appointment-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
+    "user-service": {
+      "name": "user-service",
+      "type": "app",
+      "data": {
+        "root": "backend/user-service",
+        "name": "user-service",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "backend/user-service",
+        "projectType": "application",
+        "targets": {
+          "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "uvicorn main:app --host 0.0.0.0 --port 8001",
+              "cwd": "backend/user-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "docker-build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "docker build -t hduce/user-service:latest .",
+              "cwd": "backend/user-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "echo 'Tests para user-service (por implementar)'",
+              "cwd": "backend/user-service"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    },
+    "shared-libraries": {
+      "name": "shared-libraries",
+      "type": "lib",
+      "data": {
+        "root": "shared-libraries",
+        "name": "shared-libraries",
+        "$schema": "../node_modules/nx/schemas/project-schema.json",
+        "sourceRoot": "shared-libraries",
+        "projectType": "library",
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "python -m pip install -e .",
+              "cwd": "shared-libraries"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "test": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "echo 'Tests para shared-libraries (por implementar)'",
+              "cwd": "shared-libraries"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": [],
+        "tags": []
+      }
+    }
+  },
   "externalNodes": {
     "npm:@babel/code-frame": {
       "type": "npm",
@@ -2739,6 +2899,10 @@
     }
   },
   "dependencies": {
+    "notification-service": [],
+    "appointment-service": [],
+    "user-service": [],
+    "shared-libraries": [],
     "npm:@babel/code-frame": [
       {
         "source": "npm:@babel/code-frame",
@@ -6313,20 +6477,9 @@
   "version": "6.0",
   "errors": [
     {
-      "stack": " - backend/appointment-service/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\appointment-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)\n - backend/medical-records-service/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\medical-records-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)\n - backend/notification-service/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\notification-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)\n - backend/user-service/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\user-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)\n - shared-libraries/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\shared-libraries\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
-      "message": "5 errors occurred while processing files for the nx/core/project-json plugin\n.\n  - backend/appointment-service/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\appointment-service\\project.json'\n  - backend/medical-records-service/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\medical-records-service\\project.json'\n  - backend/notification-service/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\notification-service\\project.json'\n  - backend/user-service/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\user-service\\project.json'\n  - shared-libraries/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\shared-libraries\\project.json'",
+      "stack": " - backend/medical-records-service/project.json: Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\medical-records-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
+      "message": "An error occurred while processing files for the nx/core/project-json plugin\n.\n  - backend/medical-records-service/project.json: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\medical-records-service\\project.json'",
       "errors": [
-        [
-          "backend/appointment-service/project.json",
-          {
-            "stack": "Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\appointment-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
-            "message": "ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\appointment-service\\project.json'",
-            "errno": -4058,
-            "code": "ENOENT",
-            "syscall": "open",
-            "path": "c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\appointment-service\\project.json"
-          }
-        ],
         [
           "backend/medical-records-service/project.json",
           {
@@ -6337,44 +6490,153 @@
             "syscall": "open",
             "path": "c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\medical-records-service\\project.json"
           }
+        ]
+      ],
+      "partialResults": [
+        [
+          "backend/appointment-service/project.json",
+          {
+            "projects": {
+              "backend/appointment-service": {
+                "name": "appointment-service",
+                "root": "backend/appointment-service",
+                "$schema": "../../node_modules/nx/schemas/project-schema.json",
+                "sourceRoot": "backend/appointment-service",
+                "projectType": "application",
+                "targets": {
+                  "serve": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "uvicorn main:app --host 0.0.0.0 --port 8002",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "docker-build": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "docker build -t hduce/appointment-service:latest .",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "test": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "echo 'Tests para appointment-service (por implementar)'",
+                      "cwd": "{projectRoot}"
+                    }
+                  }
+                }
+              }
+            }
+          }
         ],
         [
           "backend/notification-service/project.json",
           {
-            "stack": "Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\notification-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
-            "message": "ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\notification-service\\project.json'",
-            "errno": -4058,
-            "code": "ENOENT",
-            "syscall": "open",
-            "path": "c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\notification-service\\project.json"
+            "projects": {
+              "backend/notification-service": {
+                "name": "notification-service",
+                "root": "backend/notification-service",
+                "$schema": "../../node_modules/nx/schemas/project-schema.json",
+                "sourceRoot": "backend/notification-service",
+                "projectType": "application",
+                "targets": {
+                  "serve": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "uvicorn main:app --host 0.0.0.0 --port 8003",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "docker-build": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "docker build -t hduce/notification-service:latest .",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "test": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "echo 'Tests para notification-service (por implementar)'",
+                      "cwd": "{projectRoot}"
+                    }
+                  }
+                }
+              }
+            }
           }
         ],
         [
           "backend/user-service/project.json",
           {
-            "stack": "Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\user-service\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
-            "message": "ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\user-service\\project.json'",
-            "errno": -4058,
-            "code": "ENOENT",
-            "syscall": "open",
-            "path": "c:\\Users\\raich\\Desktop\\hduce-monorepo\\backend\\user-service\\project.json"
+            "projects": {
+              "backend/user-service": {
+                "name": "user-service",
+                "root": "backend/user-service",
+                "$schema": "../../node_modules/nx/schemas/project-schema.json",
+                "sourceRoot": "backend/user-service",
+                "projectType": "application",
+                "targets": {
+                  "serve": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "uvicorn main:app --host 0.0.0.0 --port 8001",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "docker-build": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "docker build -t hduce/user-service:latest .",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "test": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "echo 'Tests para user-service (por implementar)'",
+                      "cwd": "{projectRoot}"
+                    }
+                  }
+                }
+              }
+            }
           }
         ],
         [
           "shared-libraries/project.json",
           {
-            "stack": "Error: ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\shared-libraries\\project.json'\n    at readFileSync (node:fs:442:20)\n    at t.readFileSync (node:electron/js2c/node_init:2:11013)\n    at readJsonFile (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\utils\\fileutils.js:27:48)\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:14:59\n    at c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:10:33\n    at Array.map (<anonymous>)\n    at createNodesFromFiles (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\utils.js:8:35)\n    at exports.ProjectJsonProjectsPlugin.createNodesV2 (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\plugins\\project-json\\build-nodes\\project-json.js:13:55)\n    at LoadedNxPlugin.createNodes (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:25:62)\n    at LoadedNxPlugin.createNodes.<computed> (c:\\Users\\raich\\Desktop\\hduce-monorepo\\node_modules\\nx\\src\\project-graph\\plugins\\loaded-nx-plugin.js:39:34)",
-            "message": "ENOENT: no such file or directory, open 'c:\\Users\\raich\\Desktop\\hduce-monorepo\\shared-libraries\\project.json'",
-            "errno": -4058,
-            "code": "ENOENT",
-            "syscall": "open",
-            "path": "c:\\Users\\raich\\Desktop\\hduce-monorepo\\shared-libraries\\project.json"
+            "projects": {
+              "shared-libraries": {
+                "name": "shared-libraries",
+                "root": "shared-libraries",
+                "$schema": "../node_modules/nx/schemas/project-schema.json",
+                "sourceRoot": "shared-libraries",
+                "projectType": "library",
+                "targets": {
+                  "build": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "python -m pip install -e .",
+                      "cwd": "{projectRoot}"
+                    }
+                  },
+                  "test": {
+                    "executor": "nx:run-commands",
+                    "options": {
+                      "command": "echo 'Tests para shared-libraries (por implementar)'",
+                      "cwd": "{projectRoot}"
+                    }
+                  }
+                }
+              }
+            }
           }
         ]
       ],
-      "partialResults": [],
       "name": "AggregateCreateNodesError"
     }
   ],
-  "computedAt": 1767469038447
+  "computedAt": 1767582151782
 }

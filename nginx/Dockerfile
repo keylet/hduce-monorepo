@@ -1,13 +1,10 @@
-# nginx/Dockerfile
-FROM nginx:alpine
+﻿FROM nginx:alpine
 
 # Copiar configuración
-COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-# Exponer puertos
+# Exponer puerto
 EXPOSE 80
-EXPOSE 443
 
-# Iniciar NGINX
+# Comando por defecto
 CMD ["nginx", "-g", "daemon off;"]

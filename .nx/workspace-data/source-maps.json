@@ -1,1 +1,326 @@
-{}
+{
+  "backend/appointment-service": {
+    "root": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/appointment-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/notification-service": {
+    "root": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/user-service": {
+    "root": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "shared-libraries": {
+    "root": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.command": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.cwd": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ]
+  }
+}

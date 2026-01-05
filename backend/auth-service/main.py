@@ -1,66 +1,91 @@
-﻿# backend/auth-service/main.py
-from fastapi import FastAPI, HTTPException
-from routes import router as auth_router
-from datetime import datetime, timedelta
-from jose import jwt
-from jose.exceptions import JWTError
-from pydantic import BaseModel
+﻿from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+# Importar desde shared libraries
+from hduce_shared.auth import JWTManager
+from hduce_shared.config import settings
+from hduce_shared.database import get_db_engine, create_all_tables
+
+# Importar rutas locales - IMPORTANTE: usar import absoluto
+import routes  # Cambiado de "from . import routes" a "import routes"
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="HDUCE Auth Service",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    description="Authentication and authorization microservice using shared-libraries",
+    version="2.0.0"
 )
 
-app.include_router(auth_router, prefix="/auth")
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Simple config
-SECRET_KEY = "dev-secret-key-change-in-production"
-ALGORITHM = "HS256"
+# Incluir rutas
+app.include_router(routes.router)
 
-# Simple in-memory database
-users_db = {
-    "admin": {
-        "username": "admin",
-        "email": "admin@example.com",
-        "password": "admin123",
-        "is_active": True
-    }
-}
+# Configurar JWT Manager usando shared-libs
+jwt_manager = JWTManager(
+    secret_key=settings.jwt.jwt_secret_key,
+    algorithm=settings.jwt.jwt_algorithm
+)
 
-class User(BaseModel):
-    username: str
-    password: str
+# ==================== EVENTOS DE APLICACIÓN ====================
 
-@app.post("/login")
-async def login(user: User):
-    db_user = users_db.get(user.username)
-    if not db_user or db_user["password"] != user.password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    # Create token
-    token_data = {
-        "sub": user.username,
-        "email": db_user["email"],
-        "exp": datetime.utcnow() + timedelta(hours=24)
-    }
-    token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
-    
-    return {"access_token": token, "token_type": "bearer"}
-
-@app.get("/verify")
-async def verify_token(token: str):
+@app.on_event("startup")
+async def startup_event():
+    """Inicializar base de datos al iniciar"""
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return {"valid": True, "username": payload.get("sub")}
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        # Crear tablas si no existen
+        engine = get_db_engine(
+            host=settings.database.postgres_host,
+            port=settings.database.postgres_port,
+            database=settings.database.auth_db,
+            username=settings.database.postgres_user,
+            password=settings.database.postgres_password
+        )
+        create_all_tables(engine)
+        logger.info("✅ Database tables verified/created")
+    except Exception as e:
+        logger.error(f"❌ Database initialization failed: {e}")
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "service": "auth-service",
+        "version": "2.0.0",
+        "status": "running",
+        "shared_libs": "enabled",
+        "database": settings.database.auth_db,
+        "port": 8000
+    }
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "auth-service"}
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "auth", "shared_libs": True}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+@app.get("/config")
+async def show_config():
+    """Mostrar configuración (solo para desarrollo)"""
+    return {
+        "database": {
+            "host": settings.database.postgres_host,
+            "port": settings.database.postgres_port,
+            "database": settings.database.auth_db
+        },
+        "jwt": {
+            "algorithm": settings.jwt.jwt_algorithm,
+            "token_expiry_minutes": settings.jwt.access_token_expire_minutes
+        }
+    }
+

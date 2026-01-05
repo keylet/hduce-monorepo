@@ -46,7 +46,7 @@ if HAS_ROUTES:
 def crear_engine_notification():
     """Solución definitiva - crea engine directamente"""
     from sqlalchemy import create_engine
-
+    
     db = settings.database
     # Usar contraseña EXPLÍCITA para evitar problemas
     password = 'postgres'  # Contraseña fija y conocida
@@ -91,17 +91,18 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "notification", "shared_libs": HAS_DATABASE_MODULE}
 
-# Importar y iniciar RabbitMQ consumer - VERSIÓN CORREGIDA
+# Importar y iniciar RabbitMQ consumer
 try:
     from independent_consumer import start_independent_consumer
-    consumer = start_independent_consumer()
-    if consumer:
-        print("? Independent RabbitMQ consumer initialized successfully")
+    rabbitmq_consumer = start_independent_consumer()
+    if rabbitmq_consumer:
+        print("? RabbitMQ consumer initialized successfully")
 except ImportError as e:
-    print(f"?? Could not import independent_consumer: {e}")
+    print(f"??  Could not import rabbitmq_consumer: {e}")
 except Exception as e:
-    print(f"?? Error initializing RabbitMQ consumer: {e}")
+    print(f"??  Error initializing RabbitMQ consumer: {e}")
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8003)
+

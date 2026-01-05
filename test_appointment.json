@@ -1,0 +1,6 @@
+﻿{
+    "patient_id": "test_simple_curl",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-06T23:00:00",
+    "reason": "Prueba con curl simple"
+}

@@ -1,10 +1,72 @@
-﻿from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_db
 import models
 import schemas
+
+# ========== RABBITMQ SIMPLE ==========
+import pika
+import json
+from datetime import datetime
+
+def publish_to_rabbitmq(appointment_data):
+    """Publicar evento a RabbitMQ"""
+    try:
+        credentials = pika.PlainCredentials("admin", "admin123")
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(
+                host="rabbitmq",
+                port=5672,
+                credentials=credentials
+            )
+        )
+        
+        channel = connection.channel()
+        
+        # Exchange y queue
+        channel.exchange_declare(
+            exchange="appointments",
+            exchange_type="direct",
+            durable=True
+        )
+        
+        channel.queue_declare(
+            queue="appointment_notifications",
+            durable=True
+        )
+        
+        channel.queue_bind(
+            exchange="appointments",
+            queue="appointment_notifications",
+            routing_key="appointment.created"
+        )
+        
+        # Mensaje
+        message = {
+            "event_type": "APPOINTMENT_CREATED",
+            "timestamp": datetime.now().isoformat(),
+            "data": appointment_data
+        }
+        
+        channel.basic_publish(
+            exchange="appointments",
+            routing_key="appointment.created",
+            body=json.dumps(message, ensure_ascii=False),
+            properties=pika.BasicProperties(
+                delivery_mode=2,
+                content_type="application/json"
+            )
+        )
+        
+        print("SUCCESS: Evento publicado a RabbitMQ: APPOINTMENT_CREATED")
+        connection.close()
+        return True
+        
+    except Exception as e:
+        print(f"ERROR: Error publicando a RabbitMQ: {e}")
+        return False
 
 router = APIRouter()
 
@@ -52,12 +114,12 @@ def get_appointments(skip: int = 0, limit: int = 100, db: Session = Depends(get_
 @router.post("", response_model=schemas.Appointment)
 def create_appointment(appointment: schemas.AppointmentCreate, db: Session = Depends(get_db)):
     """Crear una nueva cita"""
-    
+
     # Verificar que el doctor existe
     doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
     if not doctor:
         raise HTTPException(status_code=404, detail="Doctor not found")
-    
+
     # Crear la cita
     db_appointment = models.Appointment(
         patient_id=appointment.patient_id,
@@ -67,15 +129,29 @@ def create_appointment(appointment: schemas.AppointmentCreate, db: Session = Dep
         notes=appointment.notes,
         status="scheduled"
     )
-    
+
     db.add(db_appointment)
     db.commit()
     db.refresh(db_appointment)
     
+    # ========== PUBLICAR A RABBITMQ ==========
+    try:
+        appointment_event = {
+            "id": db_appointment.id,
+            "patient_id": db_appointment.patient_id,
+            "doctor_id": db_appointment.doctor_id,
+            "appointment_date": db_appointment.appointment_date.isoformat() if db_appointment.appointment_date else None,
+            "reason": db_appointment.reason,
+            "status": db_appointment.status
+        }
+        publish_to_rabbitmq(appointment_event)
+    except Exception as e:
+        print(f"WARNING: Error en RabbitMQ (cita creada igual): {e}")
+    # =========================================
+
     return db_appointment
 
-# ========== RUTA PARA UNA CITA ESPECÍFICA ==========
-# IMPORTANTE: No usar {appointment_id}, usar {app_id} o algo diferente
+# ========== RUTA PARA UNA CITA ESPEC?FICA ==========
 @router.get("/appointment/{app_id}", response_model=schemas.Appointment)
 def get_appointment_by_id(app_id: int, db: Session = Depends(get_db)):
     """Obtener una cita por ID"""
@@ -91,12 +167,12 @@ def health_check():
 
 @router.get("/db-check")
 def db_check(db: Session = Depends(get_db)):
-    """Verificar conexión a base de datos"""
+    """Verificar conexion a base de datos"""
     try:
         doctor_count = db.query(models.Doctor).count()
         specialty_count = db.query(models.Specialty).count()
         appointment_count = db.query(models.Appointment).count()
-        
+
         return {
             "status": "healthy",
             "doctor_count": doctor_count,

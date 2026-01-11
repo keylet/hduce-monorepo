@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 
 # Crear engine para auth_db
 def get_auth_engine():
-    db = settings.database
-    password = 'postgres'
-    connection_string = f"postgresql://{db.postgres_user}:{password}@{db.postgres_host}:{db.postgres_port}/{db.auth_db}"
+    # Usar settings.database directamente, sin variable intermedia 'db'
+    connection_string = f"postgresql://{settings.database.postgres_user}:{settings.database.postgres_password}@{settings.database.postgres_host}:{settings.database.postgres_port}/{settings.database.auth_db}"
     return create_engine(connection_string, pool_pre_ping=True)
 
 # Base para modelos
@@ -20,7 +19,7 @@ Base = declarative_base()
 # Modelo de Usuario
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     username = Column(String(100), unique=True, index=True, nullable=False)
@@ -36,7 +35,7 @@ class User(Base):
     last_login = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -66,3 +65,4 @@ def get_db():
         yield db
     finally:
         db.close()
+

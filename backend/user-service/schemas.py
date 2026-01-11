@@ -30,3 +30,33 @@ class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
     age: Optional[int] = None
+
+
+# ============ PATIENT SCHEMAS ============
+class PatientBase(BaseModel):
+    """Base schema for patient data"""
+    user_id: int
+    date_of_birth: date
+    gender: str
+    blood_type: Optional[str] = None
+    height_cm: Optional[float] = None
+    weight_kg: Optional[float] = None
+    allergies: Optional[str] = None
+    chronic_conditions: Optional[str] = None
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    insurance_provider: Optional[str] = None
+    insurance_policy_number: Optional[str] = None
+
+class PatientCreate(PatientBase):
+    """Schema for creating a patient"""
+    pass
+
+class PatientResponse(PatientBase):
+    """Schema for patient response"""
+    patient_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True

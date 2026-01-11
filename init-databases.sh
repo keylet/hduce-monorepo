@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 set -e
 set -u
@@ -17,19 +17,22 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
 EOSQL
 
 function create_user_and_database() {
-    local database=$1
-    echo "Creating database $database"
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-        CREATE DATABASE $database;
-        GRANT ALL PRIVILEGES ON DATABASE $database TO postgres;
-        GRANT ALL PRIVILEGES ON DATABASE $database TO hduce_user;
+    local database=\$1
+    echo "Creating database \$database"
+    psql -v ON_ERROR_STOP=1 --username "\$POSTGRES_USER" <<-EOSQL
+        CREATE DATABASE \$database;
+        GRANT ALL PRIVILEGES ON DATABASE \$database TO postgres;
+        GRANT ALL PRIVILEGES ON DATABASE \$database TO hduce_user;
 EOSQL
 }
 
-if [ -n "$POSTGRES_MULTIPLE_DATABASES" ]; then
-    echo "Creating multiple databases: $POSTGRES_MULTIPLE_DATABASES"
-    for db in $(echo $POSTGRES_MULTIPLE_DATABASES | tr ',' ' '); do
-        create_user_and_database $db
-    done
-    echo "Multiple databases created successfully"
-fi
+# Crear TODAS las bases de datos necesarias
+echo "Creating all HDUCE databases..."
+
+databases="auth_db user_db appointment_db notification_db"
+
+for db in \$databases; do
+    create_user_and_database \$db
+done
+
+echo "All databases created successfully: \$databases"

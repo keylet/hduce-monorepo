@@ -1,6 +1,6 @@
 ﻿{
-    "patient_id": "test_simple_curl",
+    "patient_id": "test_fixed_json",
     "doctor_id": 1,
-    "appointment_date": "2026-01-06T23:00:00",
-    "reason": "Prueba con curl simple"
+    "appointment_date": "2026-01-10T10:00:00",
+    "reason": "Prueba con JSON fijo"
 }

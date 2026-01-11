@@ -1,6 +1,7 @@
 ﻿"""RabbitMQ Consumer INDEPENDIENTE para Notification Service"""
 import json
 import pika
+from hduce_shared.config import settings
 from datetime import datetime
 from typing import Dict, Any
 import threading
@@ -99,7 +100,7 @@ class IndependentRabbitMQConsumer:
         def consume():
             while self.running:
                 try:
-                    credentials = pika.PlainCredentials("admin", "admin123")
+                    credentials = pika.PlainCredentials(settings.rabbitmq.rabbitmq_user, settings.rabbitmq.rabbitmq_password)
                     connection = pika.BlockingConnection(
                         pika.ConnectionParameters(
                             host="rabbitmq",

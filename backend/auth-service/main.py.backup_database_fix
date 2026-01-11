@@ -5,9 +5,10 @@ import logging
 # Importar desde shared libraries
 from hduce_shared.auth import JWTManager
 from hduce_shared.config import settings
+from hduce_shared.database import get_db_engine, create_all_tables
 
-# Importar rutas locales
-import routes
+# Importar rutas locales - IMPORTANTE: usar import absoluto
+import routes  # Cambiado de "from . import routes" a "import routes"
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -31,20 +32,27 @@ app.add_middleware(
 # Incluir rutas
 app.include_router(routes.router)
 
-# ==================== EVENTOS DE APLICACIÓN ====================
+# Configurar JWT Manager usando shared-libs
+# JWTManager configurado en routes.py - usa constantes de clase
+
+# ==================== EVENTOS DE APLICACIÃ“N ====================
 
 @app.on_event("startup")
 async def startup_event():
     """Inicializar base de datos al iniciar"""
     try:
-        # Importar la función CORRECTA del database.py local
-        from database import create_tables
-        
-        # Llamar a la función local que ya está bien implementada
-        create_tables()
-        logger.info("✅ Database tables verified/created")
+        # Crear tablas si no existen
+        engine = get_db_engine(
+            host=settings.database.postgres_host,
+            port=settings.database.postgres_port,
+            database=settings.database.auth_db,
+            username=settings.database.postgres_user,
+            password=settings.database.postgres_password
+        )
+        create_all_tables(engine)
+        logger.info("âœ… Database tables verified/created")
     except Exception as e:
-        logger.error(f"❌ Database initialization failed: {e}")
+        logger.error(f"âŒ Database initialization failed: {e}")
 
 @app.get("/")
 async def root():
@@ -54,7 +62,7 @@ async def root():
         "version": "2.0.0",
         "status": "running",
         "shared_libs": "enabled",
-        "database": "auth_db",
+        "database": settings.database.auth_db,
         "port": 8000
     }
 
@@ -65,17 +73,18 @@ async def health_check():
 
 @app.get("/config")
 async def show_config():
-    """Mostrar configuración (solo para desarrollo)"""
+    """Mostrar configuraciÃ³n (solo para desarrollo)"""
     return {
         "database": {
             "host": settings.database.postgres_host,
             "port": settings.database.postgres_port,
-            "database": "auth_db"
+            "database": settings.database.auth_db
         },
         "jwt": {
             "algorithm": settings.jwt.jwt_algorithm,
-            "token_expiry_minutes": settings.jwt.jwt_access_token_expire_minutes
+            "token_expiry_minutes": settings.jwt.access_token_expire_minutes
         }
     }
+
 
 

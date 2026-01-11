@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+﻿from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+import os
+# from hduce_shared.config import settings
 
 from database import get_db
 import models
@@ -14,14 +16,10 @@ from datetime import datetime
 def publish_to_rabbitmq(appointment_data):
     """Publicar evento a RabbitMQ"""
     try:
-        credentials = pika.PlainCredentials("admin", "admin123")
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host="rabbitmq",
-                port=5672,
-                credentials=credentials
-            )
-        )
+        credentials = pika.PlainCredentials(
+    		os.getenv("RABBITMQ_USER", "guest"),
+    		os.getenv("RABBITMQ_PASSWORD", "guest")
+	)
         
         channel = connection.channel()
         
@@ -181,3 +179,6 @@ def db_check(db: Session = Depends(get_db)):
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+

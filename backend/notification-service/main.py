@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+﻿from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -38,20 +38,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Incluir rutas si est�n disponibles
+# Incluir rutas si estÃ¡n disponibles
 if HAS_ROUTES:
     app.include_router(routes.router)
 
-# ==================== SOLUCI�N DEFINITIVA ====================
+# ==================== SOLUCIÃ“N DEFINITIVA ====================
 def crear_engine_notification():
-    """Soluci�n definitiva - crea engine directamente"""
+    """SoluciÃ³n definitiva - crea engine directamente"""
     from sqlalchemy import create_engine
 
     db = settings.database
-    # Usar contrase�a EXPL�CITA para evitar problemas
-    password = 'postgres'  # Contrase�a fija y conocida
-    connection_string = f"postgresql://{db.postgres_user}:{password}@{db.postgres_host}:{db.postgres_port}/{db.notification_db}"
-    print(f"Conectando a PostgreSQL: {db.postgres_host}:{db.postgres_port}/{db.notification_db}")
+    # Usar contraseÃ±a EXPLÃCITA para evitar problemas
+    password = 'postgres'  # ContraseÃ±a fija y conocida
+    connection_string = f"postgresql://{db.postgres_user}:{password}@{db.postgres_host}:{db.postgres_port}/{db.postgres_db}"
+    print(f"Conectando a PostgreSQL: {db.postgres_host}:{db.postgres_port}/{db.postgres_db}")
     return create_engine(connection_string, pool_pre_ping=True)
 # =============================================================
 
@@ -59,16 +59,16 @@ def crear_engine_notification():
 async def startup_event():
     """Inicializar base de datos al iniciar"""
     try:
-        # USAR SOLUCI�N DEFINITIVA
+        # USAR SOLUCIÃ“N DEFINITIVA
         engine = crear_engine_notification()
         if HAS_DATABASE_MODULE:
             create_all_tables(engine)
             logger.info("? Database tables verified/created")
         else:
-            # Probar conexi�n
+            # Probar conexiÃ³n
             with engine.connect() as conn:
                 conn.execute("SELECT 1")
-            logger.info("? Conexi�n a DB establecida")
+            logger.info("? ConexiÃ³n a DB establecida")
     except Exception as e:
         logger.error(f"? Database initialization failed: {e}")
         import traceback
@@ -91,7 +91,7 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "notification", "shared_libs": HAS_DATABASE_MODULE}
 
-# Importar y iniciar RabbitMQ consumer - VERSI�N CORREGIDA
+# Importar y iniciar RabbitMQ consumer - VERSIÃ“N CORREGIDA
 try:
     from independent_consumer import start_independent_consumer
     consumer = start_independent_consumer()
@@ -105,3 +105,6 @@ except Exception as e:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8003)
+
+
+

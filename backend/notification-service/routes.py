@@ -12,6 +12,15 @@ import schemas
 # ✅ CORREGIDO: Router sin prefix, las rutas están en raíz
 router = APIRouter()
 
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "notification"}
+
+# ========== HEALTH CHECKS (DEBEN IR PRIMERO) ==========
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "notification"}
+
 # ==================== NOTIFICACIONES BÁSICAS ====================
 
 @router.get("/", response_model=List[schemas.Notification])  # <-- CAMBIADO de "/notifications" a "/"
@@ -324,6 +333,14 @@ async def create_test_notification(db: Session = Depends(get_db)):
         "created_at": notification.created_at.isoformat()
     }
 
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "notification"}
+
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "notification"}
+
 @router.get("/health/detailed")  # <-- CAMBIADO
 async def detailed_health_check(db: Session = Depends(get_db)):
     """Health check detallado"""
@@ -358,3 +375,7 @@ async def detailed_health_check(db: Session = Depends(get_db)):
             "GET /stats"
         ]
     }
+
+
+
+

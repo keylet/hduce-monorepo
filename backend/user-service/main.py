@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from hduce_shared.config import settings
@@ -23,9 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ==================== SOLUCIÓN DEFINITIVA ====================
+# ==================== SOLUCIÃ“N DEFINITIVA ====================
 def crear_engine_user():
-    """Solución definitiva - crea engine directamente"""
+    """SoluciÃ³n definitiva - crea engine directamente"""
     from sqlalchemy import create_engine
     
     db = settings.database
@@ -40,18 +40,16 @@ async def startup_event():
     """Inicializar base de datos al iniciar"""
     try:
         engine = crear_engine_user()
-        from hduce_shared.database import HAS_DATABASE_MODULE
-        
-        if HAS_DATABASE_MODULE:
+        try:
             from hduce_shared.database import create_all_tables
             create_all_tables(engine)
-            logger.info("✅ Database tables verified/created")
-        else:
+            logger.info("? Database tables verified/created")
+        except ImportError:
             with engine.connect() as conn:
                 conn.execute("SELECT 1")
-            logger.info("✅ Conexión a DB establecida")
+            logger.info("? ConexiÃ³n a DB establecida")
     except Exception as e:
-        logger.error(f"❌ Database initialization failed: {e}")
+        logger.error(f"? Database initialization failed: {e}")
         import traceback
         logger.error(traceback.format_exc())
 
@@ -85,7 +83,7 @@ async def get_protected_profile(authorization: str = Header(None)):
     if not user_data:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    # Simular obtención de perfil de usuario
+    # Simular obtenciÃ³n de perfil de usuario
     return {
         "message": "Protected user profile",
         "user_id": user_data.get("user_id"),
@@ -105,3 +103,6 @@ async def shutdown_event():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
+
+
+

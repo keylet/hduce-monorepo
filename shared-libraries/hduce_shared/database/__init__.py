@@ -12,7 +12,10 @@ from .postgres import (
     SoftDeleteMixin
 )
 
+HAS_DATABASE_MODULE = True
+
 __all__ = [
+    "HAS_DATABASE_MODULE",
     "Base",
     "DatabaseManager",
     "get_db_session",

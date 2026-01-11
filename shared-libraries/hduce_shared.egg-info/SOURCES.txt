@@ -1,3 +1,5 @@
+MANIFEST.in
+__init__.py
 setup.py
 hduce_shared/__init__.py
 hduce_shared.egg-info/PKG-INFO
@@ -13,6 +15,9 @@ hduce_shared/config/settings.py
 hduce_shared/database/__init__.py
 hduce_shared/database/postgres.py
 hduce_shared/models/__init__.py
+hduce_shared/rabbitmq/__init__.py
+hduce_shared/rabbitmq/consumer.py
+hduce_shared/rabbitmq/publisher.py
 hduce_shared/users/__init__.py
 hduce_shared/users/models.py
 schemas_types/__init__.py

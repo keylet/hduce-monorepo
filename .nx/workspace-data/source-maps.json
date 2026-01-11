@@ -1,87 +1,87 @@
 {
-  "backend/appointment-service": {
+  "backend/auth-service": {
     "root": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.serve": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.serve.executor": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.serve.options": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.serve.options.command": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.serve.options.cwd": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.docker-build": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.docker-build.executor": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.docker-build.options": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.docker-build.options.command": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.docker-build.options.cwd": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.test": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.test.executor": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.test.options": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.test.options.command": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ],
     "targets.test.options.cwd": [
-      "backend/appointment-service/project.json",
+      "backend/auth-service/project.json",
       "nx/core/project-json"
     ]
   },

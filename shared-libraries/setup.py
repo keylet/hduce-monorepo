@@ -1,25 +1,18 @@
 ﻿from setuptools import setup, find_packages
 
-# Encontrar todos los paquetes
-packages = find_packages()
-
-print(f"Paquetes encontrados: {packages}")
-
 setup(
     name="hduce-shared",
-    version="1.0.0",
-    author="HDUCE Team",
-    description="Shared libraries for HDUCE microservices",
-    packages=packages,
-    python_requires=">=3.8",
+    version="0.1.0",
+    packages=find_packages(),
     install_requires=[
-        'PyJWT>=2.8.0',
-        "fastapi>=0.104.0",
-        "pydantic>=2.0.0",
-        "python-jose[cryptography]>=3.3.0",
         "sqlalchemy>=2.0.0",
+        "pydantic==2.5.0",           # Versión específica
+        "pydantic-settings==2.1.0",  # Versión específica compatible
+        "python-jose[cryptography]>=3.3.0",
+        "passlib[bcrypt]>=1.7.4",
+        "python-multipart>=0.0.6",
+        "pika>=1.3.0",
         "psycopg2-binary>=2.9.0",
-        "pydantic-settings>=2.0.0",
+        "redis>=4.5.0",
     ],
 )
-

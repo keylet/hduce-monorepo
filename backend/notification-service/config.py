@@ -24,5 +24,9 @@ TWILIO_PHONE_NUMBER: Optional[str] = os.getenv("TWILIO_PHONE_NUMBER")
 # RabbitMQ Configuration (puede venir de shared-libraries, pero lo mantenemos aquí por claridad)
 RABBITMQ_HOST: str = os.getenv("RABBITMQ_HOST", "rabbitmq")
 RABBITMQ_PORT: int = int(os.getenv("RABBITMQ_PORT", "5672"))
-RABBITMQ_USER: str = os.getenv("RABBITMQ_USER", "admin")
-RABBITMQ_PASSWORD: str = os.getenv("RABBITMQ_PASSWORD", "admin123")
+RABBITMQ_USER: str = os.getenv("RABBITMQ_USER", "guest")
+RABBITMQ_PASSWORD: str = os.getenv("RABBITMQ_PASSWORD", "guest")
+
+
+
+

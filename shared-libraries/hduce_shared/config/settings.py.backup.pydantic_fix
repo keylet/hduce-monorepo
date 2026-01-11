@@ -7,7 +7,7 @@ class DatabaseSettings(BaseSettings):
     postgres_user: str = "postgres"
     postgres_password: str = "postgres"
     
-    # Bases de datos específicas
+    # Bases de datos específicas - AGREGADAS
     auth_db: str = "auth_db"
     user_db: str = "user_db"
     appointment_db: str = "appointment_db"
@@ -15,8 +15,6 @@ class DatabaseSettings(BaseSettings):
     medical_db: str = "medical_db"
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_prefix = "POSTGRES_"
 
 class RedisSettings(BaseSettings):
@@ -25,20 +23,16 @@ class RedisSettings(BaseSettings):
     redis_url: str = "redis://redis:6379"
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_prefix = "REDIS_"
 
 class RabbitMQSettings(BaseSettings):
     rabbitmq_host: str = "rabbitmq"
     rabbitmq_port: int = 5672
-    rabbitmq_user: str = "guest"
-    rabbitmq_password: str = "guest"
+    rabbitmq_user: str = "admin"
+    rabbitmq_password: str = "admin123"
     rabbitmq_vhost: str = "/"
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_prefix = "RABBITMQ_"
 
 class JWTSettings(BaseSettings):
@@ -47,8 +41,6 @@ class JWTSettings(BaseSettings):
     jwt_access_token_expire_minutes: int = 30
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_prefix = "JWT_"
 
 class ServicesSettings(BaseSettings):
@@ -58,8 +50,6 @@ class ServicesSettings(BaseSettings):
     notification_service_url: str = "http://notification-service:8003"
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_prefix = ""  # Sin prefijo, usa nombres exactos
 
 class Settings(BaseSettings):
@@ -70,8 +60,6 @@ class Settings(BaseSettings):
     services: ServicesSettings = ServicesSettings()
     
     class Config:
-        extra = "ignore"
-        extra = "ignore"
         env_file = ".env"
         env_file_encoding = "utf-8"
 

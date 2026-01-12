@@ -24,8 +24,8 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     username = Column(String(100), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    full_name = Column(String(100))
-    role = Column(String(20), default='patient')
+    full_name = Column(String(255), nullable=False)
+    role = Column(String(50), default='user')
     phone = Column(String(20))
     address = Column(Text)
     city = Column(String(100))
@@ -65,5 +65,4 @@ def get_db():
         yield db
     finally:
         db.close()
-
 

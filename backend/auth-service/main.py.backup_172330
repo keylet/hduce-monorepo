@@ -1,0 +1,17 @@
+﻿import sys
+import os
+
+# Configurar path para imports dentro de auth-service
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+# Importar desde shared libraries
+from hduce_shared.auth import JWTManager
+from hduce_shared.config import settings
+
+# Importar rutas locales
+import routes

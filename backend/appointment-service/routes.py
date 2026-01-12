@@ -66,7 +66,7 @@ def publish_to_rabbitmq(appointment_data):
         print(f"ERROR: Error publicando a RabbitMQ: {e}")
         return False
 
-router = APIRouter()
+router = APIRouter(prefix="/api")
 
 # ========== RUTAS DE DOCTORES ==========
 @router.get("/doctors", response_model=List[schemas.Doctor])
@@ -179,6 +179,8 @@ def db_check(db: Session = Depends(get_db)):
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
 
 
 

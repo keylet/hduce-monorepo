@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 import os
 
 # Configurar path para imports dentro de auth-service
@@ -14,7 +14,7 @@ from hduce_shared.auth import JWTManager
 from hduce_shared.config import settings
 
 # Importar rutas SIMPLES (temporalmente)
-import routes
+import routes_simple as routes
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -60,4 +60,3 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "mode": "simple"}
-

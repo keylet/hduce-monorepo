@@ -1,0 +1,9 @@
+﻿# Ejemplo de configuración - Copiar a terraform.tfvars y modificar
+environment = "qa"
+
+# Tu IP pública (obténla desde: https://checkip.amazonaws.com/)
+my_ip = 157.100.202.40
+
+# Personaliza según necesites
+instance_type = "t2.micro"
+key_name = "hduce-key"

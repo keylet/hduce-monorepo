@@ -5,226 +5,6 @@
   "nxJsonPlugins": [],
   "fileMap": {
     "projectFileMap": {
-      "shared-libraries": [
-        {
-          "file": "shared-libraries/MANIFEST.in",
-          "hash": "5272990151360349903"
-        },
-        {
-          "file": "shared-libraries/__init__.py",
-          "hash": "4981120459765484811"
-        },
-        {
-          "file": "shared-libraries/auth/jwt_manager.py",
-          "hash": "3899669133123726531"
-        },
-        {
-          "file": "shared-libraries/auth/models.py",
-          "hash": "8678223461532486117"
-        },
-        {
-          "file": "shared-libraries/database/postgres.py",
-          "hash": "10793333959557329841"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/__init__.py",
-          "hash": "13574378824256955064"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__init__.py",
-          "hash": "315125386171267458"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
-          "hash": "519305651346995893"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/models.py",
-          "hash": "8678223461532486117"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/__init__.py",
-          "hash": "12114962471405812070"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py",
-          "hash": "10212431307188070731"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
-          "hash": "13768127589240853894"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
-          "hash": "16849198648177437575"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
-          "hash": "7305828763126006733"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__init__.py",
-          "hash": "16650720195093106731"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/postgres.py",
-          "hash": "10793333959557329841"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/models/__init__.py",
-          "hash": "6456570379379735222"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
-          "hash": "3727737697781896157"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
-          "hash": "3966550151059152680"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/models.py",
-          "hash": "6326835795734559339"
-        },
-        {
-          "file": "shared-libraries/project.json",
-          "hash": "8953192372383522997"
-        },
-        {
-          "file": "shared-libraries/schemas_types/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/schemas_types/src/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/schemas_types/src/auth.types.ts",
-          "hash": "9421071837797304375"
-        },
-        {
-          "file": "shared-libraries/schemas_types/src/auth_types.py",
-          "hash": "8678223461532486117"
-        },
-        {
-          "file": "shared-libraries/schemas_types/src/user.types.ts",
-          "hash": "14862596348516170786"
-        },
-        {
-          "file": "shared-libraries/schemas_types/src/user_types.py",
-          "hash": "6326835795734559339"
-        },
-        {
-          "file": "shared-libraries/setup.py",
-          "hash": "15950840549674790237"
-        },
-        {
-          "file": "shared-libraries/users/models.py",
-          "hash": "6326835795734559339"
-        },
-        {
-          "file": "shared-libraries/utils/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/utils/src/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/utils/src/jwt.py",
-          "hash": "16458661217267040795"
-        },
-        {
-          "file": "shared-libraries/utils/src/jwt_utils.py",
-          "hash": "16781594649747525202"
-        }
-      ],
-      "auth-service": [
-        {
-          "file": "backend/auth-service/Dockerfile",
-          "hash": "17503447757358651373"
-        },
-        {
-          "file": "backend/auth-service/auth_utils.py",
-          "hash": "15192250742485609481"
-        },
-        {
-          "file": "backend/auth-service/auth_utils.py.backup2",
-          "hash": "5644398913586149234"
-        },
-        {
-          "file": "backend/auth-service/create_default_users.py",
-          "hash": "7572962879726632073"
-        },
-        {
-          "file": "backend/auth-service/database.py",
-          "hash": "7258976452483111102"
-        },
-        {
-          "file": "backend/auth-service/main.py",
-          "hash": "5378114066603330591"
-        },
-        {
-          "file": "backend/auth-service/main.py.backup_20260105_025312",
-          "hash": "4822714569449523846"
-        },
-        {
-          "file": "backend/auth-service/main.py.backup_database_fix",
-          "hash": "10924372239281763455"
-        },
-        {
-          "file": "backend/auth-service/project.json",
-          "hash": "2916055997013286920"
-        },
-        {
-          "file": "backend/auth-service/requirements.txt",
-          "hash": "17107897421067022784"
-        },
-        {
-          "file": "backend/auth-service/requirements_minimal.txt",
-          "hash": "2278123858734971096"
-        },
-        {
-          "file": "backend/auth-service/routes.py",
-          "hash": "9372054035219108970"
-        },
-        {
-          "file": "backend/auth-service/routes.py.backup_bom",
-          "hash": "12356079365002733807"
-        },
-        {
-          "file": "backend/auth-service/routes.py.backup_import_fix",
-          "hash": "13808931962333828226"
-        },
-        {
-          "file": "backend/auth-service/routes.py.backup_shared",
-          "hash": "4161617816901732241"
-        },
-        {
-          "file": "backend/auth-service/routes.py.empty_backup",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "backend/auth-service/scripts for executions/auth-service.ps1",
-          "hash": "5308150900095659333"
-        },
-        {
-          "file": "backend/auth-service/src/token_validator.py",
-          "hash": "3599898551376000717"
-        },
-        {
-          "file": "backend/auth-service/tests/__init__.py",
-          "hash": "1604380669023410385"
-        }
-      ],
       "user-service": [
         {
           "file": "backend/user-service/Dockerfile",
@@ -395,6 +175,226 @@
         {
           "file": "backend/notification-service/temp_fix.txt",
           "hash": "5113298282885311612"
+        }
+      ],
+      "auth-service": [
+        {
+          "file": "backend/auth-service/Dockerfile",
+          "hash": "17503447757358651373"
+        },
+        {
+          "file": "backend/auth-service/auth_utils.py",
+          "hash": "15192250742485609481"
+        },
+        {
+          "file": "backend/auth-service/auth_utils.py.backup2",
+          "hash": "5644398913586149234"
+        },
+        {
+          "file": "backend/auth-service/create_default_users.py",
+          "hash": "7572962879726632073"
+        },
+        {
+          "file": "backend/auth-service/database.py",
+          "hash": "7258976452483111102"
+        },
+        {
+          "file": "backend/auth-service/main.py",
+          "hash": "5378114066603330591"
+        },
+        {
+          "file": "backend/auth-service/main.py.backup_20260105_025312",
+          "hash": "4822714569449523846"
+        },
+        {
+          "file": "backend/auth-service/main.py.backup_database_fix",
+          "hash": "10924372239281763455"
+        },
+        {
+          "file": "backend/auth-service/project.json",
+          "hash": "2916055997013286920"
+        },
+        {
+          "file": "backend/auth-service/requirements.txt",
+          "hash": "17107897421067022784"
+        },
+        {
+          "file": "backend/auth-service/requirements_minimal.txt",
+          "hash": "2278123858734971096"
+        },
+        {
+          "file": "backend/auth-service/routes.py",
+          "hash": "9372054035219108970"
+        },
+        {
+          "file": "backend/auth-service/routes.py.backup_bom",
+          "hash": "12356079365002733807"
+        },
+        {
+          "file": "backend/auth-service/routes.py.backup_import_fix",
+          "hash": "13808931962333828226"
+        },
+        {
+          "file": "backend/auth-service/routes.py.backup_shared",
+          "hash": "4161617816901732241"
+        },
+        {
+          "file": "backend/auth-service/routes.py.empty_backup",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "backend/auth-service/scripts for executions/auth-service.ps1",
+          "hash": "5308150900095659333"
+        },
+        {
+          "file": "backend/auth-service/src/token_validator.py",
+          "hash": "3599898551376000717"
+        },
+        {
+          "file": "backend/auth-service/tests/__init__.py",
+          "hash": "1604380669023410385"
+        }
+      ],
+      "shared-libraries": [
+        {
+          "file": "shared-libraries/MANIFEST.in",
+          "hash": "5272990151360349903"
+        },
+        {
+          "file": "shared-libraries/__init__.py",
+          "hash": "4981120459765484811"
+        },
+        {
+          "file": "shared-libraries/auth/jwt_manager.py",
+          "hash": "3899669133123726531"
+        },
+        {
+          "file": "shared-libraries/auth/models.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/database/postgres.py",
+          "hash": "10793333959557329841"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/__init__.py",
+          "hash": "13574378824256955064"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "315125386171267458"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "519305651346995893"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/models.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "12114962471405812070"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py",
+          "hash": "10212431307188070731"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
+          "hash": "13768127589240853894"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
+          "hash": "16849198648177437575"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
+          "hash": "7305828763126006733"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "16650720195093106731"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "10793333959557329841"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/models/__init__.py",
+          "hash": "6456570379379735222"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
+          "hash": "3727737697781896157"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
+          "hash": "3966550151059152680"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/models.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/project.json",
+          "hash": "8953192372383522997"
+        },
+        {
+          "file": "shared-libraries/schemas_types/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/auth.types.ts",
+          "hash": "9421071837797304375"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/auth_types.py",
+          "hash": "8678223461532486117"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/user.types.ts",
+          "hash": "14862596348516170786"
+        },
+        {
+          "file": "shared-libraries/schemas_types/src/user_types.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/setup.py",
+          "hash": "15950840549674790237"
+        },
+        {
+          "file": "shared-libraries/users/models.py",
+          "hash": "6326835795734559339"
+        },
+        {
+          "file": "shared-libraries/utils/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/utils/src/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/utils/src/jwt.py",
+          "hash": "16458661217267040795"
+        },
+        {
+          "file": "shared-libraries/utils/src/jwt_utils.py",
+          "hash": "16781594649747525202"
         }
       ]
     },

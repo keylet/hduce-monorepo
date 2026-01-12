@@ -1,0 +1,170 @@
+﻿import sys
+import os
+# Agregar este directorio al path para imports locales
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from sqlalchemy import or_
+from datetime import datetime, timedelta
+from typing import Optional
+
+# Importar del database.py LOCAL del auth-service
+from database import get_db, User
+
+# Importar de shared-libraries
+from hduce_shared.auth import JWTManager
+from hduce_shared.config import settings
+import auth_utils
+# ==================== CONFIGURAR JWTManager ====================
+# Configurar JWTManager con los valores de settings
+JWTManager.configure(
+    secret_key=settings.jwt.jwt_secret_key,
+    algorithm=settings.jwt.jwt_algorithm,
+    access_token_expire_minutes=settings.jwt.jwt_access_token_expire_minutes
+)
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
+
+# OAuth2
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+@router.post("/register")
+async def register(user_data: dict, db: Session = Depends(get_db)):
+    """User registration endpoint"""
+    return {"message": "Register endpoint", "user": user_data}
+
+@router.post("/login")
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    """User login endpoint - VERSIÃ“N SIMPLIFICADA"""
+    try:
+        print(f"LOGIN ATTEMPT: {form_data.username}")
+        
+        # Buscar usuario por username O email
+        user = db.query(User).filter(
+            or_(User.username == form_data.username, User.email == form_data.username)
+        ).first()
+
+        if not user:
+            print(f"USER NOT FOUND: {form_data.username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario o contraseÃ±a incorrectos"
+            )
+
+        print(f"USER FOUND: {user.username}, ID: {user.id}")
+        
+        # Verificar contraseÃ±a
+        if not auth_utils.verify_password(form_data.password, user.hashed_password):
+            print(f"PASSWORD INVALID for user: {user.username}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario o contraseÃ±a incorrectos"
+            )
+
+        print(f"PASSWORD VALID for user: {user.username}")
+        
+        # Crear token
+        token_data = {
+            "sub": user.username,
+            "user_id": user.id,
+            "role": user.role
+        }
+
+        access_token = JWTManager.create_access_token(token_data)
+        print(f"TOKEN CREATED for user: {user.username}")
+
+        # Retornar datos bÃ¡sicos sin to_dict()
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"LOGIN UNEXPECTED ERROR: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error en login: {str(e)}"
+        )
+
+@router.get("/validate")
+async def validate_token(token: str = Depends(oauth2_scheme)):
+    """Validate JWT token"""
+    try:
+        payload = JWTManager.verify_token(token)
+        return {"valid": True, "payload": payload}
+    except Exception as e:
+        return {"valid": False, "error": str(e)}
+
+@router.get("/test")
+async def test_endpoint():
+    """Test endpoint"""
+    return {"status": "ok", "service": "auth", "timestamp": datetime.utcnow().isoformat()}
+
+
+
+
+
+
+
+
+@router.get("/debug/db-test")
+async def debug_db_test(db: Session = Depends(get_db)):
+    """Debug endpoint to test DB connection and password verification"""
+    import auth_utils
+    
+    results = {
+        "db_connection": "unknown",
+        "user_count": 0,
+        "emergency_user": None,
+        "password_test": None,
+        "auth_utils_working": hasattr(auth_utils, 'verify_password')
+    }
+    
+    try:
+        # Test DB connection
+        user_count = db.query(User).count()
+        results["db_connection"] = "success"
+        results["user_count"] = user_count
+        
+        # Find emergency user
+        emergency = db.query(User).filter(User.username == 'emergency').first()
+        if emergency:
+            results["emergency_user"] = {
+                "id": emergency.id,
+                "username": emergency.username,
+                "email": emergency.email,
+                "hashed_password_preview": emergency.hashed_password[:30] + "..."
+            }
+            
+            # Test password verification
+            try:
+                test_result = auth_utils.verify_password("test123", emergency.hashed_password)
+                results["password_test"] = {
+                    "test_password": "test123",
+                    "verification_result": test_result,
+                    "hash_algorithm": "bcrypt" if emergency.hashed_password.startswith('$2') else "unknown"
+                }
+            except Exception as pwd_err:
+                results["password_test"] = {
+                    "error": str(pwd_err),
+                    "error_type": type(pwd_err).__name__
+                }
+    except Exception as e:
+        results["db_connection"] = f"error: {str(e)}"
+    
+    return results

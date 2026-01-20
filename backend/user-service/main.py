@@ -1,24 +1,54 @@
-import logging
-from fastapi import FastAPI, HTTPException, Header
-from fastapi.middleware.cors import CORSMiddleware
-from hduce_shared.config import settings
-from auth_client import auth_client
-from .database import Base, engine  # ? IMPORT CORRECTO
+﻿# -*- coding: utf-8 -*-
 
-# Importar rutas
-import routes
+"""
+User Service - Main application file
+"""
+
+import logging
+import sys
+import os
+
+# Configurar path para shared-libraries
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+sys.path.insert(0, "/app")  # Para shared-libraries en Docker
+
+# IMPORTAR DE SHARED-LIBRARIES
+from hduce_shared.config import settings
+
+import os
+
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# Cargar variables de entorno PRIMERO
+load_dotenv()
 
 # Configurar logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
+# Importar rutas (DESPUES de cargar .env)
+try:
+    from routes import router as user_router
+    from database import get_db, init_db, engine
+    logger.info("Imports de user-service cargados correctamente")
+except ImportError as e:
+    logger.error(f"Error importando modulos de user-service: {e}")
+    raise
+
+# Crear aplicacion
 app = FastAPI(
-    title="HDUCE User Service",
-    description="User management microservice",
-    version="2.0.0"
+    title="User Service API",
+    version="1.0.0",
+    description="Microservicio para gestion de usuarios"
 )
 
-# CORS
+# Configurar CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,67 +57,58 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ? INCLUIR ROUTER DE RUTAS
-app.include_router(routes.router)
+# Incluir rutas
+app.include_router(user_router, prefix="/api/v1/users", tags=["users"])
 
-@app.on_event("startup")
-async def startup_event():
-    """Inicializar base de datos al iniciar"""
-    try:
-        # ? CORRECTO: Usar Base.metadata.create_all
-        Base.metadata.create_all(bind=engine)
-        logger.info("? Database tables created successfully")
-    except Exception as e:
-        logger.error(f"? Database initialization failed: {e}")
-        import traceback
-        logger.error(traceback.format_exc())
-
+# Endpoint de salud
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "service": "user", "shared_libs": True}
+    return {
+        "status": "healthy",
+        "service": "user-service",
+        "database": "connected via shared-libraries",
+        "using_shared_libraries": True
+    }
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
     return {
-        "service": "user-service",
-        "version": "2.0.0",
-        "status": "running",
-        "database": settings.database.user_db,
-        "port": 8001
+        "message": "User Service API",
+        "version": "1.0.0",
+        "using_shared_libraries": True,
+        "endpoints": [
+            "/api/v1/users/health",
+            "/api/v1/users/",
+            "/api/v1/users/me",
+            "/api/v1/users/{user_id}"
+        ]
     }
 
-@app.get("/protected-profile")
-async def get_protected_profile(authorization: str = Header(None)):
-    """Endpoint protegido que valida token con auth-service"""
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing authorization header")
-
-    token = authorization.split(" ")[1]
-
-    # Llamar al auth-service para validar token
-    user_data = await auth_client.validate_token(token)
-
-    if not user_data:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    return {
-        "message": "Protected user profile",
-        "user_id": user_data.get("user_id"),
-        "email": user_data.get("email"),
-        "profile": {
-            "name": "John Doe",
-            "role": "user",
-            "created_at": "2024-01-01"
-        }
-    }
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cerrar cliente HTTP al apagar"""
-    await auth_client.close()
+# Inicializar base de datos al iniciar
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Iniciando User Service...")
+    
+    try:
+        logger.info("Inicializando base de datos...")
+        init_db()
+        logger.info("Base de datos inicializada correctamente")
+    except Exception as e:
+        logger.error(f"Error inicializando base de datos: {e}")
+    
+    logger.info("User Service listo y funcionando en puerto 8001")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    
+    port = int(os.getenv("PORT", "8001"))
+    host = os.getenv("HOST", "0.0.0.0")
+    
+    logger.info(f"Iniciando servidor en {host}:{port}")
+    uvicorn.run(
+        app,
+        host=host,
+        port=port,
+        log_level="info"
+    )
+

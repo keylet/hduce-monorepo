@@ -1,0 +1,81 @@
+﻿"""
+Authentication client usando JWTManager de shared libraries
+"""
+import sys
+import os
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from typing import Dict, Any
+
+# AGREGAR PATH DE SHARED LIBRARIES
+shared_path = r"C:\Users\raich\Desktop\hduce-monorepo\shared-libraries\hduce_shared"
+if shared_path not in sys.path:
+    sys.path.insert(0, shared_path)
+
+try:
+    # Importar de shared libraries
+    from hduce_shared.auth.jwt_manager import JWTManager
+    from hduce_shared.config.settings import settings
+    
+    print(" User Service usando JWTManager de shared libraries")
+    
+    # Crear instancia con configuracin CENTRALIZADA
+    jwt_manager = JWTManager(
+        secret_key=settings.jwt.jwt_secret_key,
+        algorithm=settings.jwt.jwt_algorithm
+    )
+    
+    print(f" Config JWT Manager:")
+    print(f"   - Algoritmo: {jwt_manager.algorithm}")
+    print(f"   - Clave: {'*' * len(jwt_manager.secret_key)}")
+    
+except ImportError as e:
+    print(f" ERROR CRTICO: No se pueden importar shared libraries: {e}")
+    print("   Verifica que shared-libraries estn en PYTHONPATH")
+    raise
+
+security = HTTPBearer()
+
+async def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
+    """
+    Valida token JWT usando JWTManager.verify_token() de shared libraries
+    """
+    token = credentials.credentials
+    
+    print(f" Validando token: {token[:50]}...")
+    
+    try:
+        # Usar verify_token de JWTManager
+        validation_result = jwt_manager.verify_token(token)
+        
+        if not validation_result.is_valid:
+            print(f" Token invlido segn JWTManager")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token invlido o expirado"
+            )
+        
+        print(f" Token vlido para: {validation_result.email}")
+        
+        # Tambin decodificar para obtener payload completo
+        payload = jwt_manager.decode_token(token)
+        if payload:
+            return payload
+        else:
+            # Si no se puede decodificar, usar info de validation_result
+            return {
+                "sub": validation_result.user_id,
+                "email": validation_result.email,
+                "username": validation_result.username,
+                "exp": validation_result.expires_at
+            }
+            
+    except Exception as e:
+        print(f" Error en validacin: {type(e).__name__}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token invlido o expirado"
+        )
+
+
+

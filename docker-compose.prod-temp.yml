@@ -1,0 +1,50 @@
+﻿version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+  
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth-service
+      - user-service
+      - appointment-service
+
+  auth-service:
+    image: keylet/hduce-auth:latest
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/auth_db
+      JWT_SECRET_KEY: "my-secret-key-change-in-production"
+    depends_on:
+      - postgres
+
+  user-service:
+    image: keylet/hduce-user:latest
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/user_db
+    depends_on:
+      - postgres
+      - auth-service
+
+  appointment-service:
+    image: keylet/hduce-appointment:latest
+    depends_on:
+      - postgres
+      - user-service
+
+  notification-service:
+    image: keylet/hduce-notification:latest
+    depends_on:
+      - postgres

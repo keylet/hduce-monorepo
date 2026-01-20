@@ -1,168 +1,137 @@
-﻿"""RabbitMQ Consumer INDEPENDIENTE para Notification Service"""
+﻿import sys
+import os
+
+# Añadir shared-libraries al path
+sys.path.insert(0, '/app/shared-libraries')
+sys.path.insert(0, '/app')
+
 import json
-import pika
-from hduce_shared.config import settings
+import logging
 from datetime import datetime
 from typing import Dict, Any
-import threading
-import time
+from sqlalchemy.orm import Session
+from sqlalchemy import text
 
-# Importar NUESTRA configuración de base de datos
+# Import desde shared-libraries
+from hduce_shared.database import DatabaseManager
+from hduce_shared.rabbitmq.consumer import RabbitMQConsumer
+from hduce_shared.rabbitmq.config import RabbitMQConfig
+from hduce_shared.config.settings import Settings
+
+# Import local desde database.py (SESSIONLOCAL YA CONFIGURADO)
 from database import SessionLocal
-import models
+from models import Notification
 
-class IndependentRabbitMQConsumer:
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+class NotificationConsumer:
     def __init__(self):
-        print("🚀 Inicializando IndependentRabbitMQConsumer...")
-        self.running = False
-        
-    def handle_appointment_created(self, appointment_data: Dict[str, Any]) -> None:
-        """Handle appointment created event - usa NUESTRO SessionLocal"""
-        db = SessionLocal()  # ¡ESTA ES LA CLAVE! Usa NUESTRO SessionLocal
+        self.settings = Settings()
+        self.rabbitmq_config = RabbitMQConfig()
+        # NO crear sesión aquí - se creará en cada mensaje
+        self.db_session = None  # Se creará dinámicamente
+
+    def get_doctor_name(self, doctor_id: int) -> str:
+        """Obtiene el nombre del doctor desde appointment_db"""
         try:
-            appointment_id = appointment_data.get("id")
-            patient_id = appointment_data.get("patient_id")
-            doctor_id = appointment_data.get("doctor_id")
-            appointment_date = appointment_data.get("appointment_date")
-            reason = appointment_data.get("reason", "")
+            logger.info(f"🔍 Buscando doctor_id: {doctor_id}")
 
-            print(f"🎯 Procesando cita: ID={appointment_id}, Paciente={patient_id}")
+            # Obtener engine para appointments database
+            engine = DatabaseManager.get_engine("appointments")
 
-            # Validar
-            if not all([appointment_id, patient_id, doctor_id, appointment_date]):
-                print(f"⚠️ Datos incompletos: {appointment_data}")
-                return
+            # Consultar nombre del doctor
+            with engine.connect() as conn:
+                result = conn.execute(
+                    text("SELECT name FROM doctors WHERE id = :doctor_id"),
+                    {"doctor_id": doctor_id}
+                ).fetchone()
 
-            # Notificación para paciente
-            patient_notification = models.Notification(
-                user_id=patient_id,
-                notification_type="in_app",
-                subject="Cita médica confirmada",
-                message=f"Su cita ha sido programada para el {appointment_date}. Motivo: {reason}",
-                appointment_id=appointment_id,
-                status="sent",
-                sent_at=datetime.now(),
-                created_at=datetime.now()
-            )
-            db.add(patient_notification)
-
-            # Notificación para doctor
-            doctor_notification = models.Notification(
-                user_id=str(doctor_id),
-                notification_type="in_app",
-                subject="Nueva cita asignada",
-                message=f"Tiene una nueva cita programada para el {appointment_date}. Paciente: {patient_id}",
-                appointment_id=appointment_id,
-                status="sent",
-                sent_at=datetime.now(),
-                created_at=datetime.now()
-            )
-            db.add(doctor_notification)
-
-            db.commit()
-            print(f"✅ 2 notificaciones creadas para cita {appointment_id}")
+                if result:
+                    doctor_name = result[0]
+                    logger.info(f"✅ Doctor encontrado: {doctor_name}")
+                    return doctor_name
+                else:
+                    logger.warning(f"⚠️ Doctor con ID {doctor_id} no encontrado")
+                    return f"Doctor {doctor_id}"
 
         except Exception as e:
-            print(f"❌ Error: {e}")
-            import traceback
-            traceback.print_exc()
-            db.rollback()
-        finally:
-            db.close()
+            logger.error(f"❌ Error al obtener doctor: {e}")
+            return f"Doctor {doctor_id}"
 
-    def process_message(self, ch, method, properties, body):
-        """Procesar mensaje de RabbitMQ"""
+    def process_message(self, message: Dict[str, Any]) -> None:
+        """Procesa mensajes de RabbitMQ - CORREGIDO DEFINITIVAMENTE"""
         try:
-            message = json.loads(body.decode())
-            event_type = message.get("event_type")
-            data = message.get("data", {})
-            
-            print(f"📨 Mensaje recibido: {event_type}")
-            print(f"📋 Datos: {data}")
-            
-            if event_type == "APPOINTMENT_CREATED":
-                self.handle_appointment_created(data)
-            else:
-                print(f"⚠️ Evento desconocido: {event_type}")
-                
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            
-        except Exception as e:
-            print(f"❌ Error procesando mensaje: {e}")
-            import traceback
-            traceback.print_exc()
+            logger.info(f"📨 Mensaje recibido: {message}")
 
-    def start(self):
-        """Iniciar consumer"""
-        print("🚀 Iniciando IndependentRabbitMQConsumer...")
-        self.running = True
-        
-        def consume():
-            while self.running:
+            # Extraer datos del mensaje
+            event_type = message.get('event_type', '')
+            data = message.get('data', {})
+
+            if event_type.lower() == "appointment_created":
+                # OBTENER NOMBRE DEL DOCTOR
+                doctor_id = data.get('doctor_id')
+                doctor_name = self.get_doctor_name(doctor_id) if doctor_id else "Doctor"
+
+                # Crear sesión de base de datos (CORREGIDO - usa SessionLocal)
+                db = SessionLocal()
                 try:
-                    credentials = pika.PlainCredentials(settings.rabbitmq.rabbitmq_user, settings.rabbitmq.rabbitmq_password)
-                    connection = pika.BlockingConnection(
-                        pika.ConnectionParameters(
-                            host="rabbitmq",
-                            port=5672,
-                            credentials=credentials,
-                            heartbeat=600
-                        )
+                    notification = Notification(
+                        user_id=data.get('patient_id'),
+                        user_email=data.get('patient_email', ''),
+                        title=f"Cita médica programada con Dr. {doctor_name}",
+                        message=(
+                            f"Tu cita con el Dr. {doctor_name} "
+                            f"ha sido programada para el {data.get('appointment_date')} "
+                            f"a las {data.get('appointment_time')}. "
+                            f"Motivo: {data.get('reason', 'Consulta médica')}"
+                        ),
+                        notification_type="appointment",
+                        is_read=False,
+                        created_at=datetime.utcnow()
                     )
-                    
-                    channel = connection.channel()
-                    
-                    # Asegurar exchange y queue
-                    channel.exchange_declare(
-                        exchange="appointments",
-                        exchange_type="direct",
-                        durable=True
-                    )
-                    
-                    channel.queue_declare(
-                        queue="appointment_notifications",
-                        durable=True
-                    )
-                    
-                    channel.queue_bind(
-                        exchange="appointments",
-                        queue="appointment_notifications",
-                        routing_key="appointment.created"
-                    )
-                    
-                    channel.basic_qos(prefetch_count=1)
-                    
-                    print("✅ Conectado a RabbitMQ. Esperando mensajes...")
-                    
-                    channel.basic_consume(
-                        queue="appointment_notifications",
-                        on_message_callback=self.process_message,
-                        auto_ack=False
-                    )
-                    
-                    channel.start_consuming()
-                    
+
+                    db.add(notification)
+                    db.commit()
+                    logger.info(f"✅ Notificación creada para usuario {data.get('patient_id')} - Cita #{data.get('appointment_id')}")
+                    logger.info(f"📝 Detalles: Título='{notification.title}'")
+
                 except Exception as e:
-                    print(f"❌ Error de conexión: {e}. Reintentando en 5 segundos...")
-                    time.sleep(5)
-        
-        # Iniciar en thread separado
-        thread = threading.Thread(target=consume, daemon=True)
-        thread.start()
-        return self
+                    db.rollback()
+                    logger.error(f"❌ Error al crear notificación: {e}")
+                    logger.error(f"🔍 Datos del mensaje: {data}")
+                finally:
+                    db.close()  # Cerrar sesión siempre
+            else:
+                logger.warning(f"⚠️ Evento no manejado: {event_type}")
 
-def start_independent_consumer():
-    """Iniciar consumer independiente"""
+        except Exception as e:
+            logger.error(f"❌ Error procesando mensaje: {e}")
+
+    def start_consuming(self) -> None:
+        """Inicia el consumidor de RabbitMQ"""
+        try:
+            consumer = RabbitMQConsumer()
+            logger.info("🎯 Iniciando consumidor de RabbitMQ...")
+            logger.info("✅ SessionLocal importado correctamente de database.py")
+            consumer.start_consuming(callback=self.process_message)
+        except Exception as e:
+            logger.error(f"❌ Error en el consumidor: {e}")
+
+def start_consumer():
+    """Inicia el consumidor de RabbitMQ (para importación desde main.py)"""
     try:
-        consumer = IndependentRabbitMQConsumer()
-        consumer.start()
-        print("✅ IndependentRabbitMQConsumer iniciado exitosamente")
-        return consumer
+        notification_consumer = NotificationConsumer()
+        notification_consumer.start_consuming()
     except Exception as e:
-        print(f"❌ Error iniciando consumer: {e}")
-        import traceback
-        traceback.print_exc()
-        return None
+        logger.error(f"❌ Error en start_consumer: {e}")
+        raise
 
-# Iniciar automáticamente
-independent_consumer = start_independent_consumer()
+# SOLO ejecutar si se llama directamente
+if __name__ == "__main__":
+    print("🚀 Iniciando Notification Consumer de forma independiente...")
+    start_consumer()

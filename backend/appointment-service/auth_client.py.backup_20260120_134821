@@ -1,0 +1,74 @@
+﻿"""
+Authentication client - Using Shared Libraries JWTManager
+"""
+import sys
+import os
+
+# Add path for shared-libraries
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, '/app')  # For Docker
+
+import logging
+from typing import Dict, Any
+from fastapi import HTTPException, status, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+# IMPORT FROM SHARED-LIBRARIES
+from hduce_shared.config import settings
+from hduce_shared.auth import JWTManager
+
+logger = logging.getLogger(__name__)
+security = HTTPBearer()
+
+# Inicializar JWTManager desde shared
+# settings.jwt.jwt_secret_key según la estructura de settings.py
+jwt_secret_key = settings.jwt.jwt_secret_key
+logger.info(f"JWT Secret Key loaded: {jwt_secret_key[:10]}...")
+jwt_manager = JWTManager(secret_key=jwt_secret_key)
+
+async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
+    """
+    Verifica un token JWT usando shared JWTManager (local, sin llamada HTTP)
+    """
+    jwt_token = credentials.credentials
+    logger.info(f"Verificando token (primeros 20 chars): {jwt_token[:20]}...")
+    
+    if not jwt_token:
+        logger.error("No se proporcionó token de autenticación")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token de autenticación requerido",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    try:
+        # Usar JWTManager de shared-libraries
+        payload = jwt_manager.decode_token(jwt_token)
+        
+        # Formatear payload para compatibilidad con código existente
+        token_data = {
+            "valid": True,
+            "user_id": payload.get("user_id") or payload.get("sub"),
+            "email": payload.get("email"),
+            "username": payload.get("username"),
+            "role": payload.get("role", "patient"),
+            "sub": payload.get("sub"),
+            "exp": payload.get("exp"),
+            "iat": payload.get("iat")
+        }
+        
+        logger.info(f"Token válido para usuario: {token_data['email']}")
+        return token_data
+        
+    except Exception as e:
+        logger.error(f"Error verificando token: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Token inválido: {str(e)}",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+# Función de compatibilidad
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Alias para verify_token para compatibilidad con código existente"""
+    return await verify_token(credentials)

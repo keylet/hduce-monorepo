@@ -1,0 +1,51 @@
+# HDUCE Healthcare System - Nginx Gateway
+# Created: $(Get-Date)
+# Clean configuration without BOM
+
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 80;
+        server_name localhost;
+        
+        # Root endpoint - Show available services
+        location = / {
+            add_header Content-Type text/plain;
+            return 200 '=== HDUCE HEALTHCARE SYSTEM ===\n\nMICROSERVICES:\n?  Auth Service:        http://localhost:8000\n?  User Service:        http://localhost:8001\n?  Appointment Service: http://localhost:8002\n?  Notification Service: http://localhost:8003\n\nHEALTH CHECKS:\n?  Auth:        http://localhost:8000/health\n?  Users:       http://localhost:8001/health\n?  Appointments: http://localhost:8002/health\n?  Notifications: http://localhost:8003/health\n\nNGINX GATEWAY: ACTIVE\n';
+        }
+        
+        # Nginx health check
+        location /health {
+            add_header Content-Type application/json;
+            return 200 '{"status": "healthy", "service": "nginx-gateway", "timestamp": "$time_iso8601"}';
+        }
+        
+        # Simple redirects to services
+        location = /auth {
+            return 301 http://localhost:8000;
+        }
+        
+        location = /users {
+            return 301 http://localhost:8001;
+        }
+        
+        location = /appointments {
+            return 301 http://localhost:8002;
+        }
+        
+        location = /notifications {
+            return 301 http://localhost:8003;
+        }
+        
+        # Show gateway info
+        location /info {
+            add_header Content-Type application/json;
+            return 200 '{"gateway": "hduce-nginx", "version": "1.0", "status": "running", "services": 4}';
+        }
+    }
+}

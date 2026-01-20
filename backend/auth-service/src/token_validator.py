@@ -3,8 +3,8 @@ Token Validator Endpoint for Auth Service
 Using PyJWT from shared libraries (NO python-jose dependency)
 """
 from fastapi import APIRouter, HTTPException
-from hduce_shared_libs.types.src.auth_types import TokenValidationRequest, TokenValidationResponse
-from hduce_shared_libs.utils.src.jwt_utils import JWTManager
+from hduce_shared.auth import TokenValidationRequest, TokenValidationResponse
+from hduce_shared.auth import JWTManager
 import os
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
@@ -33,3 +33,4 @@ async def validate_token(request: TokenValidationRequest):
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "auth-service"}
+

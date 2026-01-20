@@ -1,0 +1,31 @@
+﻿"""
+Configuration module for RabbitMQ in HDuce shared library
+"""
+from typing import Optional
+from pydantic import BaseSettings, Field
+
+class RabbitMQConfig(BaseSettings):
+    """RabbitMQ configuration settings"""
+    
+    host: str = Field(default="rabbitmq", description="RabbitMQ host")
+    port: int = Field(default=5672, description="RabbitMQ port")
+    username: str = Field(default="guest", description="RabbitMQ username")
+    password: str = Field(default="guest", description="RabbitMQ password")
+    virtual_host: str = Field(default="/", description="RabbitMQ virtual host")
+    exchange: str = Field(default="appointments", description="Default exchange name")
+    queue: str = Field(default="appointment_notifications", description="Default queue name")
+    routing_key: str = Field(default="notification.created", description="Default routing key")
+    heartbeat: int = Field(default=600, description="Heartbeat timeout in seconds")
+    blocked_connection_timeout: int = Field(default=300, description="Blocked connection timeout")
+    
+    class Config:
+        env_prefix = "RABBITMQ_"
+        case_sensitive = False
+    
+    @classmethod
+    def from_env(cls) -> 'RabbitMQConfig':
+        """Create configuration from environment variables"""
+        return cls()
+
+# Convenience constant for default configuration
+DEFAULT_CONFIG = RabbitMQConfig()

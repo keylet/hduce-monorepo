@@ -1,0 +1,116 @@
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream auth_service {
+        server auth-service:8000;
+    }
+
+    upstream patient_service {
+        server user-service:8001;
+    }
+
+    upstream appointment_service {
+        server appointment-service:8002;
+    }
+
+    upstream notification_service {
+        server notification-service:8003;
+    }
+
+    server {
+        listen 80;
+        server_name localhost;
+
+        # Home page
+        location = / {
+            return 200 "HDUCE Healthcare API Gateway - FIXED\n\nAvailable services:\n- Auth: POST /auth/login\n- Patients: GET /patients/\n- Appointments: GET /api/doctors\n- Notifications: POST /notifications/email\n- Health: GET /health/[service]\n";
+            add_header Content-Type text/plain;
+        }
+
+        # Auth service
+        location /auth/ {
+            proxy_pass http://auth_service/auth/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Patient service (antes user service)
+        location /patients/ {
+            proxy_pass http://patient_service/patients/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+                # Appointment service
+        location /api/doctors {
+            proxy_pass http://appointment_service/api/doctors;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/specialties {
+            proxy_pass http://appointment_service/api/specialties;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /api/ {
+            proxy_pass http://appointment_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Notification service
+        location /notifications/ {
+            proxy_pass http://notification_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Health checks
+        location /health/auth {
+            proxy_pass http://auth_service/health;
+            proxy_set_header Host $host;
+        }
+
+        location /health/patients {
+            proxy_pass http://patient_service/health;
+            proxy_set_header Host $host;
+        }
+
+        location /health/appointments {
+            proxy_pass http://appointment_service/health;
+            proxy_set_header Host $host;
+        }
+
+        location /health/notifications {
+            proxy_pass http://notification_service/health;
+            proxy_set_header Host $host;
+        }
+
+        # Debug endpoint
+        location /nginx-test {
+            return 200 "NGINX Working - Fixed encoding issue\n";
+            add_header Content-Type text/plain;
+        }
+    }
+}
+
+
+

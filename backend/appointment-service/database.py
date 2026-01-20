@@ -1,31 +1,74 @@
-﻿from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+"""
+Database configuration for Appointment Service - Using Shared Libraries
+"""
+import sys
 import os
 
-# Configuración de base de datos
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres")
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
-POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-POSTGRES_DB = os.getenv("APPOINTMENT_DB", "appointment_db")
+# Add path for shared-libraries
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, '/app')  # For Docker
 
-DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+from sqlalchemy.orm import sessionmaker
+from contextlib import contextmanager
 
-# Crear engine y session
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+# IMPORT FROM SHARED-LIBRARIES
+from hduce_shared.database import Base, DatabaseManager, create_all_tables
+from hduce_shared.config import settings
 
-# Dependencia de base de datos
+print("?? Configurando appointment-service database con shared libraries...")
+
+# Service name constant
+SERVICE_NAME = "appointments"
+
+# ==============================================
+# FASTAPI COMPATIBLE DATABASE FUNCTIONS
+# ==============================================
+
 def get_db():
-    db = SessionLocal()
+    """
+    FastAPI dependency for appointment-service
+    Returns a SQLAlchemy session
+    """
+    # Get context manager from shared libraries
+    context_manager = DatabaseManager.get_session(SERVICE_NAME)
+    
+    # Enter context to get the session
+    db = context_manager.__enter__()
+    
     try:
         yield db
     finally:
-        db.close()
+        # Exit context
+        context_manager.__exit__(None, None, None)
 
-# Crear tablas
+@contextmanager
+def get_db_context():
+    """Alternative context manager"""
+    with DatabaseManager.get_session(SERVICE_NAME) as db:
+        yield db
+
+# Alias for compatibility
+get_db_session_appointment = lambda: DatabaseManager.get_session(SERVICE_NAME)
+
+# Get engine for table creation (used in main.py)
+def get_engine():
+    """Get SQLAlchemy engine for this service"""
+    return DatabaseManager.get_engine(SERVICE_NAME)
+
+# Create tables for this service
 def create_tables():
-    Base.metadata.create_all(bind=engine)
+    """Create tables for appointment-service"""
+    try:
+        create_all_tables(SERVICE_NAME)
+        print(f"? Tables created for service: {SERVICE_NAME}")
+        return True
+    except Exception as e:
+        print(f"? Error creating tables: {e}")
+        raise
+
+print(f"?? Appointment-service configured to use shared libraries")
+print(f"?? Service: {SERVICE_NAME}, Database: {settings.database.appointment_db}")
+
+# Export
+__all__ = ["get_db", "get_db_context", "get_db_session_appointment", "get_engine", "create_tables", "Base"]
+

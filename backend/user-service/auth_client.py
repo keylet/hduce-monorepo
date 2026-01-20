@@ -1,79 +1,66 @@
-﻿import httpx
-import logging
-from typing import Optional
-from fastapi import Depends, HTTPException
+"""
+Authentication client usando JWTManager de shared libraries - VERSION CORREGIDA
+"""
+from fastapi import HTTPException, Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from hduce_shared.auth import JWTManager
-from hduce_shared.config import settings
+from typing import Dict, Any
 
-logger = logging.getLogger(__name__)
+try:
+    # Importar de shared libraries (instalado via pip)
+    from hduce_shared.auth.jwt_manager import JWTManager
+    from hduce_shared.config.settings import settings
 
-# Configurar JWTManager para validación local (opcional)
-JWTManager.configure(
-    secret_key=settings.jwt.jwt_secret_key,
-    algorithm=settings.jwt.jwt_algorithm,
-    access_token_expire_minutes=settings.jwt.jwt_access_token_expire_minutes
-)
+    # Crear instancia con configuraci?n centralizada
+    jwt_manager = JWTManager(
+        secret_key=settings.jwt.jwt_secret_key,
+        algorithm=settings.jwt.jwt_algorithm
+    )
 
-class AuthServiceClient:
-    def __init__(self):
-        self.base_url = "http://auth-service:8000"
-        self.client = httpx.AsyncClient(timeout=30.0)
+    print(f"? User-service JWTManager configurado correctamente")
 
-    async def validate_token(self, token: str) -> Optional[dict]:
-        """Valida un token JWT con el auth-service (forma recomendada)"""
-        try:
-            headers = {"Authorization": f"Bearer {token}"}
-            response = await self.client.get(
-                f"{self.base_url}/auth/validate",
-                headers=headers
-            )
+except ImportError as e:
+    print(f"? ERROR: No se pueden importar shared libraries: {e}")
+    raise
 
-            if response.status_code == 200:
-                return response.json()
-            else:
-                logger.error(f"Token validation failed: {response.status_code}")
-                return None
-
-        except Exception as e:
-            logger.error(f"Error calling auth-service: {e}")
-            return None
-    
-    def validate_token_locally(self, token: str) -> Optional[dict]:
-        """Valida token localmente usando JWTManager (solo para casos especiales)"""
-        payload = JWTManager.verify_token(token)
-        if payload:
-            return {
-                "valid": True,
-                "payload": {
-                    "sub": payload.get("sub"),
-                    "user_id": payload.get("user_id"),
-                    "role": payload.get("role"),
-                    "email": payload.get("email")
-                }
-            }
-        return {"valid": False, "error": "Token inválido"}
-
-    async def close(self):
-        await self.client.aclose()
-
-# Singleton instance
-auth_client = AuthServiceClient()
-
-# ========== FUNCIÓN PARA DEPENDENCY ==========
 security = HTTPBearer()
 
-async def validate_token(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
-) -> dict:
-    """Función para usar como dependency en FastAPI"""
+async def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Dict[str, Any]:
+    """
+    Valida token JWT usando JWTManager.verify_token() de shared libraries
+    """
     token = credentials.credentials
-    user_data = await auth_client.validate_token(token)
 
-    if not user_data or not user_data.get("valid"):
+    print(f"?? Validando token: {token[:30]}...")
+
+    try:
+        # Usar verify_token de JWTManager
+        validation_result = jwt_manager.verify_token(token)
+
+        if not validation_result.is_valid:
+            print(f"? Token inv?lido seg?n JWTManager")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token inv?lido o expirado"
+            )
+
+        print(f"? Token v?lido para: {validation_result.email}")
+
+        # Tambi?n decodificar para obtener payload completo
+        payload = jwt_manager.decode_token(token)
+        if payload:
+            return payload
+        else:
+            # Si no se puede decodificar, usar info de validation_result
+            return {
+                "sub": validation_result.user_id,
+                "email": validation_result.email,
+                "username": validation_result.username,
+                "exp": validation_result.expires_at
+            }
+
+    except Exception as e:
+        print(f"? Error en validaci?n: {type(e).__name__}: {e}")
         raise HTTPException(
-            status_code=401,
-            detail="Token inválido o expirado"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inv?lido o expirado"
         )
-
-    return user_data.get("payload", {})

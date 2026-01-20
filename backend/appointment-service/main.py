@@ -1,23 +1,42 @@
-﻿from fastapi import FastAPI
+﻿"""
+Appointment Service - Using Shared Libraries with corrected imports
+"""
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from database import create_tables
-from routes import router
 import logging
 
-# Configurar logging
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("🚀 Appointment Service starting up...")
+    
+    # Import inside lifespan to avoid circular imports
+    from hduce_shared.database import Base
+    from database import get_engine, create_tables
+    
+    # Get engine and create tables
+    engine = get_engine()
+    Base.metadata.create_all(bind=engine)
+    logger.info("✅ Database tables created/verified")
+    
+    yield
+    
+    # Shutdown
+    logger.info("🛑 Appointment Service shutting down...")
+
 app = FastAPI(
-    title="Appointment Service CLEAN",
-    description="Microservicio limpio para gestión de citas médicas",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    title="Appointment Service",
+    description="Medical appointments management microservice",
+    version="2.0.0",
+    lifespan=lifespan
 )
 
-# CORS
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,38 +45,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Evento de startup
-@app.on_event("startup")
-def startup_event():
-    try:
-        create_tables()
-        logger.info("✅ Database tables verified/created")
-    except Exception as e:
-        logger.error(f"❌ Error creating database tables: {e}")
+# Import and include routes
+from routes import router as appointments_router
+app.include_router(
+    appointments_router,
+    prefix="/api",
+    tags=["appointments"]
+)
 
-# ✅ INCLUIR ROUTER SIN PREFIX (Nginx ya agrega /appointments/)
-app.include_router(router, prefix="")
-
-# Health check (fuera del prefix)
 @app.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "appointment-clean"}
-
-@app.get("/")
-def root():
+async def health_check():
+    """Health endpoint"""
     return {
-        "message": "Appointment Service CLEAN",
-        "endpoints": {
-            "health": "/health",
-            "docs": "/docs",
-            "appointments": "/appointments",
-            "doctors": "/appointments/doctors",
-            "specialties": "/appointments/specialties"
-        }
+        "status": "healthy",
+        "service": "appointment-service",
+        "version": "2.0.0",
+        "using_shared_libraries": True,
+        "database": "appointment_db"
     }
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8002,
+        reload=True,
+        log_level="info"
+    )
 
 

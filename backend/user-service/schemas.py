@@ -1,29 +1,19 @@
-﻿# backend/user-service/schemas.py
-from pydantic import BaseModel
+﻿from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import date  # ✅ IMPORTAR date desde datetime
+from datetime import datetime
 
-class PatientBase(BaseModel):
-    user_id: int
-    first_name: str
-    last_name: str
-    date_of_birth: Optional[date] = None
-    gender: Optional[str] = None
-    phone: Optional[str] = None
-    address: Optional[str] = None
-    emergency_contact: Optional[str] = None
-    blood_type: Optional[str] = None
-    allergies: Optional[str] = None
-    current_medications: Optional[str] = None
-    medical_notes: Optional[str] = None
+class UserBase(BaseModel):
+    name: str
+    email: EmailStr
+    age: Optional[int] = None
 
-class PatientCreate(PatientBase):
+class UserCreate(UserBase):
     pass
 
-class PatientResponse(PatientBase):
-    patient_id: int
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
+class UserResponse(UserBase):
+    id: int  # ← CORREGIDO: cambiar de uuid.UUID a int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
-        from_attributes = True
+        from_attributes = True  # Para Pydantic v2 (antes orm_mode=True)

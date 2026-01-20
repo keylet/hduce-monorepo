@@ -1,69 +1,73 @@
-﻿import logging
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
-from hduce_shared.config import settings
+﻿# backend/auth-service/database.py
+# ✅ VERSIÓN FINAL CORREGIDA - COMPATIBLE CON FASTAPI
 
-logger = logging.getLogger(__name__)
+print("🔧 Configurando auth-service database con shared libraries...")
 
-# Crear engine para auth_db
-def get_auth_engine():
-    # Usar settings.database directamente, sin variable intermedia 'db'
-    connection_string = f"postgresql://{settings.database.postgres_user}:{settings.database.postgres_password}@{settings.database.postgres_host}:{settings.database.postgres_port}/{settings.database.auth_db}"
-    return create_engine(connection_string, pool_pre_ping=True)
+# IMPORTAR DESDE SHARED LIBRARIES
+try:
+    from hduce_shared.database import (
+        Base,
+        DatabaseManager,
+        create_all_tables,
+        get_db_session
+    )
+    from hduce_shared.config import settings
+    from contextlib import contextmanager
 
-# Base para modelos
-Base = declarative_base()
+    print(f"✅ Shared libraries importadas correctamente")
+    print(f"📊 Servicio: auth, Base de datos: {settings.database.auth_db}")
 
-# Modelo de Usuario
-class User(Base):
-    __tablename__ = "users"
+    # Configurar constantes para este servicio
+    SERVICE_NAME = "auth"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), unique=True, index=True, nullable=False)
-    username = Column(String(100), unique=True, index=True, nullable=False)
-    hashed_password = Column(String(255), nullable=False)
-    full_name = Column(String(100))
-    role = Column(String(20), default='patient')
-    phone = Column(String(20))
-    address = Column(Text)
-    city = Column(String(100))
-    country = Column(String(100))
-    is_active = Column(Boolean, default=True)
-    is_verified = Column(Boolean, default=False)
-    last_login = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # ==============================================
+    # FUNCIÓN GET_DB CORREGIDA PARA FASTAPI
+    # ==============================================
+    def get_db():
+        """
+        FastAPI dependency para auth-service
+        CORREGIDA: Retorna una sesión de SQLAlchemy, no un contexto
+        """
+        # Obtener el contexto manager de shared libraries
+        context_manager = DatabaseManager.get_session(SERVICE_NAME)
+        
+        # Entrar al contexto para obtener la sesión
+        db = context_manager.__enter__()
+        
+        try:
+            yield db
+        finally:
+            # Salir del contexto
+            context_manager.__exit__(None, None, None)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'username': self.username,
-            'full_name': self.full_name,
-            'role': self.role,
-            'phone': self.phone,
-            'city': self.city,
-            'country': self.country,
-            'is_active': self.is_active,
-            'is_verified': self.is_verified
-        }
+    # Versión alternativa usando get_db_session directamente
+    @contextmanager
+    def get_db_context():
+        """Context manager alternativo"""
+        with DatabaseManager.get_session(SERVICE_NAME) as db:
+            yield db
 
-# Crear tablas
-def create_tables():
-    engine = get_auth_engine()
-    Base.metadata.create_all(bind=engine)
-    logger.info("✅ Tablas de auth-service creadas/verificadas")
+    # Alias para compatibilidad
+    get_db_session_auth = lambda: DatabaseManager.get_session(SERVICE_NAME)
 
-# Obtener sesión de base de datos
-def get_db():
-    engine = get_auth_engine()
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    # Crear tablas para este servicio
+    def create_auth_tables():
+        """Crear tablas del auth-service"""
+        try:
+            create_all_tables(SERVICE_NAME)
+            print(f"✅ Tablas creadas para servicio: {SERVICE_NAME}")
+        except Exception as e:
+            print(f"❌ Error creando tablas: {e}")
+            raise
 
+    print(f"🎯 Auth-service configurado para usar shared libraries (FastAPI compatible)")
 
+except ImportError as e:
+    print(f"❌ ERROR CRÍTICO: No se pueden importar shared libraries: {e}")
+    print("💥 El sistema NO funcionará sin shared libraries")
+    raise
+
+print("✅ Configuración de database completada")
+
+# Exportar
+__all__ = ["get_db", "get_db_session_auth", "create_auth_tables", "Base"]

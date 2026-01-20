@@ -1,0 +1,166 @@
+﻿"""RabbitMQ Consumer CORREGIDO para Notification Service"""
+import json
+import pika
+from hduce_shared.config import settings
+from datetime import datetime
+from typing import Dict, Any
+import threading
+import time
+
+# Importar NUESTRA configuración de base de datos
+from database import SessionLocal
+import models
+
+class IndependentRabbitMQConsumer:
+    def __init__(self):
+        print("🚀 Inicializando IndependentRabbitMQConsumer...")
+        self.running = False
+
+    def handle_appointment_created(self, appointment_data: Dict[str, Any]) -> None:
+        """Handle appointment created event - CORREGIDO para usar modelo correcto"""
+        db = SessionLocal()
+        try:
+            appointment_id = appointment_data.get("id")
+            patient_id = appointment_data.get("patient_id")
+            doctor_id = appointment_data.get("doctor_id")
+            appointment_date = appointment_data.get("appointment_date")
+            reason = appointment_data.get("reason", "")
+            
+            print(f"🎯 Procesando cita: ID={appointment_id}, Paciente={patient_id}")
+
+            # Validar datos requeridos
+            if not all([appointment_id, patient_id, doctor_id, appointment_date]):
+                print(f"⚠️ Datos incompletos: {appointment_data}")
+                return
+
+            # Notificación para paciente - CORREGIDO: usa campos correctos del modelo
+            patient_notification = models.Notification(
+                user_id=patient_id,
+                user_email=f"patient_{patient_id}@example.com",  # Temporal, usar email real en producción
+                notification_type="in_app",
+                title="Cita médica confirmada",
+                message=f"Su cita ha sido programada para el {appointment_date}. Motivo: {reason}",
+                is_read=False,
+                created_at=datetime.now()
+            )
+            db.add(patient_notification)
+
+            # Notificación para doctor - CORREGIDO: usa campos correctos del modelo
+            doctor_notification = models.Notification(
+                user_id=doctor_id,
+                user_email=f"doctor_{doctor_id}@example.com",  # Temporal, usar email real en producción
+                notification_type="in_app",
+                title="Nueva cita asignada",
+                message=f"Tiene una nueva cita programada para el {appointment_date}. Paciente ID: {patient_id}",
+                is_read=False,
+                created_at=datetime.now()
+            )
+            db.add(doctor_notification)
+
+            db.commit()
+            print(f"✅ 2 notificaciones creadas para cita {appointment_id}")
+
+        except Exception as e:
+            print(f"❌ Error creando notificaciones: {e}")
+            import traceback
+            traceback.print_exc()
+            db.rollback()
+        finally:
+            db.close()
+
+    def process_message(self, ch, method, properties, body):
+        """Procesar mensaje de RabbitMQ - CORREGIDO event_type"""
+        try:
+            message = json.loads(body.decode())
+            event_type = message.get("event_type")
+            data = message.get("data", {})
+
+            print(f"📨 Mensaje recibido: {event_type}")
+
+            if event_type == "appointment.created":
+                self.handle_appointment_created(data)
+            else:
+                print(f"⚠️ Evento no manejado: {event_type}")
+
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+
+        except Exception as e:
+            print(f"❌ Error procesando mensaje: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def start(self):
+        """Iniciar consumer"""
+        print("🚀 Iniciando IndependentRabbitMQConsumer...")
+        self.running = True
+
+        def consume():
+            while self.running:
+                try:
+                    credentials = pika.PlainCredentials("guest", "guest")
+                    connection = pika.BlockingConnection(
+                        pika.ConnectionParameters(
+                            host="rabbitmq",
+                            port=5672,
+                            credentials=credentials,
+                            heartbeat=600
+                        )
+                    )
+
+                    channel = connection.channel()
+
+                    # Asegurar exchange y queue - CORREGIDO routing_key
+                    channel.exchange_declare(
+                        exchange="appointments",
+                        exchange_type="direct",
+                        durable=True
+                    )
+
+                    channel.queue_declare(
+                        queue="appointment_notifications",
+                        durable=True
+                    )
+
+                    # Binding CORREGIDO para usar notification.created
+                    channel.queue_bind(
+                        exchange="appointments",
+                        queue="appointment_notifications",
+                        routing_key="notification.created"
+                    )
+
+                    channel.basic_qos(prefetch_count=1)
+
+                    print("✅ Conectado a RabbitMQ. Esperando mensajes...")
+
+                    channel.basic_consume(
+                        queue="appointment_notifications",
+                        on_message_callback=self.process_message,
+                        auto_ack=False
+                    )
+
+                    channel.start_consuming()
+
+                except Exception as e:
+                    print(f"❌ Error de conexión RabbitMQ: {e}. Reintentando en 5 segundos...")
+                    time.sleep(5)
+
+        # Iniciar en thread separado
+        thread = threading.Thread(target=consume, daemon=True)
+        thread.start()
+        return self
+
+def start_independent_consumer():
+    """Iniciar consumer independiente"""
+    try:
+        consumer = IndependentRabbitMQConsumer()
+        consumer.start()
+        print("✅ IndependentRabbitMQConsumer iniciado exitosamente")
+        return consumer
+    except Exception as e:
+        print(f"❌ Error iniciando consumer: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+# Iniciar automáticamente
+independent_consumer = start_independent_consumer()

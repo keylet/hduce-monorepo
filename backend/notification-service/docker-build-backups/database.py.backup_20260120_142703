@@ -1,0 +1,112 @@
+﻿# backend/notification-service/database.py
+# VERSIÓN MIGRADA A SHARED LIBRARIES - COMPATIBLE CON appointment-service
+
+import sys
+import os
+import logging
+from typing import Generator
+
+# Añadir path para shared libraries
+sys.path.insert(0, '/app')
+
+from hduce_shared.database import DatabaseManager
+from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
+
+SERVICE_NAME = "notification"
+
+def get_db() -> Generator[Session, None, None]:
+    """
+    Dependency para obtener sesión de base de datos usando DatabaseManager de shared libraries.
+    Mismo patrón que appointment-service.
+    """
+    context_manager = DatabaseManager.get_session(SERVICE_NAME)
+    db = context_manager.__enter__()
+    try:
+        yield db
+    finally:
+        context_manager.__exit__(None, None, None)
+
+# Alias para compatibilidad con código existente
+def get_db_session():
+    """Función para compatibilidad con código que usa get_db_session()"""
+    context_manager = DatabaseManager.get_session(SERVICE_NAME)
+    return context_manager.__enter__()
+
+SessionLocal = type('SessionLocal', (), {
+    '__call__': lambda self: get_db_session()
+})()
+
+def create_tables():
+    """Crear todas las tablas definidas en models.py si no existen"""
+    try:
+        logger.info("🚀 Verificando/Creando tablas en notification_db...")
+        
+        # Importar Base y modelos
+        from models import Base, Notification, EmailLog, SMSLog
+        
+        # Obtener engine de DatabaseManager
+        engine = DatabaseManager.get_engine(SERVICE_NAME)
+        
+        # Verificar si la tabla ya existe
+        from sqlalchemy import inspect, text
+        inspector = inspect(engine)
+        
+        # Lista de tablas que deberían existir
+        expected_tables = ['notifications', 'email_logs', 'sms_logs']
+        existing_tables = inspector.get_table_names()
+        
+        # Crear tablas que faltan
+        tables_to_create = [table for table in expected_tables if table not in existing_tables]
+        
+        if tables_to_create:
+            logger.info(f"📦 Creando tablas faltantes: {tables_to_create}")
+            Base.metadata.create_all(bind=engine, tables=[
+                Notification.__table__ if 'notifications' in tables_to_create else None,
+                EmailLog.__table__ if 'email_logs' in tables_to_create else None,
+                SMSLog.__table__ if 'sms_logs' in tables_to_create else None
+            ])
+            logger.info("✅ Tablas creadas exitosamente")
+        else:
+            logger.info("✅ Todas las tablas ya existen")
+        
+        # Verificar estructura de tabla notifications
+        if 'notifications' in existing_tables:
+            with engine.connect() as conn:
+                result = conn.execute(text("""
+                    SELECT column_name, data_type, is_nullable 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'notifications' 
+                    ORDER BY ordinal_position
+                """))
+                columns = [(row[0], row[1], row[2]) for row in result]
+                logger.info(f"📊 Estructura de notifications: {len(columns)} columnas")
+                
+                # Verificar que tenemos todas las columnas necesarias
+                required_columns = ['id', 'user_id', 'user_email', 'notification_type', 'title', 'message', 'is_read', 'created_at', 'read_at']
+                existing_columns = [col[0] for col in columns]
+                
+                for req_col in required_columns:
+                    if req_col not in existing_columns:
+                        logger.warning(f"⚠️  Columna faltante: {req_col}")
+        
+        return True
+    except Exception as e:
+        logger.error(f"❌ Error creando/verificando tablas: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        return False
+
+if __name__ == "__main__":
+    # Para probar la conexión
+    print("🔧 Probando DatabaseManager...")
+    try:
+        engine = DatabaseManager.get_engine(SERVICE_NAME)
+        print(f"✅ Engine obtenido: {engine}")
+        print("✅ DatabaseManager funcionando correctamente")
+        create_tables()
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        import traceback
+        print(traceback.format_exc())

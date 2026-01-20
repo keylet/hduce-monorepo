@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx run-many --target=serve --projects=user-service --dry-run",
+    "startTime": "2026-01-18T02:54:16.804Z",
+    "endTime": "2026-01-18T02:54:17.288Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "user-service:serve",
+      "target": "serve",
+      "projectName": "user-service",
+      "hash": "2849100567956648138",
+      "startTime": "2026-01-18T02:54:16.827Z",
+      "endTime": "2026-01-18T02:54:17.286Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    }
+  ]
+}

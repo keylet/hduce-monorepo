@@ -1,4 +1,4 @@
-﻿from auth_client import auth_client
+rom auth_client import auth_client
 
 @app.get("/protected-profile")
 async def get_protected_profile(authorization: str = Header(None)):
@@ -30,3 +30,4 @@ async def get_protected_profile(authorization: str = Header(None)):
 async def shutdown_event():
     """Cerrar cliente HTTP al apagar"""
     await auth_client.close()
+

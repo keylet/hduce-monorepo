@@ -1,0 +1,59 @@
+﻿name: HDuce Fast CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  fast-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10  # Máximo 10 minutos
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install PowerShell Core (para tests en Windows)
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y powershell
+    
+    - name: Run Fast CI Tests
+      run: |
+        echo "🚀 Ejecutando tests rápidos de CI..."
+        pwsh ./ci-tests/ci-test-all.ps1 -Fast -OutputFile test-results.json
+        
+        echo "📊 Mostrando resultados:"
+        cat test-results.json | python -m json.tool || echo "JSON output available"
+    
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          test-results.json
+          ci-token-*.txt
+    
+    - name: Check Test Results
+      run: |
+        # Verificar si hubo fallos
+        if [ -f test-results.json ]; then
+          FAILED_COUNT=$(python -c "import json; data=json.load(open('test-results.json')); print(data['summary']['failed'])")
+          if [ "$FAILED_COUNT" -gt 0 ]; then
+            echo "❌ Tests fallidos: $FAILED_COUNT"
+            exit 1
+          else
+            echo "✅ Todos los tests pasaron"
+          fi
+        else
+          echo "⚠️ No se encontró archivo de resultados"
+          exit 1
+        fi

@@ -1,0 +1,66 @@
+// frontend/src/services/endpoints.ts
+import api from './api';
+import type {
+  User,
+  Doctor,
+  Appointment,
+  Notification,
+  ApiResponse
+} from '../types/hduce';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4200';
+
+export const ENDPOINTS = {
+  // Auth
+  LOGIN: `${API_BASE}/auth/login`,
+  VERIFY: `${API_BASE}/auth/verify`,
+  
+  // Users
+  USERS_ME: `${API_BASE}/api/v1/users/me`,
+  USER_BY_ID: (id: number) => `${API_BASE}/api/v1/users/${id}`,
+  
+  // Doctors
+  DOCTORS: `${API_BASE}/api/doctors/`,
+  DOCTOR_BY_ID: (id: number) => `${API_BASE}/api/doctors/${id}`,
+  
+  // Appointments
+  APPOINTMENTS: `${API_BASE}/api/appointments/`,
+  APPOINTMENT_BY_ID: (id: number) => `${API_BASE}/api/appointments/${id}`,
+  
+  // Notifications
+  NOTIFICATIONS: `${API_BASE}/api/notifications/`,
+  NOTIFICATIONS_UNREAD: `${API_BASE}/api/notifications/unread`,
+  NOTIFICATION_READ: (id: number) => `${API_BASE}/api/notifications/${id}/read`,
+};
+
+// Servicios específicos
+export const userService = {
+  getMe: () => api.get<ApiResponse<User>>(ENDPOINTS.USERS_ME),
+  getUser: (id: number) => api.get<ApiResponse<User>>(ENDPOINTS.USER_BY_ID(id)),
+};
+
+export const doctorService = {
+  getAll: () => api.get<ApiResponse<Doctor[]>>(ENDPOINTS.DOCTORS),
+  getById: (id: number) => api.get<ApiResponse<Doctor>>(ENDPOINTS.DOCTOR_BY_ID(id)),
+};
+
+export const appointmentService = {
+  getAll: () => api.get<ApiResponse<Appointment[]>>(ENDPOINTS.APPOINTMENTS),
+  create: (data: Partial<Appointment>) => api.post<ApiResponse<Appointment>>(ENDPOINTS.APPOINTMENTS, data),
+  update: (id: number, data: Partial<Appointment>) => 
+    api.put<ApiResponse<Appointment>>(ENDPOINTS.APPOINTMENT_BY_ID(id), data),
+  cancel: (id: number) => api.delete<ApiResponse<void>>(ENDPOINTS.APPOINTMENT_BY_ID(id)),
+};
+
+export const notificationService = {
+  getAll: () => api.get<ApiResponse<Notification[]>>(ENDPOINTS.NOTIFICATIONS),
+  getUnread: () => api.get<ApiResponse<Notification[]>>(ENDPOINTS.NOTIFICATIONS_UNREAD),
+  markAsRead: (id: number) => api.patch<ApiResponse<Notification>>(ENDPOINTS.NOTIFICATION_READ(id)),
+};
+
+export default {
+  user: userService,
+  doctor: doctorService,
+  appointment: appointmentService,
+  notification: notificationService,
+};

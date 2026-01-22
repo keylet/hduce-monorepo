@@ -58,7 +58,7 @@ app.add_middleware(
 )
 
 # Incluir rutas
-app.include_router(user_router, prefix="/api/v1/users", tags=["users"])
+app.include_router(user_router, tags=["users"])
 
 # Endpoint de salud
 @app.get("/health")
@@ -111,4 +111,5 @@ if __name__ == "__main__":
         port=port,
         log_level="info"
     )
+
 

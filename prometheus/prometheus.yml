@@ -1,0 +1,48 @@
+﻿global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # HDuce Services
+  - job_name: 'hduce-services'
+    static_configs:
+      - targets:
+        - 'hduce-auth:8000'
+        - 'hduce-user:8001'
+        - 'hduce-appointment:8002'
+        - 'hduce-notification:8003'
+        - 'hduce-mqtt:8004'
+    metrics_path: '/metrics'
+
+  # Node Exporter (for host metrics)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # cAdvisor (for container metrics)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+  # Frontend Monitoring
+  - job_name: 'frontend-monitor'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['host.docker.internal:9100']  # O la IP de tu host
+    file_sd_configs:
+      - files:
+        - '/prometheus/frontend-metrics.json'

@@ -1,0 +1,11 @@
+﻿# HELP frontend_up Frontend availability (1=up, 0=down)
+# TYPE frontend_up gauge
+frontend_up{service="frontend"} 1
+
+# HELP frontend_response_time_ms Frontend response time in milliseconds
+# TYPE frontend_response_time_ms gauge
+frontend_response_time_ms{service="frontend"} 33.42
+
+# HELP frontend_check_time Unix timestamp of last check
+# TYPE frontend_check_time gauge
+frontend_check_time{service="frontend"} 1769042062

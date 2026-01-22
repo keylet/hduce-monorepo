@@ -7,6 +7,12 @@ sys.path.insert(0, current_dir)
 sys.path.insert(0, '/app')  # Para shared-libraries
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import json
+from fastapi.responses import JSONResponse
+import json
+from fastapi.responses import JSONResponse
+import json
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -65,3 +71,7 @@ async def root():
 @app.get("/health")
 async def health():
     return {"status": "healthy", "service": "auth"}
+
+
+
+

@@ -1,8 +1,8 @@
-﻿from pydantic import BaseModel
+﻿from typing import List, Optional
+from pydantic import BaseModel, EmailStr
 from datetime import datetime, date, time
-from typing import Optional
 
-# Modelos para Doctor y Specialty (mantener existentes)
+# ==================== Specialty Schemas ====================
 class SpecialtyBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -10,13 +10,14 @@ class SpecialtyBase(BaseModel):
 class SpecialtyCreate(SpecialtyBase):
     pass
 
-class Specialty(SpecialtyBase):
+class SpecialtyResponse(SpecialtyBase):
     id: int
     created_at: Optional[datetime] = None
-
+    
     class Config:
         from_attributes = True
 
+# ==================== Doctor Schemas ====================
 class DoctorBase(BaseModel):
     name: str
     email: Optional[str] = None
@@ -27,28 +28,32 @@ class DoctorBase(BaseModel):
 class DoctorCreate(DoctorBase):
     pass
 
-class Doctor(DoctorBase):
+class DoctorUpdate(DoctorBase):
+    pass
+
+# DoctorResponse CORREGIDO - maneja la relación specialty correctamente
+class DoctorResponse(DoctorBase):
     id: int
     created_at: Optional[datetime] = None
-
+    # Cambiado: en lugar de specialty: Optional[str], usamos specialty: Optional[SpecialtyResponse]
+    specialty: Optional[SpecialtyResponse] = None
+    
     class Config:
         from_attributes = True
 
-# Modelos para Appointment - CORREGIDOS
+# ==================== Appointment Schemas ====================
 class AppointmentBase(BaseModel):
     doctor_id: int
-    appointment_date: date  # Cambiado de datetime a date
-    appointment_time: time  # Añadido campo time
+    appointment_date: date
+    appointment_time: time
     reason: Optional[str] = None
-    status: Optional[str] = "scheduled"  # Cambiado de "pending"
-    # patient_id, patient_email, patient_name NO deben estar aquí
-    # Se derivan del token
+    status: Optional[str] = "scheduled"
 
 class AppointmentCreate(AppointmentBase):
     pass
 
 class AppointmentUpdate(BaseModel):
-    """Esquema para actualizar citas - TODOS los campos son opcionales"""
+    """Esquema para actualizar citas - todos los campos opcionales"""
     doctor_id: Optional[int] = None
     appointment_date: Optional[date] = None
     appointment_time: Optional[time] = None
@@ -57,35 +62,25 @@ class AppointmentUpdate(BaseModel):
 
 class AppointmentResponse(AppointmentBase):
     id: int
-    patient_id: int  # Añadidos en respuesta
-    patient_email: str
-    patient_name: str
-    created_at: datetime
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-# Modelo para compatibilidad con código existente
-class Appointment(AppointmentBase):
-    id: int
     patient_id: int
     patient_email: str
     patient_name: str
     created_at: datetime
     updated_at: Optional[datetime] = None
-
+    
     class Config:
         from_attributes = True
 
-class DoctorResponse(BaseModel):
-    id: int
-    name: str
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    specialty_id: Optional[int] = None
-    is_active: bool = True
+# Alias para compatibilidad con código existente
+Appointment = AppointmentResponse
 
-    class Config:
-        from_attributes = True
+# ==================== Webhook Schemas ====================
+class WebhookPayload(BaseModel):
+    event: str
+    data: dict
+    timestamp: datetime
 
+class WebhookResponse(BaseModel):
+    success: bool
+    message: str
+    data: Optional[dict] = None

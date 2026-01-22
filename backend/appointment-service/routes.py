@@ -1,159 +1,220 @@
-﻿from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from typing import List, Optional
-from datetime import datetime
+﻿"""
+Routes for appointment service - Versión corregida con DatabaseManager correcto
+"""
 import logging
+from typing import List
+from datetime import datetime
 
-from database import get_db
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from sqlalchemy.orm import Session
+
+# Importar de shared-libraries
+from hduce_shared.database import DatabaseManager
+from hduce_shared.rabbitmq.publisher import RabbitMQPublisher
+
+# Importar modelos y esquemas locales
 from models import Appointment, Doctor
-from schemas import AppointmentCreate, AppointmentUpdate, AppointmentResponse
-from auth_client import verify_token
-from rabbitmq_utils import publish_appointment_created as publish_appointment_event
+from schemas import AppointmentCreate, AppointmentResponse, DoctorResponse
+from auth_client import get_current_user
 
-router = APIRouter(tags=["appointments"])
 logger = logging.getLogger(__name__)
 
-async def get_current_user(current_user: dict = Depends(verify_token)):
-    """Obtiene el usuario actual del token verificado"""
-    return current_user
+# Crear router SIN prefix aquí - el prefix /api se añade en main.py
+router = APIRouter()
+
+# Dependencia de base de datos - usar DatabaseManager.get_session correctamente
+def get_db():
+    """CORRECTO: Usar DatabaseManager.get_session() como context manager"""
+    with DatabaseManager.get_session("appointments") as session:
+        try:
+            yield session
+        except Exception:
+            # El context manager ya maneja commit/rollback automáticamente
+            raise
+
+def publish_appointment_created(appointment_data: dict):
+    """Publica evento de cita creada a RabbitMQ"""
+    try:
+        publisher = RabbitMQPublisher()
+        success = publisher.publish_appointment_created({
+            "appointment_id": appointment_data.get("id"),
+            "patient_id": appointment_data.get("patient_id"),
+            "patient_email": appointment_data.get("patient_email", ""),
+            "doctor_id": appointment_data.get("doctor_id"),
+            "appointment_date": str(appointment_data.get("appointment_date")),
+            "appointment_time": str(appointment_data.get("appointment_time")),
+            "reason": appointment_data.get("reason", "Consulta médica"),
+            "created_at": datetime.utcnow().isoformat()
+        })
+        if success:
+            logger.info(f"✅ Evento publicado a RabbitMQ para cita #{appointment_data.get('id')}")
+        else:
+            logger.error(f"❌ Error al publicar evento a RabbitMQ para cita #{appointment_data.get('id')}")
+    except Exception as e:
+        logger.error(f"❌ Error en RabbitMQ publisher: {e}")
 
 @router.get("/appointments/", response_model=List[AppointmentResponse])
-def read_appointments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    appointments = db.query(Appointment).offset(skip).limit(limit).all()
-    return appointments
+async def get_appointments(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get all appointments - GET /api/appointments/"""
+    try:
+        appointments = db.query(Appointment).offset(skip).limit(limit).all()
+        return appointments
+    except Exception as e:
+        logger.error(f"Error al obtener citas: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting appointments: {str(e)}")
 
 @router.get("/appointments/{appointment_id}", response_model=AppointmentResponse)
-def read_appointment(appointment_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
-    if appointment is None:
-        raise HTTPException(status_code=404, detail="Appointment not found")
-    return appointment
+async def get_appointment(
+    appointment_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Get specific appointment by ID - GET /api/appointments/{id}"""
+    try:
+        appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+        if not appointment:
+            raise HTTPException(status_code=404, detail="Appointment not found")
+        return appointment
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al obtener cita {appointment_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error getting appointment: {str(e)}")
 
 @router.post("/appointments/", response_model=AppointmentResponse, status_code=status.HTTP_201_CREATED)
-async def create_appointment(appointment: AppointmentCreate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    logger.info(f"=== CREATE APPOINTMENT DEBUG ===")
-    logger.info(f"Current user from token: {current_user}")
-    logger.info(f"Appointment data received: {appointment.dict()}")
-    
-    # Extraer información del usuario autenticado del token
-    user_id = current_user.get("user_id") or current_user.get("sub")
-    email = current_user.get("user", {}).get("email") or current_user.get("email")
-    name = current_user.get("user", {}).get("username") or current_user.get("name") or current_user.get("username") or "Test User"
-    
-    logger.info(f"Extracted from token - user_id: {user_id}, email: {email}, name: {name}")
-    
-    # Validar que tenemos los datos necesarios
-    if not user_id:
-        logger.error(f"Falta user_id en token. Token completo: {current_user}")
-        raise HTTPException(
-            status_code=400, 
-            detail=f"No user_id in token. Token data: {current_user}"
-        )
-    
-    if not email:
-        logger.error(f"Falta email en token. Token completo: {current_user}")
-        raise HTTPException(
-            status_code=400, 
-            detail=f"No email in token. Token data: {current_user}"
-        )
-    
-    # Verificar que el doctor existe
-    doctor = db.query(Doctor).filter(Doctor.id == appointment.doctor_id).first()
-    if doctor is None:
-        logger.error(f"Doctor con ID {appointment.doctor_id} no encontrado")
-        raise HTTPException(status_code=400, detail=f"Doctor with ID {appointment.doctor_id} not found")
-    
-    # Convertir user_id a entero si es string
+async def create_appointment(
+    appointment: AppointmentCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Create a new appointment - POST /api/appointments/"""
     try:
-        patient_id_int = int(user_id)
-    except (ValueError, TypeError):
-        logger.warning(f"user_id no es entero: {user_id}, usando 1 como fallback")
-        patient_id_int = 1
-    
-    # Crear el objeto de cita con TODOS los campos requeridos
-    # NOTA: appointment NO tiene patient_id, patient_email, patient_name
-    # Estos se derivan del token y se añaden aquí
-    db_appointment = Appointment(
-        doctor_id=appointment.doctor_id,
-        appointment_date=appointment.appointment_date,
-        appointment_time=appointment.appointment_time,
-        #   # Columna no existe en BD
-        status=appointment.status,
-        # Campos derivados del token (NO vienen en AppointmentCreate):
-        patient_id=patient_id_int,
-        patient_email=email,
-        patient_name=name
-    )
-    
-    logger.info(f"Intentando crear cita con datos: doctor_id={db_appointment.doctor_id}, "
-                f"date={db_appointment.appointment_date}, time={db_appointment.appointment_time}, "
-                f"patient_id={db_appointment.patient_id}, patient_email={db_appointment.patient_email}")
-    
-    try:
+        # Obtener patient_id del usuario actual
+        user_id = current_user.get("user_id")
+        if not user_id:
+            logger.error(f"Usuario no tiene user_id válido: {current_user}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Usuario no tiene un ID válido"
+            )
+
+        # Convertir user_id a int (patient_id)
+        try:
+            patient_id = int(user_id)
+        except (ValueError, TypeError):
+            logger.error(f"user_id no es un número válido: {user_id}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="ID de usuario no válido"
+            )
+
+        # Crear diccionario con datos de la cita
+        appointment_dict = appointment.dict()
+
+        # Añadir información del paciente desde el usuario actual
+        appointment_dict["patient_id"] = patient_id
+        appointment_dict["patient_email"] = current_user.get("email", f"user{patient_id}@example.com")
+        appointment_dict["patient_name"] = current_user.get("username", f"Paciente {patient_id}")
+
+        # Crear objeto de cita
+        db_appointment = Appointment(**appointment_dict)
         db.add(db_appointment)
         db.commit()
         db.refresh(db_appointment)
-        logger.info(f"? Cita creada exitosamente: ID {db_appointment.id}")
-    except Exception as e:
-        db.rollback()
-        logger.error(f"? Error al crear cita en BD: {str(e)}")
-        logger.error(f"Error type: {type(e)}")
-        import traceback
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-    
-    # Publicar evento a RabbitMQ
-    try:
-        from rabbitmq_utils import publish_appointment_created
-        publish_appointment_created({
-            "appointment_id": db_appointment.id,
+
+        logger.info(f"✅ Cita creada: ID={db_appointment.id}, Paciente={db_appointment.patient_id}")
+
+        # Preparar datos para RabbitMQ
+        rabbitmq_data = {
+            "id": db_appointment.id,
             "patient_id": db_appointment.patient_id,
             "patient_email": db_appointment.patient_email,
-            "patient_name": db_appointment.patient_name,
             "doctor_id": db_appointment.doctor_id,
-            "appointment_date": db_appointment.appointment_date.isoformat() if db_appointment.appointment_date else None,
-            "appointment_time": db_appointment.appointment_time.isoformat() if db_appointment.appointment_time else None,
-            "reason": db_appointment.reason,
-            "status": db_appointment.status
-        })
-        logger.info(f"? Evento publicado a RabbitMQ para cita {db_appointment.id}")
+            "appointment_date": str(db_appointment.appointment_date),
+            "appointment_time": str(db_appointment.appointment_time),
+            "reason": db_appointment.reason
+        }
+
+        # Publicar a RabbitMQ en background
+        background_tasks.add_task(publish_appointment_created, rabbitmq_data)
+
+        return db_appointment
+
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"?? Error publicando evento a RabbitMQ: {e}")
-        # No lanzamos excepción porque la cita ya se creó
-    
-    return db_appointment
+        db.rollback()
+        logger.error(f"❌ Error al crear cita: {e}")
+        raise HTTPException(status_code=500, detail=f"Error creating appointment: {str(e)}")
 
 @router.put("/appointments/{appointment_id}", response_model=AppointmentResponse)
-def update_appointment(appointment_id: int, appointment_update: AppointmentUpdate, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    db_appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
-    if db_appointment is None:
-        raise HTTPException(status_code=404, detail="Appointment not found")
-    
-    update_data = appointment_update.dict(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(db_appointment, field, value)
-    
-    db.commit()
-    db.refresh(db_appointment)
-    return db_appointment
+async def update_appointment(
+    appointment_id: int,
+    appointment_update: AppointmentCreate,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Update an appointment - PUT /api/appointments/{id}"""
+    try:
+        db_appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+        if not db_appointment:
+            raise HTTPException(status_code=404, detail="Appointment not found")
 
-@router.delete("/appointments/{appointment_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_appointment(appointment_id: int, db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
-    if appointment is None:
-        raise HTTPException(status_code=404, detail="Appointment not found")
-    
-    db.delete(appointment)
-    db.commit()
-    return None
+        for key, value in appointment_update.dict().items():
+            setattr(db_appointment, key, value)
 
+        db.commit()
+        db.refresh(db_appointment)
+        return db_appointment
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error al actualizar cita {appointment_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error updating appointment: {str(e)}")
 
+@router.delete("/appointments/{appointment_id}")
 
+@router.get('/doctors/', response_model=List[DoctorResponse])
+async def get_doctors(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db)
+):
+    """Get all doctors - GET /api/doctors/"""
+    try:
+        doctors = db.query(Doctor).offset(skip).limit(limit).all()
+        return doctors
+    except Exception as e:
+        logger.error(f'Error al obtener doctores: {e}')
+        raise HTTPException(status_code=500, detail=f'Error getting doctors: {str(e)}')
 
+async def delete_appointment(
+    appointment_id: int,
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """Delete an appointment - DELETE /api/appointments/{id}"""
+    try:
+        db_appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+        if not db_appointment:
+            raise HTTPException(status_code=404, detail="Appointment not found")
 
-
-
-
+        db.delete(db_appointment)
+        db.commit()
+        return {"message": "Appointment deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error al eliminar cita {appointment_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Error deleting appointment: {str(e)}")
 
 
 

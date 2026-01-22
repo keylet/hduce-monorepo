@@ -2,7 +2,6 @@
 
 WORKDIR /app
 
-# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -10,20 +9,20 @@ RUN apt-get update && apt-get install -y \
 
 # Copiar requirements primero
 COPY backend/user-service/requirements.txt .
-COPY shared-libraries ./shared-libraries
 
-# Instalar shared-libraries
-RUN pip install -e ./shared-libraries --no-cache-dir
+# Instalar dependencias
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Instalar requirements del user-service
-RUN pip install --no-cache-dir -r requirements.txt
+# Copiar shared-libraries y instalarlas
+COPY shared-libraries/ /app/shared-libraries/
+RUN cd /app/shared-libraries && pip install -e .
 
-# Copiar el código del user-service
-COPY backend/user-service/ .
+# Copiar el código del servicio
+COPY backend/user-service/ /app/
 
-# VERIFICACIÓN SIMPLE Y SEGURA (sin caracteres especiales)
-RUN echo "Verificando imports críticos..." && \
-    python -c "from hduce_shared.auth.jwt_manager import JWTManager; print('✅ JWTManager importado exitosamente')"
+ENV PYTHONPATH=/app:$PYTHONPATH
 
-# Comando por defecto
-CMD ["python", "main.py"]
+EXPOSE 8001
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]

@@ -37,9 +37,9 @@ async def root():
         "version": "1.0.0",
         "endpoints": [
             "/health",
-            "/auth/login",
-            "/auth/me",
-            "/auth/verify",
+            "/login",
+            "/me",
+            "/verify",
             "/auth/docs"
         ]
     }
@@ -200,5 +200,6 @@ async def verify_token_quick(
     except Exception as e:
         logger.error(f"❌ Error en verify-token: {e}")
         return {"valid": False, "message": f"Verification error: {str(e)}"}
+
 
 

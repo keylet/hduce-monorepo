@@ -2,27 +2,32 @@
 
 WORKDIR /app
 
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar shared-libraries desde contexto raíz
-COPY shared-libraries ./shared-libraries
-
-# Instalar shared-libraries
-RUN pip install -e ./shared-libraries --force-reinstall
-
-# Copiar requirements del servicio
-COPY backend/appointment-service/requirements.txt .
+# Copiar requirements primero (para cache de Docker)
+COPY appointment-service/requirements.txt .
 
 # Instalar dependencias del servicio
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt pydantic-settings
 
-# Copiar SOLO el código de appointment-service
-COPY backend/appointment-service/ .
+# IMPORTANTE: NO copiamos shared-libraries aquí porque se montan como volumen
+# en docker-compose.yml. Solo necesitamos asegurar que existan.
+
+# Copiar el código del servicio
+COPY appointment-service/ /app/
+
+# Configurar PYTHONPATH para encontrar shared-libraries
+ENV PYTHONPATH=/app:/app/shared-libraries:
+
+# Verificar archivos copiados
+RUN echo "=== Archivos copiados a /app ===" && ls -la /app/
 
 EXPOSE 8002
 
-# Ejecutar el main.py de appointment-service
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+

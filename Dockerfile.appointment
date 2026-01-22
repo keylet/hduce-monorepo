@@ -1,0 +1,24 @@
+﻿FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar TODO el proyecto
+COPY . /app/
+
+# Instalar dependencias de appointment-service
+RUN pip install --no-cache-dir --upgrade pip && \
+    cd /app/backend/appointment-service && \
+    pip install --no-cache-dir -r requirements.txt
+
+ENV PYTHONPATH=/app:/app/shared-libraries:$PYTHONPATH
+
+WORKDIR /app/backend/appointment-service
+
+EXPOSE 8002
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]

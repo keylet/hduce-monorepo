@@ -1,0 +1,51 @@
+﻿"""
+Database utilities for HDUCE microservices.
+"""
+
+from .postgres import (
+    Base,
+    DatabaseManager,
+    get_db_session,
+    get_db_engine,
+    create_all_tables,
+    TimestampMixin,
+    SoftDeleteMixin
+)
+
+# --- FUNCIONES NUEVAS (SOLO ESTAS) ---
+def init_db():
+    """
+    Función de compatibilidad.
+    Retorna DatabaseManager (como estaba en tu código antiguo).
+    """
+    return DatabaseManager
+
+def check_db_connection():
+    """
+    Función de compatibilidad. 
+    Verifica conexión usando el primer motor disponible.
+    """
+    try:
+        # Probamos con 'auth' como servicio default
+        engine = DatabaseManager.get_engine("auth")
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        return True
+    except Exception:
+        return False
+# -------------------------------------
+
+HAS_DATABASE_MODULE = True
+
+__all__ = [
+    "HAS_DATABASE_MODULE",
+    "Base",
+    "DatabaseManager",
+    "get_db_session", 
+    "get_db_engine",
+    "create_all_tables",
+    "TimestampMixin",
+    "SoftDeleteMixin",
+    "init_db",           # <-- AGREGADO
+    "check_db_connection" # <-- AGREGADO
+]

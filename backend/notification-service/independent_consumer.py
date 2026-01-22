@@ -12,11 +12,11 @@ from typing import Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-# Import desde shared-libraries
+# Import desde shared-libraries - CORREGIDO
 from hduce_shared.database import DatabaseManager
 from hduce_shared.rabbitmq.consumer import RabbitMQConsumer
 from hduce_shared.rabbitmq.config import RabbitMQConfig
-from hduce_shared.config.settings import Settings
+from hduce_shared import get_settings
 
 # Import local desde database.py (SESSIONLOCAL YA CONFIGURADO)
 from database import SessionLocal
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 class NotificationConsumer:
     def __init__(self):
-        self.settings = Settings()
+        self.settings = get_settings()
         self.rabbitmq_config = RabbitMQConfig()
         # NO crear sesión aquí - se creará en cada mensaje
         self.db_session = None  # Se creará dinámicamente
@@ -43,6 +43,10 @@ class NotificationConsumer:
 
             # Obtener engine para appointments database
             engine = DatabaseManager.get_engine("appointments")
+
+            if engine is None:
+                logger.error("❌ No se pudo obtener engine para appointments database")
+                return f"Doctor {doctor_id}"
 
             # Consultar nombre del doctor
             with engine.connect() as conn:
@@ -64,7 +68,7 @@ class NotificationConsumer:
             return f"Doctor {doctor_id}"
 
     def process_message(self, message: Dict[str, Any]) -> None:
-        """Procesa mensajes de RabbitMQ - CORREGIDO DEFINITIVAMENTE"""
+        """Procesa mensajes de RabbitMQ"""
         try:
             logger.info(f"📨 Mensaje recibido: {message}")
 
@@ -72,12 +76,12 @@ class NotificationConsumer:
             event_type = message.get('event_type', '')
             data = message.get('data', {})
 
-            if event_type.lower() == "appointment_created":
+            if event_type.upper() == "APPOINTMENT_CREATED":
                 # OBTENER NOMBRE DEL DOCTOR
                 doctor_id = data.get('doctor_id')
                 doctor_name = self.get_doctor_name(doctor_id) if doctor_id else "Doctor"
 
-                # Crear sesión de base de datos (CORREGIDO - usa SessionLocal)
+                # Crear sesión de base de datos
                 db = SessionLocal()
                 try:
                     notification = Notification(
@@ -117,10 +121,11 @@ class NotificationConsumer:
         try:
             consumer = RabbitMQConsumer()
             logger.info("🎯 Iniciando consumidor de RabbitMQ...")
-            logger.info("✅ SessionLocal importado correctamente de database.py")
+            logger.info(f"✅ Configuración: Exchange={self.rabbitmq_config.appointment_exchange}, Queue={self.rabbitmq_config.appointment_queue}, RoutingKey={self.rabbitmq_config.appointment_routing_key}")
             consumer.start_consuming(callback=self.process_message)
         except Exception as e:
             logger.error(f"❌ Error en el consumidor: {e}")
+            raise
 
 def start_consumer():
     """Inicia el consumidor de RabbitMQ (para importación desde main.py)"""

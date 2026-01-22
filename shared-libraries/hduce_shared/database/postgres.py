@@ -30,6 +30,14 @@ class DatabaseManager:
                     "schema": "public"
                 },
                 "appointments": {
+                "database": settings.database.appointment_db,
+                "schema": "public"
+            },
+            "notifications": {
+                "database": settings.database.notification_db,
+                "schema": "public"
+            },
+            "medical": {
                     "database": settings.database.appointment_db,
                     "schema": "public"
                 },
@@ -112,3 +120,4 @@ class SoftDeleteMixin:
     from sqlalchemy import Column, Boolean
     
     is_active = Column(Boolean, default=True, nullable=False)
+

@@ -1,6 +1,7 @@
 ﻿version: '3.8'
 
 services:
+  # ========== BASE DE DATOS Y COLA ==========
   postgres:
     image: postgres:15
     container_name: hduce-postgres
@@ -18,6 +19,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - hduce-network
 
   redis:
     image: redis:7-alpine
@@ -26,6 +29,8 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - hduce-network
 
   rabbitmq:
     image: rabbitmq:3.12-management
@@ -38,66 +43,207 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - hduce-network
 
+  # ========== MICROSERVICIOS ==========
   auth-service:
-    build: ./backend/auth-service
+    build:
+      context: ./backend
+      dockerfile: auth-service/Dockerfile
     container_name: hduce-auth
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/auth_db
-      - REDIS_URL=redis://redis:6379
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/auth_db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+    volumes:
+      - ./shared-libraries:/app/shared-libraries:ro
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_started
-    volumes:
-      - ./shared-libraries:/app/shared-libraries:ro
+    networks:
+      - hduce-network
 
   user-service:
-    build: ./backend/user-service
+    build:
+      context: ./backend
+      dockerfile: user-service/Dockerfile
     container_name: hduce-user
     ports:
       - "8001:8001"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/user_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/user_db
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./shared-libraries:/app/shared-libraries:ro
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./shared-libraries:/app/shared-libraries:ro
+      redis:
+        condition: service_started
+    networks:
+      - hduce-network
 
   appointment-service:
-    build: ./backend/appointment-service
+    build:
+      context: ./backend
+      dockerfile: appointment-service/Dockerfile
     container_name: hduce-appointment
     ports:
       - "8002:8002"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/appointment_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/appointment_db
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - ./shared-libraries:/app/shared-libraries:ro
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
       rabbitmq:
         condition: service_started
-    volumes:
-      - ./shared-libraries:/app/shared-libraries:ro
+    networks:
+      - hduce-network
 
   notification-service:
-    build: ./backend/notification-service
+    build:
+      context: ./backend
+      dockerfile: notification-service/Dockerfile
     container_name: hduce-notification
     ports:
       - "8003:8003"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/notification_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/notification_db
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - ./shared-libraries:/app/shared-libraries:ro
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
       rabbitmq:
         condition: service_started
-    volumes:
-      - ./shared-libraries:/app/shared-libraries:ro
+    networks:
+      - hduce-network
 
+  # ========== MQTT & MESSAGING ==========
+  mosquitto:
+    build: ./mosquitto
+    container_name: hduce-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - hduce-network
+    restart: unless-stopped
+
+  mqtt-service:
+    build:
+      context: ./backend/mqtt-service
+      dockerfile: Dockerfile
+    container_name: hduce-mqtt
+    ports:
+      - "8004:8004"
+    environment:
+      MQTT_BROKER: mosquitto
+      MQTT_PORT: 1883
+    depends_on:
+      - mosquitto
+    networks:
+      - hduce-network
+    restart: unless-stopped
+
+  # ========== MONITORING & METRICS ==========
+  metrics-service:
+    build:
+      context: ./backend/metrics-service
+      dockerfile: Dockerfile
+    container_name: hduce-metrics
+    ports:
+      - "8005:8005"
+    networks:
+      - hduce-network
+    restart: unless-stopped
+
+  prometheus:
+    build: ./prometheus
+    container_name: hduce-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - hduce-network
+    restart: unless-stopped
+
+  grafana:
+    build: ./grafana
+    container_name: hduce-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - hduce-network
+    restart: unless-stopped
+
+  # ========== ORQUESTACIÓN N8N ==========
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: hduce-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=hduce2025
+      - N8N_PROTOCOL=http
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_WEBHOOK_URL=http://localhost:5678
+      - GENERIC_TIMEZONE=America/Guayaquil
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    depends_on:
+      - rabbitmq
+      - notification-service
+    networks:
+      - hduce-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ========== PROXY NGINX ==========
   nginx:
     image: nginx:alpine
     container_name: hduce-nginx
@@ -110,8 +256,23 @@ services:
       - user-service
       - appointment-service
       - notification-service
+      - mqtt-service
+      - metrics-service
+      - n8n
+    networks:
+      - hduce-network
 
+# ========== VOLUMENES ==========
 volumes:
   postgres_data:
   redis_data:
   rabbitmq_data:
+  mosquitto_data:
+  mosquitto_log:
+  prometheus_data:
+  grafana_data:
+
+# ========== REDES ==========
+networks:
+  hduce-network:
+    driver: bridge

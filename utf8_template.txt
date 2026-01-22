@@ -1,0 +1,20 @@
+﻿from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import json
+
+app = FastAPI()
+
+class UTF8JSONResponse(JSONResponse):
+    media_type = "application/json; charset=utf-8"
+    
+    def render(self, content: any) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            indent=None,
+            separators=(",", ":")
+        ).encode("utf-8")
+
+app.default_response_class = UTF8JSONResponse
+
+# ... resto del código existente de auth-service/main.py ...

@@ -1,2 +1,2 @@
-﻿pydantic>=2.4.0
+pydantic>=2.4.0
 pydantic-settings>=2.0.0

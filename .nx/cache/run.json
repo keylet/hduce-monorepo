@@ -1,21 +1,21 @@
 {
   "run": {
-    "command": "nx run-many --target=serve --projects=user-service --dry-run",
-    "startTime": "2026-01-18T02:54:16.804Z",
-    "endTime": "2026-01-18T02:54:17.288Z",
+    "command": "nx lint frontend",
+    "startTime": "2026-01-21T08:22:14.832Z",
+    "endTime": "2026-01-21T08:23:07.434Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "user-service:serve",
-      "target": "serve",
-      "projectName": "user-service",
-      "hash": "2849100567956648138",
-      "startTime": "2026-01-18T02:54:16.827Z",
-      "endTime": "2026-01-18T02:54:17.286Z",
+      "taskId": "frontend:lint",
+      "target": "lint",
+      "projectName": "frontend",
+      "hash": "395223855009956182",
+      "startTime": "2026-01-21T08:22:14.847Z",
+      "endTime": "2026-01-21T08:23:07.416Z",
       "params": "",
       "cacheStatus": "cache-miss",
-      "status": 1
+      "status": 0
     }
   ]
 }

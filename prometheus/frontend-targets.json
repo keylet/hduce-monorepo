@@ -1,0 +1,9 @@
+﻿[
+  {
+    "targets": ["host.docker.internal:9100"],
+    "labels": {
+      "service": "frontend",
+      "job": "frontend-monitor"
+    }
+  }
+]

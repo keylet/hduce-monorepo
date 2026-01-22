@@ -1,22 +1,4 @@
 {
-  "name": "shared-libraries",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "shared-libraries",
-  "projectType": "library",
-  "targets": {
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "python -m pip install -e .",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "echo 'Tests para shared-libraries (por implementar)'",
-        "cwd": "{projectRoot}"
-      }
-    }
-  }
+  "name": "shared-libraries-root",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json"
 }

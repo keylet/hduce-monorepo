@@ -32,14 +32,258 @@
   ],
   "fileMap": {
     "projectFileMap": {
+      "user-service": [
+        {
+          "file": "backend/user-service/Dockerfile",
+          "hash": "53534066649162800"
+        },
+        {
+          "file": "backend/user-service/auth_client.py",
+          "hash": "13816201411622752698"
+        },
+        {
+          "file": "backend/user-service/auth_client.py.backup",
+          "hash": "8666549912918405509"
+        },
+        {
+          "file": "backend/user-service/database.py",
+          "hash": "6135079749860650046"
+        },
+        {
+          "file": "backend/user-service/main.py",
+          "hash": "6312489957109240414"
+        },
+        {
+          "file": "backend/user-service/models.py",
+          "hash": "13592606020168496958"
+        },
+        {
+          "file": "backend/user-service/project.json",
+          "hash": "2087094838259850057"
+        },
+        {
+          "file": "backend/user-service/protected_endpoint.py",
+          "hash": "16944010515277397963"
+        },
+        {
+          "file": "backend/user-service/requirements.txt",
+          "hash": "256818226757123767"
+        },
+        {
+          "file": "backend/user-service/routes.py",
+          "hash": "14992830030322457621"
+        },
+        {
+          "file": "backend/user-service/routes.py.backup_20260120_132133",
+          "hash": "14992830030322457621"
+        },
+        {
+          "file": "backend/user-service/routes_corrected.py",
+          "hash": "15897614574925382490"
+        },
+        {
+          "file": "backend/user-service/schemas.py",
+          "hash": "1802833276724735601"
+        },
+        {
+          "file": "backend/user-service/src/auth_dependency.py",
+          "hash": "9819372071793116306"
+        },
+        {
+          "file": "backend/user-service/src/protected_routes.py",
+          "hash": "1577785537661554588"
+        },
+        {
+          "file": "backend/user-service/start_debug.py",
+          "hash": "18430190949371566825"
+        },
+        {
+          "file": "backend/user-service/test_minimal.py",
+          "hash": "7986820741897846665"
+        },
+        {
+          "file": "backend/user-service/test_secret.py",
+          "hash": "16206357420488112583"
+        }
+      ],
+      "notification-shared-libs": [
+        {
+          "file": "backend/notification-service/shared-libraries/MANIFEST.in",
+          "hash": "5272990151360349903"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/__init__.py",
+          "hash": "16637819469781383938"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/PKG-INFO",
+          "hash": "3744346213689469982"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/SOURCES.txt",
+          "hash": "10469267164356162011"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/dependency_links.txt",
+          "hash": "15036214574332298676"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/requires.txt",
+          "hash": "13704119464853822097"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/top_level.txt",
+          "hash": "8557583263086043608"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/__init__.py",
+          "hash": "4891500053161560829"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
+          "hash": "16763308449428322137"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "6952816186556482872"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
+          "hash": "17885241911294964134"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
+          "hash": "812629374085501095"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
+          "hash": "11901491760549374869"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "9858352579526108815"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
+          "hash": "1816135038433782461"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/models.py",
+          "hash": "3193116146641020817"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "7506492744676447590"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
+          "hash": "8192148975621453115"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
+          "hash": "116342575734476406"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py",
+          "hash": "11959024291828910724"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
+          "hash": "848697214867587171"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup2",
+          "hash": "1458518331998392213"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup_final",
+          "hash": "7305828763126006733"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "15315504698999785157"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
+          "hash": "2801271685917385858"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
+          "hash": "14061619561625073946"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/check_jwtmanager.py",
+          "hash": "2559772859923341951"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "13143236577770082015"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/models/__init__.py",
+          "hash": "13473430670647865299"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__init__.py",
+          "hash": "12582658867451509286"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
+          "hash": "15717527966218290986"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
+          "hash": "4397052833388114194"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py",
+          "hash": "8438536005104924461"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
+          "hash": "3012040559261423324"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/consumer.py",
+          "hash": "2520291436147216813"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/publisher.py",
+          "hash": "12932089014399532574"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__pycache__/__init__.cpython-313.pyc",
+          "hash": "6171404035273358423"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/models.py",
+          "hash": "11561497110635772168"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/project.json",
+          "hash": "8582516598725759667"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/requirements.txt",
+          "hash": "10302298233526660313"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/setup.py",
+          "hash": "12826394306350995508"
+        }
+      ],
       "auth-service": [
         {
           "file": "backend/auth-service/.dockerignore",
-          "hash": "14757289287314180312"
+          "hash": "17813528833182650020"
         },
         {
           "file": "backend/auth-service/Dockerfile",
-          "hash": "15512231374234706975"
+          "hash": "14946131415743170754"
         },
         {
           "file": "backend/auth-service/__init__.py",
@@ -47,15 +291,15 @@
         },
         {
           "file": "backend/auth-service/analyze_imports.py",
-          "hash": "16043575621759803053"
+          "hash": "5108072220564627492"
         },
         {
           "file": "backend/auth-service/analyze_jwt_usage.py",
-          "hash": "63906770590235234"
+          "hash": "16412300827616051241"
         },
         {
           "file": "backend/auth-service/auth_utils.py",
-          "hash": "11482430419780920703"
+          "hash": "1588686337905681560"
         },
         {
           "file": "backend/auth-service/auth_utils_completo.txt",
@@ -63,43 +307,43 @@
         },
         {
           "file": "backend/auth-service/check_auth_key.py",
-          "hash": "3905985948082771245"
+          "hash": "3896004413666714625"
         },
         {
           "file": "backend/auth-service/check_jwt_direct.py",
-          "hash": "2181060268114128900"
+          "hash": "1929987946218838756"
         },
         {
           "file": "backend/auth-service/create_default_users.py",
-          "hash": "7343349778459074777"
+          "hash": "16050071235584798215"
         },
         {
           "file": "backend/auth-service/database.py",
-          "hash": "15737153879269414073"
+          "hash": "2497513121722478549"
         },
         {
           "file": "backend/auth-service/find_jwt_usage.py",
-          "hash": "11105748061887412958"
+          "hash": "5713206111685734554"
         },
         {
           "file": "backend/auth-service/find_token_creation.py",
-          "hash": "7748932923690479494"
+          "hash": "650535726754240926"
         },
         {
           "file": "backend/auth-service/main.py",
-          "hash": "17947265050140922227"
+          "hash": "1711825959116711330"
         },
         {
           "file": "backend/auth-service/models.py",
-          "hash": "10878380192487739390"
+          "hash": "1707925383497909240"
         },
         {
           "file": "backend/auth-service/project.json",
-          "hash": "2916055997013286920"
+          "hash": "15955825266890914316"
         },
         {
           "file": "backend/auth-service/requirements.txt",
-          "hash": "11823116357159277751"
+          "hash": "3397239597731815380"
         },
         {
           "file": "backend/auth-service/requirements_minimal.txt",
@@ -107,11 +351,11 @@
         },
         {
           "file": "backend/auth-service/routes.py",
-          "hash": "18187210427948036919"
+          "hash": "13922214774578694475"
         },
         {
           "file": "backend/auth-service/routes_test.py",
-          "hash": "2849449157882215066"
+          "hash": "7701521972762107063"
         },
         {
           "file": "backend/auth-service/schemas.py",
@@ -130,236 +374,230 @@
           "hash": "1604380669023410385"
         }
       ],
-      "user-service": [
+      "shared-libraries-root": [
         {
-          "file": "backend/user-service/.env.backup",
-          "hash": "13088211980029124299"
-        },
-        {
-          "file": "backend/user-service/Dockerfile",
-          "hash": "17297367735836102753"
-        },
-        {
-          "file": "backend/user-service/auth_client.py",
-          "hash": "10766546835540623640"
-        },
-        {
-          "file": "backend/user-service/auth_client.py.backup",
-          "hash": "9779278783838697135"
-        },
-        {
-          "file": "backend/user-service/database.py",
-          "hash": "17831908304227168887"
-        },
-        {
-          "file": "backend/user-service/main.py",
-          "hash": "7599668842702144839"
-        },
-        {
-          "file": "backend/user-service/models.py",
-          "hash": "6721220300787645708"
-        },
-        {
-          "file": "backend/user-service/project.json",
-          "hash": "17435465511608540165"
-        },
-        {
-          "file": "backend/user-service/protected_endpoint.py",
-          "hash": "16944010515277397963"
-        },
-        {
-          "file": "backend/user-service/requirements.txt",
-          "hash": "16695285778859265913"
-        },
-        {
-          "file": "backend/user-service/routes.py",
-          "hash": "8556995872318256830"
-        },
-        {
-          "file": "backend/user-service/routes.py.backup_20260120_132133",
-          "hash": "8556995872318256830"
-        },
-        {
-          "file": "backend/user-service/routes_corrected.py",
-          "hash": "14368309478574323213"
-        },
-        {
-          "file": "backend/user-service/schemas.py",
-          "hash": "8147724456656342762"
-        },
-        {
-          "file": "backend/user-service/src/auth_dependency.py",
-          "hash": "7127304821305102353"
-        },
-        {
-          "file": "backend/user-service/src/protected_routes.py",
-          "hash": "6927028533691287353"
-        },
-        {
-          "file": "backend/user-service/start_debug.py",
-          "hash": "11287055948700982696"
-        },
-        {
-          "file": "backend/user-service/test_minimal.py",
-          "hash": "11555923267434995452"
-        },
-        {
-          "file": "backend/user-service/test_secret.py",
-          "hash": "15330343840893300946"
-        }
-      ],
-      "notification-shared-libs": [
-        {
-          "file": "backend/notification-service/shared-libraries/MANIFEST.in",
+          "file": "shared-libraries/MANIFEST.in",
           "hash": "5272990151360349903"
         },
         {
-          "file": "backend/notification-service/shared-libraries/__init__.py",
-          "hash": "9667908143278251990"
+          "file": "shared-libraries/__init__.py",
+          "hash": "16637819469781383938"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/PKG-INFO",
-          "hash": "3744346213689469982"
+          "file": "shared-libraries/hduce_shared.egg-info/PKG-INFO",
+          "hash": "8230997925516338399"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/SOURCES.txt",
-          "hash": "13977251310096685180"
+          "file": "shared-libraries/hduce_shared.egg-info/SOURCES.txt",
+          "hash": "10469267164356162011"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/dependency_links.txt",
-          "hash": "4055606894390288348"
+          "file": "shared-libraries/hduce_shared.egg-info/dependency_links.txt",
+          "hash": "15036214574332298676"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/requires.txt",
-          "hash": "10312878693271531091"
+          "file": "shared-libraries/hduce_shared.egg-info/requires.txt",
+          "hash": "4577494559807045646"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/top_level.txt",
-          "hash": "13081962649080183894"
+          "file": "shared-libraries/hduce_shared.egg-info/top_level.txt",
+          "hash": "8557583263086043608"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/__init__.py",
-          "hash": "12079864386370661459"
+          "file": "shared-libraries/hduce_shared/__init__.py",
+          "hash": "1669487708641253851"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__init__.py",
-          "hash": "315125386171267458"
+          "file": "shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
+          "hash": "161882706874164062"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py",
-          "hash": "8608817355550925307"
+          "file": "shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "6952816186556482872"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
-          "hash": "7764010610553467022"
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
+          "hash": "17885241911294964134"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/models.py",
-          "hash": "8678223461532486117"
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
+          "hash": "812629374085501095"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__init__.py",
-          "hash": "12114962471405812070"
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
+          "hash": "11901491760549374869"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py",
-          "hash": "11959024291828910724"
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "9858352579526108815"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
-          "hash": "13768127589240853894"
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
+          "hash": "1816135038433782461"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup2",
-          "hash": "16849198648177437575"
+          "file": "shared-libraries/hduce_shared/auth/models.py",
+          "hash": "3193116146641020817"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup_final",
+          "file": "shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "7506492744676447590"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
+          "hash": "4075823552249913587"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
+          "hash": "17747621657429848650"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py",
+          "hash": "9641834381714293399"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
+          "hash": "848697214867587171"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
+          "hash": "1458518331998392213"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
           "hash": "7305828763126006733"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__init__.py",
-          "hash": "16650720195093106731"
+          "file": "shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "15222087201286331172"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/check_jwtmanager.py",
-          "hash": "6274903022823433707"
+          "file": "shared-libraries/hduce_shared/database/__init__.py.backup2",
+          "hash": "14525772102586922126"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/postgres.py",
-          "hash": "10793333959557329841"
+          "file": "shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
+          "hash": "15708008234829326003"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/models/__init__.py",
-          "hash": "6456570379379735222"
+          "file": "shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
+          "hash": "10429973234354246881"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__init__.py",
-          "hash": "13997994422103277318"
+          "file": "shared-libraries/hduce_shared/database/check_jwtmanager.py",
+          "hash": "2559772859923341951"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py",
-          "hash": "12548198431080944783"
+          "file": "shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "17702638740765592762"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
-          "hash": "267220363444562897"
+          "file": "shared-libraries/hduce_shared/database/postgres.py.backup",
+          "hash": "13143236577770082015"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/consumer.py",
-          "hash": "3727737697781896157"
+          "file": "shared-libraries/hduce_shared/models/__init__.py",
+          "hash": "13473430670647865299"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/publisher.py",
-          "hash": "3966550151059152680"
+          "file": "shared-libraries/hduce_shared/models/__pycache__/__init__.cpython-313.pyc",
+          "hash": "8615643836990370896"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__init__.py",
+          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
+          "hash": "12582658867451509286"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
+          "hash": "826812153436530672"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/config.cpython-313.pyc",
+          "hash": "14311026961828496351"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/consumer.cpython-313.pyc",
+          "hash": "13680042465570115834"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
+          "hash": "4397052833388114194"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/config.py",
+          "hash": "8438536005104924461"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
+          "hash": "3012040559261423324"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
+          "hash": "2520291436147216813"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
+          "hash": "12932089014399532574"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/__init__.py",
           "hash": "769905511232003074"
         },
         {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/users/models.py",
-          "hash": "6326835795734559339"
+          "file": "shared-libraries/hduce_shared/users/models.py",
+          "hash": "11561497110635772168"
         },
         {
-          "file": "backend/notification-service/shared-libraries/project.json",
-          "hash": "15968913433279479633"
+          "file": "shared-libraries/project.json",
+          "hash": "3691912510623639730"
         },
         {
-          "file": "backend/notification-service/shared-libraries/requirements.txt",
-          "hash": "12791186413785461292"
+          "file": "shared-libraries/requirements.txt",
+          "hash": "17693975781177548029"
         },
         {
-          "file": "backend/notification-service/shared-libraries/setup.py",
-          "hash": "16728414777233591170"
+          "file": "shared-libraries/setup.py",
+          "hash": "6717852542557102059"
         }
       ],
       "frontend": [
         {
+          "file": "frontend/build-forced.js",
+          "hash": "5236496888898316644",
+          "deps": [
+            "npm:vite",
+            "npm:@vitejs/plugin-react"
+          ]
+        },
+        {
           "file": "frontend/check-imports.ps1",
-          "hash": "10767270509986682871"
+          "hash": "4139925588965709774"
         },
         {
           "file": "frontend/eslint.config.mjs",
-          "hash": "6286113312110665026",
+          "hash": "17382919957701662928",
           "deps": [
             "npm:@nx/eslint-plugin"
           ]
         },
         {
           "file": "frontend/final-verification.ps1",
-          "hash": "7607633886179180719"
+          "hash": "1837536868927753086"
         },
         {
           "file": "frontend/index.html",
-          "hash": "17846319808596225969"
+          "hash": "5612849566114081647"
         },
         {
           "file": "frontend/jest.config.cts",
-          "hash": "13811537932034765036"
+          "hash": "11091210062705919482"
         },
         {
           "file": "frontend/project.json",
+          "hash": "731130367001069695"
+        },
+        {
+          "file": "frontend/project.json.backup",
           "hash": "11389205431730976346"
         },
         {
@@ -368,23 +606,23 @@
         },
         {
           "file": "frontend/quick-check.ps1",
-          "hash": "16304916095539366142"
+          "hash": "3844317558760716582"
         },
         {
           "file": "frontend/src/app/App.css",
-          "hash": "3789490991447004813"
+          "hash": "13828032711236805858"
         },
         {
           "file": "frontend/src/app/App.tsx.backup_20260121_112522",
-          "hash": "11501757685032385210"
+          "hash": "7111669302798465961"
         },
         {
           "file": "frontend/src/app/app.module.css",
-          "hash": "8887387885984320532"
+          "hash": "14507130133388590702"
         },
         {
           "file": "frontend/src/app/app.spec.tsx",
-          "hash": "18196748236722790490",
+          "hash": "11875640429478945862",
           "deps": [
             "npm:@testing-library/react",
             "npm:react-router-dom"
@@ -392,7 +630,7 @@
         },
         {
           "file": "frontend/src/app/app.tsx",
-          "hash": "7434322100881028287",
+          "hash": "16595158728791123834",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -400,15 +638,15 @@
         },
         {
           "file": "frontend/src/app/app.tsx.backup",
-          "hash": "5905114437754718218"
+          "hash": "8387300365795024665"
         },
         {
           "file": "frontend/src/app/app.tsx.backup2",
-          "hash": "14758509954813861208"
+          "hash": "6815393115694274609"
         },
         {
           "file": "frontend/src/app/nx-welcome.tsx",
-          "hash": "14708174282304233720"
+          "hash": "17616459125443730291"
         },
         {
           "file": "frontend/src/assets/.gitkeep",
@@ -416,40 +654,45 @@
         },
         {
           "file": "frontend/src/components/Auth/Login.css",
-          "hash": "92595760551389132"
+          "hash": "5652488656242599360"
         },
         {
           "file": "frontend/src/components/Auth/Login.tsx",
-          "hash": "3989077827302039442",
+          "hash": "11879800178764885174",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "frontend/src/components/Auth/ProtectedRoute.tsx",
-          "hash": "12131304995893286827",
+          "hash": "453980390023727791",
           "deps": [
+            "npm:react",
             "npm:react-router-dom"
           ]
         },
         {
+          "file": "frontend/src/components/Auth/ProtectedRoute.tsx.backup",
+          "hash": "15565497587162942612"
+        },
+        {
           "file": "frontend/src/components/Common/Dashboard.css",
-          "hash": "18320526819938732252"
+          "hash": "4595799305413889116"
         },
         {
           "file": "frontend/src/components/Common/Dashboard.tsx",
-          "hash": "10077874041643549050",
+          "hash": "2094609439404110700",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "frontend/src/components/Header.css",
-          "hash": "3268080182720278594"
+          "hash": "3313706595853771866"
         },
         {
           "file": "frontend/src/components/Header.tsx",
-          "hash": "7621717611124522031",
+          "hash": "10284903502453762768",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -457,7 +700,7 @@
         },
         {
           "file": "frontend/src/components/ProtectedRoute.tsx",
-          "hash": "16896327007805171022",
+          "hash": "5405680315851948592",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -465,11 +708,11 @@
         },
         {
           "file": "frontend/src/components/Sidebar.css",
-          "hash": "9537692430919454828"
+          "hash": "6327255766350318335"
         },
         {
           "file": "frontend/src/components/Sidebar.tsx",
-          "hash": "8157002090795904229",
+          "hash": "10182605888005018550",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -477,11 +720,11 @@
         },
         {
           "file": "frontend/src/components/components.css",
-          "hash": "14338827223899195936"
+          "hash": "1152673758568316675"
         },
         {
           "file": "frontend/src/context/AuthContext.tsx",
-          "hash": "1391452525527392147",
+          "hash": "13579558090914655753",
           "deps": [
             "npm:react",
             "npm:jwt-decode"
@@ -489,15 +732,15 @@
         },
         {
           "file": "frontend/src/context/AuthContext.tsx.backup",
-          "hash": "5306762094188713624"
+          "hash": "7603955637037928058"
         },
         {
           "file": "frontend/src/context/AuthContext.tsx.error-backup",
-          "hash": "13093801381378253476"
+          "hash": "6049991825938530935"
         },
         {
           "file": "frontend/src/index.css",
-          "hash": "15156849639838596227"
+          "hash": "15200701012305459223"
         },
         {
           "file": "frontend/src/main.tsx",
@@ -509,19 +752,27 @@
         },
         {
           "file": "frontend/src/pages/AppointmentsPage.css",
-          "hash": "5398731772374600918"
+          "hash": "5264585031543642632"
         },
         {
           "file": "frontend/src/pages/AppointmentsPage.tsx",
-          "hash": "13197566723622656612",
+          "hash": "2977368842029923087",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
           ]
         },
         {
+          "file": "frontend/src/pages/AppointmentsPage.tsx.backup",
+          "hash": "8632753616700469862"
+        },
+        {
+          "file": "frontend/src/pages/AppointmentsPage.tsx.backup2",
+          "hash": "8632753616700469862"
+        },
+        {
           "file": "frontend/src/pages/DashboardPage.css",
-          "hash": "64085489927836238"
+          "hash": "12417068152887962364"
         },
         {
           "file": "frontend/src/pages/DashboardPage.tsx",
@@ -533,23 +784,23 @@
         },
         {
           "file": "frontend/src/pages/DashboardPage.tsx.backup_112651",
-          "hash": "473818523390087873"
+          "hash": "8848395597934217438"
         },
         {
           "file": "frontend/src/pages/DashboardPage.tsx.backup_113428",
-          "hash": "11723061104101147839"
+          "hash": "7007901514153401347"
         },
         {
           "file": "frontend/src/pages/DashboardPage.tsx.backup_final_113640",
-          "hash": "2072373482403691771"
+          "hash": "9751203928716391432"
         },
         {
           "file": "frontend/src/pages/DoctorsPage.css",
-          "hash": "14171359113736192023"
+          "hash": "969094659653594930"
         },
         {
           "file": "frontend/src/pages/DoctorsPage.tsx",
-          "hash": "16030479262306821582",
+          "hash": "15828788390170804548",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -557,11 +808,11 @@
         },
         {
           "file": "frontend/src/pages/DoctorsPage.tsx.backup",
-          "hash": "5942905771274695827"
+          "hash": "16789587985454441356"
         },
         {
           "file": "frontend/src/pages/LoginPage.css",
-          "hash": "14901577391150577440"
+          "hash": "13878752685217427742"
         },
         {
           "file": "frontend/src/pages/LoginPage.tsx",
@@ -573,23 +824,23 @@
         },
         {
           "file": "frontend/src/pages/LoginPage.tsx.backup_112651",
-          "hash": "12362062262641897183"
+          "hash": "18320263932309706856"
         },
         {
           "file": "frontend/src/pages/LoginPage.tsx.backup_113513",
-          "hash": "11001056069835032707"
+          "hash": "1142491173379803421"
         },
         {
           "file": "frontend/src/pages/LoginPage.tsx.backup_final_113701",
-          "hash": "1748741405032877580"
+          "hash": "597307702222824989"
         },
         {
           "file": "frontend/src/pages/NotificationsPage.css",
-          "hash": "6587144716635453710"
+          "hash": "10514975138068972625"
         },
         {
           "file": "frontend/src/pages/NotificationsPage.tsx",
-          "hash": "6389130059383242193",
+          "hash": "16163614348509575325",
           "deps": [
             "npm:react",
             "npm:react-router-dom"
@@ -597,15 +848,15 @@
         },
         {
           "file": "frontend/src/pages/NotificationsPage.tsx.backup_20260121_114652",
-          "hash": "3078721648453933490"
+          "hash": "11775141113073229130"
         },
         {
           "file": "frontend/src/pages/NotificationsPage.tsx.backup_20260121_114807",
-          "hash": "8672310361986170702"
+          "hash": "705440360069924790"
         },
         {
           "file": "frontend/src/services/api.ts",
-          "hash": "15008330420071284302",
+          "hash": "5147606737317061971",
           "deps": [
             "npm:axios",
             "npm:jwt-decode"
@@ -613,59 +864,63 @@
         },
         {
           "file": "frontend/src/services/api.ts.backup",
-          "hash": "3441146772554086766"
+          "hash": "6905180370722373832"
+        },
+        {
+          "file": "frontend/src/services/api.ts.backup2",
+          "hash": "18222472296321909533"
         },
         {
           "file": "frontend/src/services/apiFunctions.ts",
-          "hash": "15637545365890969337"
+          "hash": "1970241147491757191"
         },
         {
           "file": "frontend/src/services/auth.ts",
-          "hash": "14964071081231860821"
+          "hash": "15895311282008448424"
         },
         {
           "file": "frontend/src/services/auth.ts.backup",
-          "hash": "7074546770758691522"
+          "hash": "9120536564397132603"
         },
         {
           "file": "frontend/src/services/endpoints.ts",
-          "hash": "18020187567537387209"
+          "hash": "6235555976585014869"
         },
         {
           "file": "frontend/src/services/endpoints.ts.backup",
-          "hash": "1910751036055696540"
+          "hash": "2739183367242820499"
         },
         {
           "file": "frontend/src/styles.css",
-          "hash": "5195668842064076916"
+          "hash": "2917954890128038984"
         },
         {
           "file": "frontend/src/types/hduce.ts",
-          "hash": "17230765453143355120"
+          "hash": "8800140898836105792"
         },
         {
           "file": "frontend/src/types/start-dev.ps1",
-          "hash": "3754359823799351820"
+          "hash": "10114389485108758762"
         },
         {
           "file": "frontend/start-frontend.ps1",
-          "hash": "17592229251803183016"
+          "hash": "14305899757408674037"
         },
         {
           "file": "frontend/tsconfig.app.json",
-          "hash": "7751994381758596574"
+          "hash": "1388573357310308201"
         },
         {
           "file": "frontend/tsconfig.json",
-          "hash": "8390130472640669154"
+          "hash": "11955428697402663226"
         },
         {
           "file": "frontend/tsconfig.spec.json",
-          "hash": "8058892194984921738"
+          "hash": "5567588479472547760"
         },
         {
           "file": "frontend/vite.config.mts",
-          "hash": "5804609817957446267",
+          "hash": "15352772091567228483",
           "deps": [
             "npm:vite",
             "npm:@vitejs/plugin-react",
@@ -674,25 +929,45 @@
         },
         {
           "file": "frontend/vite.config.mts.backup",
-          "hash": "18250797745920487981"
+          "hash": "5444358409294045038"
         }
       ],
       "notification-service": [
         {
           "file": "backend/notification-service/Dockerfile",
-          "hash": "8628889216463636483"
+          "hash": "2392998042295769967"
+        },
+        {
+          "file": "backend/notification-service/__pycache__/database.cpython-313.pyc",
+          "hash": "2890308619781701593"
+        },
+        {
+          "file": "backend/notification-service/__pycache__/main.cpython-313.pyc",
+          "hash": "863843392651580811"
+        },
+        {
+          "file": "backend/notification-service/__pycache__/models.cpython-313.pyc",
+          "hash": "10272564453172278327"
+        },
+        {
+          "file": "backend/notification-service/__pycache__/routes.cpython-313.pyc",
+          "hash": "15212327424300671319"
+        },
+        {
+          "file": "backend/notification-service/__pycache__/schemas.cpython-313.pyc",
+          "hash": "7698703891430659948"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/config.py.backup.shared",
-          "hash": "15643069901623048867"
+          "hash": "16968640674676220214"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/database.py.backup.shared",
-          "hash": "14603038357439324077"
+          "hash": "16274774301116980630"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/main.py.backup.shared",
-          "hash": "12262782330484738092"
+          "hash": "14135711588228315126"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/main.py.backup_final",
@@ -700,87 +975,87 @@
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/models.py.backup.shared",
-          "hash": "9826604635921558930"
+          "hash": "13691791249450359500"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/routes.py.backup.shared",
-          "hash": "15710858596772413318"
+          "hash": "16251141711204487664"
         },
         {
           "file": "backend/notification-service/cleanup-backup-20260111/schemas.py.backup.shared",
-          "hash": "1775332716993143220"
+          "hash": "10177202780226365260"
         },
         {
           "file": "backend/notification-service/config.py",
-          "hash": "16460254390547822081"
+          "hash": "9416578063957694552"
         },
         {
           "file": "backend/notification-service/database.py",
-          "hash": "9224559928257467736"
+          "hash": "14092143703375781735"
         },
         {
           "file": "backend/notification-service/docker-build-backups/database.py.backup_20260120_142703",
-          "hash": "15126424030962798667"
+          "hash": "16336922683403262250"
         },
         {
           "file": "backend/notification-service/docker-build-backups/database.py.backup_before_shared_20260120_135939",
-          "hash": "1637717818465993320"
+          "hash": "17096202306093222653"
         },
         {
           "file": "backend/notification-service/docker-build-backups/diagnostic.py",
-          "hash": "15156160349495180836"
+          "hash": "11281488163091312914"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup",
-          "hash": "5364327239841245733"
+          "hash": "2345273382763167539"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_20260120_123327",
-          "hash": "14753748539450783096"
+          "hash": "6058277483760744747"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_20260120_143759",
-          "hash": "15779963953661255179"
+          "hash": "17634042272582125793"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_204833",
-          "hash": "15651431050238947762"
+          "hash": "18076726130141214887"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_212309",
-          "hash": "8038245879813680391"
+          "hash": "3025317559455397787"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_213054",
-          "hash": "11164889023825520571"
+          "hash": "16382641233028607276"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_213210",
-          "hash": "17716762443552301915"
+          "hash": "2788712998033604337"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_215014",
-          "hash": "7306164659030651733"
+          "hash": "8503930202905159243"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_225355",
-          "hash": "7461469609180636591"
+          "hash": "9777825387181523040"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_debug",
-          "hash": "5352219982046429002"
+          "hash": "2564751732406406597"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer.py.backup_encoding",
-          "hash": "553746042006839207"
+          "hash": "1260272299753245210"
         },
         {
           "file": "backend/notification-service/docker-build-backups/independent_consumer_shared.py",
-          "hash": "15779963953661255179"
+          "hash": "17634042272582125793"
         },
         {
           "file": "backend/notification-service/docker-build-backups/main.py.backup_before_shared_20260120_135926",
-          "hash": "13262923041289169681"
+          "hash": "855236616930158678"
         },
         {
           "file": "backend/notification-service/docker-build-backups/main.py.before_fix",
@@ -788,51 +1063,51 @@
         },
         {
           "file": "backend/notification-service/docker-build-backups/main_part1.py",
-          "hash": "2891833710356094858"
+          "hash": "12740876726245241700"
         },
         {
           "file": "backend/notification-service/docker-build-backups/main_part2.py",
-          "hash": "17543031774527671394"
+          "hash": "17430718575824240042"
         },
         {
           "file": "backend/notification-service/docker-build-backups/models.py.backup.final",
-          "hash": "7731632635031918290"
+          "hash": "15307054931162974441"
         },
         {
           "file": "backend/notification-service/docker-build-backups/models.py.backup_before_shared_20260120_135943",
-          "hash": "7451780596281180886"
+          "hash": "16834499349585013684"
         },
         {
           "file": "backend/notification-service/docker-build-backups/rabbitmq_consumer.py",
-          "hash": "5499017051572772127"
+          "hash": "13830052551431078550"
         },
         {
           "file": "backend/notification-service/docker-build-backups/rabbitmq_utils_simple.py",
-          "hash": "4803886757624769171"
+          "hash": "18019027942482369668"
         },
         {
           "file": "backend/notification-service/docker-build-backups/routes.py.backup_20260118_231802",
-          "hash": "16092747966503809709"
+          "hash": "17549889031165699702"
         },
         {
           "file": "backend/notification-service/docker-build-backups/routes.py.backup_20260120_140156",
-          "hash": "6485530059973531869"
+          "hash": "2976838584030108742"
         },
         {
           "file": "backend/notification-service/docker-build-backups/routes.py.backup_encoding_20260118_232302",
-          "hash": "5409158857023274062"
+          "hash": "4404371697850639243"
         },
         {
           "file": "backend/notification-service/docker-build-backups/routes.py.backup_final_20260118_233619",
-          "hash": "6485530059973531869"
+          "hash": "2976838584030108742"
         },
         {
           "file": "backend/notification-service/docker-build-backups/schemas.py.backup",
-          "hash": "9557244327484509949"
+          "hash": "118877856481167311"
         },
         {
           "file": "backend/notification-service/docker-build-backups/schemas.py.backup_20260118_231209",
-          "hash": "18349005036730569756"
+          "hash": "14445743609145660484"
         },
         {
           "file": "backend/notification-service/docker-build-backups/temp_fix.txt",
@@ -840,236 +1115,102 @@
         },
         {
           "file": "backend/notification-service/docker-build-backups/test_connection.py",
-          "hash": "7519010084717277517"
+          "hash": "15875868251579613543"
         },
         {
           "file": "backend/notification-service/docker-build-backups/test_consumer_simple.py",
-          "hash": "2507067678721895396"
+          "hash": "182748853090098945"
         },
         {
           "file": "backend/notification-service/docker-build-backups/test_routes.py",
-          "hash": "15102308233785974911"
+          "hash": "10496915531842874024"
         },
         {
           "file": "backend/notification-service/enum_patch.py",
-          "hash": "7387308577653030788"
+          "hash": "11107729051306965495"
         },
         {
           "file": "backend/notification-service/independent_consumer.py",
-          "hash": "3715472725695750405"
+          "hash": "5814621833471826662"
         },
         {
           "file": "backend/notification-service/independent_consumer.py.backup",
-          "hash": "6519637741007616075"
+          "hash": "3389472248168228232"
         },
         {
           "file": "backend/notification-service/independent_consumer.py.backup_20260120_163542",
-          "hash": "4929075327159925069"
+          "hash": "14478983139661927990"
         },
         {
           "file": "backend/notification-service/main.py",
-          "hash": "11236238956148516301"
+          "hash": "212006466023859648"
         },
         {
           "file": "backend/notification-service/models.py",
-          "hash": "4005403068285714605"
+          "hash": "11460780908217981319"
         },
         {
           "file": "backend/notification-service/prepare.sh",
-          "hash": "2191117754551862289"
+          "hash": "4874489605491964415"
         },
         {
           "file": "backend/notification-service/project.json",
-          "hash": "6006294844967704002"
+          "hash": "13917433064324175453"
         },
         {
           "file": "backend/notification-service/requirements.txt",
-          "hash": "16068733605521182232"
+          "hash": "13307010668343898504"
         },
         {
           "file": "backend/notification-service/routes.py",
-          "hash": "10334235790142282538"
+          "hash": "8750815050488633773"
         },
         {
           "file": "backend/notification-service/schemas.py",
-          "hash": "12546747070703682117"
+          "hash": "2623448607157205241"
         },
         {
           "file": "backend/notification-service/src/email_service.py",
-          "hash": "1218877239733707602"
+          "hash": "8325140646561610296"
         },
         {
           "file": "backend/notification-service/src/notification_service.py",
-          "hash": "2400844483404615257"
+          "hash": "2698621268129482198"
         },
         {
           "file": "backend/notification-service/src/sms_service.py",
-          "hash": "14349014749121023455"
+          "hash": "3169043478841055618"
         },
         {
           "file": "backend/notification-service/start.sh",
-          "hash": "2507531272928779144"
-        }
-      ],
-      "shared-libraries-root": [
-        {
-          "file": "shared-libraries/MANIFEST.in",
-          "hash": "5272990151360349903"
-        },
-        {
-          "file": "shared-libraries/__init__.py",
-          "hash": "9667908143278251990"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/PKG-INFO",
-          "hash": "8230997925516338399"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/SOURCES.txt",
-          "hash": "13977251310096685180"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/dependency_links.txt",
-          "hash": "4055606894390288348"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/requires.txt",
-          "hash": "7419915441336529584"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/top_level.txt",
-          "hash": "13081962649080183894"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/__init__.py",
-          "hash": "8059030220668819705"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__init__.py",
-          "hash": "315125386171267458"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
-          "hash": "8608817355550925307"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
-          "hash": "7764010610553467022"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/models.py",
-          "hash": "8678223461532486117"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/__init__.py",
-          "hash": "12114962471405812070"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py",
-          "hash": "5797011407571664963"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
-          "hash": "13768127589240853894"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
-          "hash": "16849198648177437575"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
-          "hash": "7305828763126006733"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__init__.py",
-          "hash": "14996280541933451396"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__init__.py.backup2",
-          "hash": "14525772102586922126"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/check_jwtmanager.py",
-          "hash": "6274903022823433707"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/postgres.py",
-          "hash": "14184454644832081978"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/postgres.py.backup",
-          "hash": "10793333959557329841"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/models/__init__.py",
-          "hash": "6456570379379735222"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
-          "hash": "13997994422103277318"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/config.py",
-          "hash": "12548198431080944783"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
-          "hash": "267220363444562897"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
-          "hash": "3727737697781896157"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
-          "hash": "3966550151059152680"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/models.py",
-          "hash": "6326835795734559339"
-        },
-        {
-          "file": "shared-libraries/project.json",
-          "hash": "16977633552583755283"
-        },
-        {
-          "file": "shared-libraries/requirements.txt",
-          "hash": "11613029674717081581"
-        },
-        {
-          "file": "shared-libraries/setup.py",
-          "hash": "6228404494144183379"
+          "hash": "16257420589032568406"
         }
       ]
     },
     "nonProjectFiles": [
       {
         "file": ".dockerignore",
-        "hash": "15115682599274342982"
+        "hash": "534492394401627336"
       },
       {
         "file": ".editorconfig",
-        "hash": "5443105041930014821"
+        "hash": "11532813898455409296"
       },
       {
-        "file": ".github/workflows/ci.yml",
-        "hash": "15818543080246007282"
+        "file": ".github/workflows/ci-tests.yml",
+        "hash": "16895302119455235947"
       },
       {
         "file": ".gitignore",
-        "hash": "14366809360515670589"
+        "hash": "1545727382439080375"
       },
       {
         "file": ".prettierignore",
-        "hash": "14688272390704683536"
+        "hash": "17085498363870782104"
       },
       {
         "file": ".prettierrc",
-        "hash": "16267754514737964994"
+        "hash": "6820402234827505055"
       },
       {
         "file": "2",
@@ -1077,79 +1218,107 @@
       },
       {
         "file": "Dockerfile.appointment",
-        "hash": "16703467852099840634"
+        "hash": "12083239389007757931"
       },
       {
         "file": "PROGRESO_ACTUAL.md",
-        "hash": "18106151666547769862"
+        "hash": "7794688720193590325"
       },
       {
         "file": "README.md",
-        "hash": "5259497453254201825"
+        "hash": "7360127529181164846"
       },
       {
         "file": "RESUMEN_MIGRACION_COMPLETADA.txt",
-        "hash": "8370315701989318375"
+        "hash": "8195269594977100347"
       },
       {
         "file": "RESUMEN_PROGRESO.md",
-        "hash": "14274662980505083096"
+        "hash": "15388246550028908535"
       },
       {
         "file": "aws-deployment-config.txt",
-        "hash": "9836146848902061171"
+        "hash": "13977719004784294180"
       },
       {
         "file": "backend/appointment-service/Dockerfile",
-        "hash": "7615019420369128354"
+        "hash": "8802578435073485743"
       },
       {
         "file": "backend/appointment-service/__init__.py",
-        "hash": "12002068661865287649"
+        "hash": "2641433277100240642"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/auth_client.cpython-313.pyc",
+        "hash": "2309729810226418392"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/database.cpython-313.pyc",
+        "hash": "14609072227219457142"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/main.cpython-313.pyc",
+        "hash": "4140604438277183487"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/models.cpython-313.pyc",
+        "hash": "4352780105987212497"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/rabbitmq_utils.cpython-313.pyc",
+        "hash": "13889643541752649897"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/routes.cpython-313.pyc",
+        "hash": "6553582045960466283"
+      },
+      {
+        "file": "backend/appointment-service/__pycache__/schemas.cpython-313.pyc",
+        "hash": "18091795853262756992"
       },
       {
         "file": "backend/appointment-service/auth_client.py",
-        "hash": "8961152021232133732"
+        "hash": "6867003765944649203"
       },
       {
         "file": "backend/appointment-service/database.py",
-        "hash": "15333814643371509894"
+        "hash": "7679069923380742433"
       },
       {
         "file": "backend/appointment-service/database.py.backup",
-        "hash": "17474468041955989074"
+        "hash": "936442002211321951"
       },
       {
         "file": "backend/appointment-service/main.py",
-        "hash": "1088164005480572595"
+        "hash": "4526752913034656111"
       },
       {
         "file": "backend/appointment-service/main.py.backup",
-        "hash": "6789118750336583004"
+        "hash": "104768733414332549"
       },
       {
         "file": "backend/appointment-service/main_complete.py",
-        "hash": "15844632015297028495"
+        "hash": "15203377138050146665"
       },
       {
         "file": "backend/appointment-service/models.py",
-        "hash": "5941341328223465686"
+        "hash": "17608146318368881538"
       },
       {
         "file": "backend/appointment-service/models.py.backup",
-        "hash": "12509862023909859803"
+        "hash": "9375665966268197023"
       },
       {
         "file": "backend/appointment-service/rabbitmq_utils.py",
-        "hash": "4108555693778454809"
+        "hash": "1104079387887344516"
       },
       {
         "file": "backend/appointment-service/rabbitmq_utils.py.backup",
-        "hash": "17834602523198838348"
+        "hash": "17325727985250398429"
       },
       {
         "file": "backend/appointment-service/requirements.txt",
-        "hash": "3702834867772212437"
+        "hash": "14459760261200046382"
       },
       {
         "file": "backend/appointment-service/routes.py",
@@ -1157,19 +1326,19 @@
       },
       {
         "file": "backend/appointment-service/routes.py.backup",
-        "hash": "16549602004850776985"
+        "hash": "51633317364287254"
       },
       {
         "file": "backend/appointment-service/routes.py.backup_20260120_231957",
-        "hash": "6348635612065444569"
+        "hash": "16172495874379551631"
       },
       {
         "file": "backend/appointment-service/routes.py.backup_20260121_155218",
-        "hash": "2219227980846212565"
+        "hash": "15593527203133461669"
       },
       {
         "file": "backend/appointment-service/routes.py.backup_final_correction",
-        "hash": "8109902909651276338"
+        "hash": "5089226263057807824"
       },
       {
         "file": "backend/appointment-service/routes_backup.txt",
@@ -1177,11 +1346,11 @@
       },
       {
         "file": "backend/appointment-service/schemas.py",
-        "hash": "11557886959859743211"
+        "hash": "13252533600451809164"
       },
       {
         "file": "backend/appointment-service/schemas.py.backup",
-        "hash": "13398671846944286379"
+        "hash": "7651932259438090639"
       },
       {
         "file": "backend/appointment-service/schemas.py.backup_20260121_160610",
@@ -1197,79 +1366,151 @@
       },
       {
         "file": "backend/appointment-service/services/rabbitmq_service.py",
-        "hash": "12943105292366054564"
+        "hash": "5985484648321464042"
       },
       {
         "file": "backend/appointment-service/test_rabbitmq_direct.py",
-        "hash": "18000218235539519308"
+        "hash": "16530470932440202138"
       },
       {
         "file": "backend/appointment-service/test_rabbitmq_minimal.py",
-        "hash": "13237115444114784393"
+        "hash": "5953011829456788902"
       },
       {
         "file": "backend/appointment-service/webhooks.py",
-        "hash": "6452334247561680014"
+        "hash": "8732618527083542069"
       },
       {
         "file": "backend/appointment-service/webhooks_simple.py",
-        "hash": "9784175751444541807"
+        "hash": "2196713652489863285"
       },
       {
         "file": "backend/init-databases.sh",
-        "hash": "15567728953659341772"
+        "hash": "15668404352378555693"
       },
       {
         "file": "backend/metrics-service/Dockerfile",
-        "hash": "16947155768950476904"
+        "hash": "10648967182615243371"
       },
       {
         "file": "backend/metrics-service/main.py",
-        "hash": "398200297602321259"
+        "hash": "361238952643877996"
       },
       {
         "file": "backend/metrics-service/requirements.txt",
-        "hash": "7465344150828390853"
+        "hash": "13470777482214803183"
       },
       {
         "file": "backend/mqtt-service/Dockerfile",
-        "hash": "16458349206457693451"
+        "hash": "7612529219612040593"
       },
       {
         "file": "backend/mqtt-service/main.py",
-        "hash": "5642655280862276024"
+        "hash": "10687468331806410207"
       },
       {
         "file": "backend/mqtt-service/main.py.backup",
-        "hash": "13933979854116953888"
+        "hash": "6010981805923898602"
       },
       {
         "file": "backend/mqtt-service/requirements.txt",
-        "hash": "7799049393185358267"
+        "hash": "2140273930186377267"
       },
       {
         "file": "backend/shared-middleware/__init__.py",
-        "hash": "8700691132061959862"
+        "hash": "8881462681187029771"
       },
       {
         "file": "backend/shared-middleware/encoding_middleware.py",
-        "hash": "7455452381427474045"
+        "hash": "5949694761483122605"
       },
       {
         "file": "backend/shared-middleware/simple_encoding.py",
-        "hash": "10036327780917738754"
+        "hash": "15726334305282605492"
       },
       {
         "file": "backend/verificar_servicios.ps1",
-        "hash": "14450800279639601612"
+        "hash": "15333900918092300552"
       },
       {
         "file": "backend/verificar_servicios_v2.ps1",
-        "hash": "2708652429613949377"
+        "hash": "11637737873051711921"
+      },
+      {
+        "file": "ci-tests/Invoke-SafeWebRequest.ps1",
+        "hash": "11678149590024818753"
+      },
+      {
+        "file": "ci-tests/auth-login.ps1",
+        "hash": "4376703127562683594"
+      },
+      {
+        "file": "ci-tests/ci-final.ps1",
+        "hash": "5065389253918205146"
+      },
+      {
+        "file": "ci-tests/ci-pipeline.ps1",
+        "hash": "7803654851319912590"
+      },
+      {
+        "file": "ci-tests/ci-report-20260122-053313.json",
+        "hash": "11976300349431494019"
+      },
+      {
+        "file": "ci-tests/ci-run-all.ps1",
+        "hash": "18378981824301242385"
+      },
+      {
+        "file": "ci-tests/ci-test-all.ps1",
+        "hash": "11669672486329651693"
+      },
+      {
+        "file": "ci-tests/pipeline-report-20260122-053755.json",
+        "hash": "12670418891923571320"
+      },
+      {
+        "file": "ci-tests/pipeline-report-20260122-053805.json",
+        "hash": "3833345442345458989"
+      },
+      {
+        "file": "ci-tests/pipeline-report-20260122-054050.json",
+        "hash": "18381138786367127818"
+      },
+      {
+        "file": "ci-tests/test-accurate.ps1",
+        "hash": "7886209377979705235"
+      },
+      {
+        "file": "ci-tests/test-auth.ps1",
+        "hash": "9566015695553900159"
+      },
+      {
+        "file": "ci-tests/test-connectivity.ps1",
+        "hash": "13267140492006685006"
+      },
+      {
+        "file": "ci-tests/test-endpoints.ps1",
+        "hash": "352291350652534122"
+      },
+      {
+        "file": "ci-tests/test-quick.ps1",
+        "hash": "10861279716266454261"
+      },
+      {
+        "file": "ci-tests/test-report-20260122-052624.json",
+        "hash": "12042520830230371432"
+      },
+      {
+        "file": "ci-tests/test-report-20260122-052811.json",
+        "hash": "7050412480473953375"
+      },
+      {
+        "file": "ci-tests/test-with-token.ps1",
+        "hash": "3006722232272883968"
       },
       {
         "file": "confirmation_test.json",
-        "hash": "16192739938466054665"
+        "hash": "13355039400299773203"
       },
       {
         "file": "correccion_rabbitmq_utils.ps1",
@@ -1277,59 +1518,111 @@
       },
       {
         "file": "create_admin_final.py",
-        "hash": "11570810131669272997"
+        "hash": "5903291248066927597"
       },
       {
         "file": "create_admin_shared.py",
-        "hash": "2013273314772547924"
+        "hash": "3965446619382108420"
       },
       {
         "file": "create_tables.py",
-        "hash": "3545784071329035364"
+        "hash": "6917199905564642818"
       },
       {
         "file": "curl_test.json",
-        "hash": "2101013822730055457"
+        "hash": "183717500149010651"
       },
       {
         "file": "curl_test_fixed.json",
-        "hash": "1868709522886446593"
+        "hash": "8127482684913064268"
       },
       {
         "file": "database.py.backup_root_20260111_171050",
-        "hash": "7600712795047214541"
+        "hash": "16788833891451649867"
+      },
+      {
+        "file": "database/backup/appointment_db.sql",
+        "hash": "18189299635103201278"
+      },
+      {
+        "file": "database/backup/auth_db.sql",
+        "hash": "4231647852716872513"
+      },
+      {
+        "file": "database/backup/notification_db.sql",
+        "hash": "16705845099933190666"
       },
       {
         "file": "database/backup/restore.sh",
-        "hash": "7100783473988545487"
+        "hash": "13666860971341415625"
+      },
+      {
+        "file": "database/backup/user_db.sql",
+        "hash": "1479137253197269005"
       },
       {
         "file": "database/init-databases.sh",
-        "hash": "807768257346349556"
+        "hash": "8682131659875227163"
+      },
+      {
+        "file": "database/init-scripts/init-appointment-data-fixed.sql",
+        "hash": "13899879609621320017"
+      },
+      {
+        "file": "database/init-scripts/init-appointment-doctors.sql",
+        "hash": "9304869884946047013"
+      },
+      {
+        "file": "database/init-scripts/init-appointment-specialties.sql",
+        "hash": "14136631857554753205"
+      },
+      {
+        "file": "database/init-scripts/init-auth.sql",
+        "hash": "15124514983341699526"
+      },
+      {
+        "file": "database/schemas/auth_schema.sql",
+        "hash": "5811154684980437933"
+      },
+      {
+        "file": "database/schemas/user_schema.sql",
+        "hash": "14534517333969506088"
+      },
+      {
+        "file": "database/scripts/init.sql",
+        "hash": "16927661725328707399"
+      },
+      {
+        "file": "database/scripts/init_all.sql",
+        "hash": "16927661725328707399"
+      },
+      {
+        "file": "database/scripts/init_all_databases.sql",
+        "hash": "12841895343529191957"
       },
       {
         "file": "debug_appointment.py",
-        "hash": "13710462585684228560"
+        "hash": "16139459163728662057"
       },
       {
         "file": "debug_auth.py",
-        "hash": "7254034515486048693"
+        "hash": "2842591118485683292"
       },
       {
         "file": "debug_final.py",
-        "hash": "17007012979435822084"
+        "hash": "8827904306826009983"
       },
       {
         "file": "debug_server.py",
-        "hash": "6837950609399669104"
+        "hash": "10603443821210364127"
       },
       {
         "file": "definitive_test.json",
-        "hash": "9767365567986609613"
+        "hash": "1176450609580778155"
       },
       {
         "file": "demo_flujo_integracion.ps1",
-        "hash": "2361150502957335117"
+        "hash": "400949189437528172"
       },
       {
         "file": "demo_integracion.py",
@@ -1337,91 +1630,91 @@
       },
       {
         "file": "diagnose_appointment.py",
-        "hash": "5775323474308658826"
+        "hash": "5964742370506903120"
       },
       {
         "file": "diagnostico_avanzado.py",
-        "hash": "4898790297650856791"
+        "hash": "11682550507517839014"
       },
       {
         "file": "diagnostico_db.py",
-        "hash": "11421315782966817579"
+        "hash": "17647049848439216828"
       },
       {
         "file": "diagnostico_db2.py",
-        "hash": "12167298109002362077"
+        "hash": "16050368254443965130"
       },
       {
         "file": "diagnostico_microservicios_20260117_203635.txt",
         "hash": "5801068142525792996"
       },
       {
-        "file": "docker-compose.prod.yml",
-        "hash": "8607258405009017135"
-      },
-      {
         "file": "docker-compose.yml",
-        "hash": "16337634106647461044"
+        "hash": "5695748671108278073"
       },
       {
-        "file": "docker-compose.yml.backup",
-        "hash": "7653784839033600184"
+        "file": "docker-compose.yml.backup.before_frontend",
+        "hash": "15789426607539515278"
       },
       {
         "file": "docker/docker-compose.local.yml",
         "hash": "3244421341483603138"
       },
       {
+        "file": "docker/postgres/init.sql",
+        "hash": "16927661725328707399"
+      },
+      {
         "file": "eslint.config.mjs",
-        "hash": "7311729156798379896"
+        "hash": "13207065029378577136"
       },
       {
         "file": "estructura_proyecto.txt",
-        "hash": "4358686362925194773"
+        "hash": "7377581619266829948"
       },
       {
         "file": "external_test.py",
-        "hash": "8752297551976493178"
+        "hash": "14984175892232818544"
       },
       {
         "file": "fastapi_debug.py",
-        "hash": "12185875362884450654"
+        "hash": "7095127223603466375"
       },
       {
         "file": "final_rabbit_test.json",
-        "hash": "3530605061581401125"
+        "hash": "8103425608051176483"
       },
       {
         "file": "final_rabbitmq_test.json",
-        "hash": "9420768016013508946"
+        "hash": "14951978087548446208"
       },
       {
         "file": "final_robust_test.json",
-        "hash": "10936933740475471117"
+        "hash": "11397606339354126864"
       },
       {
         "file": "final_success.json",
-        "hash": "9499124313202010487"
+        "hash": "6547383744887746693"
       },
       {
         "file": "final_test.json",
-        "hash": "17632795820674577718"
+        "hash": "12645900466711040670"
       },
       {
         "file": "frontend-metrics.prom",
-        "hash": "793389665344962094"
+        "hash": "9811751973054921853"
       },
       {
         "file": "full_diagnostic.py",
-        "hash": "10062173459961058261"
+        "hash": "8134700947010223771"
       },
       {
         "file": "grafana/Dockerfile",
-        "hash": "16069978911471617140"
+        "hash": "3346793514038365845"
       },
       {
         "file": "grafana/Dockerfile.backup",
-        "hash": "7214549680397493529"
+        "hash": "4186751149960848840"
       },
       {
         "file": "grafana/dashboards/hduce-dashboard.json",
@@ -1429,11 +1722,11 @@
       },
       {
         "file": "grafana/grafana.ini",
-        "hash": "9144284220144726796"
+        "hash": "4623329097070985833"
       },
       {
         "file": "hduce-infra/main.tf",
-        "hash": "1761902381059485213"
+        "hash": "15098989242303056103"
       },
       {
         "file": "hduce-test-report-20260103-143359.json",
@@ -1441,43 +1734,43 @@
       },
       {
         "file": "init-database.sh",
-        "hash": "15138542251640967517"
+        "hash": "1735696595822493749"
       },
       {
         "file": "init-databases-fixed.sh",
-        "hash": "8852873363600408382"
+        "hash": "2847033985155717411"
       },
       {
         "file": "init-databases.sh",
-        "hash": "16229875567733315489"
+        "hash": "2226067726993224445"
       },
       {
         "file": "initialize-test-data.ps1",
-        "hash": "13267724587315777342"
+        "hash": "12027024501809042038"
       },
       {
         "file": "insert_admin.py",
-        "hash": "2629369334516525456"
+        "hash": "4631758777186171228"
       },
       {
         "file": "insert_hash.py",
-        "hash": "6560239394769372993"
+        "hash": "10284794355940676232"
       },
       {
         "file": "internal_container_test.py",
-        "hash": "15515729344803514228"
+        "hash": "9851115132765246667"
       },
       {
         "file": "internal_debug.py",
-        "hash": "9758276226082970323"
+        "hash": "17923662086779502261"
       },
       {
         "file": "jest.config.ts",
-        "hash": "6870352021923392442"
+        "hash": "9882362695153092473"
       },
       {
         "file": "jest.preset.js",
-        "hash": "9430166341120122740"
+        "hash": "7473220183190921152"
       },
       {
         "file": "main.py.backup_fase2",
@@ -1488,16 +1781,20 @@
         "hash": "13779592713580985077"
       },
       {
+        "file": "monitor-frontend.ps1",
+        "hash": "12564744621772298952"
+      },
+      {
         "file": "mosquitto/Dockerfile",
-        "hash": "10517826656432814155"
+        "hash": "614024247247724241"
       },
       {
         "file": "mosquitto/mosquitto.conf",
-        "hash": "10249660949508964585"
+        "hash": "1658142446398918376"
       },
       {
         "file": "n8n_data/config",
-        "hash": "4125341502663204590"
+        "hash": "557256564239863069"
       },
       {
         "file": "n8n_data/crash.journal",
@@ -1509,59 +1806,75 @@
       },
       {
         "file": "n8n_data/database.sqlite-shm",
-        "hash": "15058333113036929475"
+        "hash": "3880975607603372690"
       },
       {
         "file": "n8n_data/database.sqlite-wal",
-        "hash": "8838072556491462804"
+        "hash": "15685906653390440600"
       },
       {
         "file": "n8n_data/nodes/package.json",
-        "hash": "12221984429705715680"
+        "hash": "2852556995646760707"
+      },
+      {
+        "file": "new-token-from-test.txt",
+        "hash": "10407331074396210866"
+      },
+      {
+        "file": "new-token.txt",
+        "hash": "10752471882126546855"
       },
       {
         "file": "nginx-ascii.conf",
-        "hash": "11026662839477889931"
+        "hash": "4982798695547520041"
       },
       {
         "file": "nginx-clean.conf",
-        "hash": "1830539249116169849"
+        "hash": "5703214816994214101"
+      },
+      {
+        "file": "nginx-config-check.txt",
+        "hash": "10376956019246494313"
+      },
+      {
+        "file": "nginx-fixed.txt",
+        "hash": "4058568559231373654"
       },
       {
         "file": "nginx-simple.conf",
-        "hash": "16575890288147700164"
+        "hash": "7847209875321827014"
       },
       {
         "file": "nginx-utf8-nobom.conf",
-        "hash": "11026662839477889931"
+        "hash": "4982798695547520041"
       },
       {
         "file": "nginx.conf",
-        "hash": "11026662839477889931"
+        "hash": "4982798695547520041"
       },
       {
         "file": "nginx/nginx-complete.conf",
-        "hash": "11895252593060745779"
+        "hash": "18144219846512182413"
       },
       {
         "file": "nginx/nginx-corrected.conf",
-        "hash": "2609969102330393441"
+        "hash": "2001582221733630957"
       },
       {
         "file": "nginx/nginx-post-fixed.conf",
-        "hash": "10663725549240482216"
+        "hash": "13292673583109883614"
       },
       {
         "file": "nginx/nginx-simple-working.conf",
-        "hash": "2169171188237216238"
+        "hash": "12164741009870474056"
       },
       {
         "file": "nginx/nginx-ultra-simple.conf",
-        "hash": "5536951320813031931"
+        "hash": "15821248432156815345"
       },
       {
         "file": "nginx/nginx.conf",
-        "hash": "17826844788077293588"
+        "hash": "11939274878279438625"
       },
       {
         "file": "nginx/nginx.conf.analyze",
@@ -1569,63 +1882,67 @@
       },
       {
         "file": "nginx/nginx.conf.backup",
-        "hash": "7877402260378139550"
+        "hash": "17169523248519353159"
       },
       {
         "file": "nginx/nginx.conf.backup.20260118_191726",
-        "hash": "12260478066502745077"
+        "hash": "3445826612789394524"
+      },
+      {
+        "file": "nginx/nginx.conf.backup.frontend",
+        "hash": "11747250720376851308"
       },
       {
         "file": "nginx/nginx.conf.backup2",
-        "hash": "1018586864856188216"
+        "hash": "17376446002395624812"
       },
       {
         "file": "nginx/nginx.conf.backup_20260118_203721",
-        "hash": "2169171188237216238"
+        "hash": "12164741009870474056"
       },
       {
         "file": "nginx/nginx.conf.backup_20260119_022426",
-        "hash": "9920950656820305235"
+        "hash": "13979187404832126954"
       },
       {
         "file": "nginx/nginx.conf.backup_20260120_225358",
-        "hash": "18140778765467387114"
+        "hash": "10617319206618452922"
       },
       {
         "file": "nginx/nginx.conf.backup_before_fix_022618",
-        "hash": "9920950656820305235"
+        "hash": "13979187404832126954"
       },
       {
         "file": "nginx/nginx.conf.backup_gateway_fix_20260121_014019",
-        "hash": "16329361570366465884"
+        "hash": "14954003688235583871"
       },
       {
         "file": "nginx/nginx.conf.bak-problema",
-        "hash": "13496809243046804458"
+        "hash": "200410673943551200"
       },
       {
         "file": "nginx/nginx.conf.example",
-        "hash": "14377400612846621605"
+        "hash": "6442852160807262650"
       },
       {
         "file": "nginx/nginx.conf.latest",
-        "hash": "16150807583737398220"
+        "hash": "6204339606352671674"
       },
       {
         "file": "nginx/nginx.conf.with-bom.bak",
-        "hash": "13496809243046804458"
+        "hash": "200410673943551200"
       },
       {
         "file": "nginx/simple_gateway.conf",
-        "hash": "8026532264208777126"
+        "hash": "5587689828354295045"
       },
       {
         "file": "nginx/test_services.py",
-        "hash": "16446218803054909097"
+        "hash": "6702428601856048354"
       },
       {
         "file": "nx-dev.ps1",
-        "hash": "6120459921244970386"
+        "hash": "15776836319479391569"
       },
       {
         "file": "nx.json",
@@ -1633,7 +1950,7 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "4359857533360393929"
+        "hash": "1333535304007671774"
       },
       {
         "file": "package.json",
@@ -1641,31 +1958,35 @@
       },
       {
         "file": "practical_test.json",
-        "hash": "649820679659791814"
+        "hash": "11527411272836793680"
       },
       {
         "file": "prometheus/Dockerfile",
-        "hash": "11286231001441842310"
+        "hash": "17674181858319246894"
+      },
+      {
+        "file": "prometheus/frontend-targets.json",
+        "hash": "2948837604408211736"
       },
       {
         "file": "prometheus/prometheus.yml",
-        "hash": "9626768172828503115"
+        "hash": "11588433740406485419"
       },
       {
         "file": "providers.tf",
-        "hash": "16726600175782849338"
+        "hash": "5455555396114985329"
       },
       {
         "file": "quick_debug.py",
-        "hash": "8452548884649713883"
+        "hash": "6465043563174964280"
       },
       {
         "file": "quick_debug_httpx.py",
-        "hash": "1252257594685401365"
+        "hash": "1350145565976286004"
       },
       {
         "file": "quick_test.py",
-        "hash": "6514481247979932122"
+        "hash": "10086021239496781329"
       },
       {
         "file": "requirements.no_psycopg2.txt",
@@ -1673,7 +1994,7 @@
       },
       {
         "file": "requirements.txt",
-        "hash": "11530361083375476399"
+        "hash": "7473153126434810684"
       },
       {
         "file": "response.txt",
@@ -1685,43 +2006,43 @@
       },
       {
         "file": "restart_hduce.ps1",
-        "hash": "1132331983155118901"
+        "hash": "6569281606831663751"
       },
       {
         "file": "routes.py.backup_fase2",
-        "hash": "6069952668884021461"
+        "hash": "1458668079775236196"
       },
       {
         "file": "schema_check.py",
-        "hash": "15026351998796307534"
+        "hash": "10919213928214438635"
       },
       {
         "file": "scripts/push-dockerhub.ps1",
-        "hash": "12588602481977919399"
+        "hash": "6119841456942948346"
       },
       {
         "file": "scripts/push-to-dockerhub.ps1",
-        "hash": "13452284014994496599"
+        "hash": "1432311542473930475"
       },
       {
         "file": "scripts/seed-hduce-data.sh",
-        "hash": "13147091654470014759"
+        "hash": "5142143414375878468"
       },
       {
         "file": "scripts/seed_data.py",
-        "hash": "6883290408164534652"
+        "hash": "2834143445020518032"
       },
       {
         "file": "scripts/verify-dockerhub.ps1",
-        "hash": "5145458666476192772"
+        "hash": "14235888802924262647"
       },
       {
         "file": "simple_test.json",
-        "hash": "11518370627226352169"
+        "hash": "10496719815579241415"
       },
       {
         "file": "start-frontend.ps1",
-        "hash": "9336829572621940032"
+        "hash": "610267957104121662"
       },
       {
         "file": "start.ps1",
@@ -1736,16 +2057,20 @@
         "hash": "10649493134671113461"
       },
       {
+        "file": "temp_fix.txt",
+        "hash": "198559940358231218"
+      },
+      {
         "file": "temp_local_main.txt",
         "hash": "11643459956091991676"
       },
       {
         "file": "test-nx-commands.ps1",
-        "hash": "17501604688077827282"
+        "hash": "18235347437040611361"
       },
       {
         "file": "test-report-20260121-184842.html",
-        "hash": "1868602627361080272"
+        "hash": "17650228092617529575"
       },
       {
         "file": "test-services.ps1",
@@ -1753,23 +2078,23 @@
       },
       {
         "file": "test.json",
-        "hash": "2199675409617307948"
+        "hash": "4788069868819747447"
       },
       {
         "file": "test_appointment.json",
-        "hash": "8374762426061525388"
+        "hash": "17984040483156023007"
       },
       {
         "file": "test_connection.ps1",
-        "hash": "11878553574679789112"
+        "hash": "5127270245125007376"
       },
       {
         "file": "test_connection.py",
-        "hash": "11327762617765176776"
+        "hash": "213201253958011692"
       },
       {
         "file": "test_connection_simple.py",
-        "hash": "13667260015330668406"
+        "hash": "5980364330706590876"
       },
       {
         "file": "test_create.json",
@@ -1777,59 +2102,59 @@
       },
       {
         "file": "test_curl.json",
-        "hash": "18350255385772672156"
+        "hash": "3254276457141352777"
       },
       {
         "file": "test_db.py",
-        "hash": "17771285444901575888"
+        "hash": "4257708893536065446"
       },
       {
         "file": "test_db_connection.py",
-        "hash": "9781214545295945168"
+        "hash": "6457033063065148838"
       },
       {
         "file": "test_dbmanager.py",
-        "hash": "18117144919783851333"
+        "hash": "3142629006111553625"
       },
       {
         "file": "test_definitivo.json",
-        "hash": "3531117252563089864"
+        "hash": "5638042373817889214"
       },
       {
         "file": "test_diagnostic.py",
-        "hash": "2879031109281900719"
+        "hash": "16979797329722976489"
       },
       {
         "file": "test_direct.py",
-        "hash": "4689233405015826562"
+        "hash": "16971180759314387046"
       },
       {
         "file": "test_final.json",
-        "hash": "1879216400148230315"
+        "hash": "13410362861658282600"
       },
       {
         "file": "test_final_corregido.ps1",
-        "hash": "4420381975023090372"
+        "hash": "17032770660632745785"
       },
       {
         "file": "test_hduce_system.ps1",
-        "hash": "16822166632235532850"
+        "hash": "13559808082673094644"
       },
       {
         "file": "test_integracion.ps1",
-        "hash": "9982953365596532239"
+        "hash": "6797479362171403839"
       },
       {
         "file": "test_integration.json",
-        "hash": "8311986631207626618"
+        "hash": "89554694876441404"
       },
       {
         "file": "test_login_unit.py",
-        "hash": "4353415334845827255"
+        "hash": "1107022686972458845"
       },
       {
         "file": "test_model.py",
-        "hash": "1759069546800707168"
+        "hash": "4631975781146192781"
       },
       {
         "file": "test_rabbitmq.json",
@@ -1837,15 +2162,15 @@
       },
       {
         "file": "test_rabbitmq_direct.py",
-        "hash": "5061354671772114451"
+        "hash": "9224378235544165345"
       },
       {
         "file": "test_rapido.ps1",
-        "hash": "1732159576434794252"
+        "hash": "18259736706010413573"
       },
       {
         "file": "test_register.ps1",
-        "hash": "8831583757353970967"
+        "hash": "13678545866449330018"
       },
       {
         "file": "test_reinicio.json",
@@ -1853,35 +2178,35 @@
       },
       {
         "file": "test_routes_import.py",
-        "hash": "16202457462763915482"
+        "hash": "348139318093175685"
       },
       {
         "file": "test_simple.ps1",
-        "hash": "2266944979075733977"
+        "hash": "4135391852631466265"
       },
       {
         "file": "test_simple.py",
-        "hash": "12991417830611266364"
+        "hash": "4577956790719390619"
       },
       {
         "file": "test_validate.py",
-        "hash": "11269190625051236461"
+        "hash": "13393999597815626196"
       },
       {
         "file": "token.txt",
-        "hash": "16491455257465704713"
+        "hash": "2600802644389588596"
       },
       {
         "file": "tsconfig.base.json",
-        "hash": "16936441711144470533"
+        "hash": "12471885200579325840"
       },
       {
         "file": "ultimate_test.json",
-        "hash": "2167483335314322741"
+        "hash": "441773506672318915"
       },
       {
         "file": "update-services-nginx.ps1",
-        "hash": "2200995766820382305"
+        "hash": "9307398912871997763"
       },
       {
         "file": "user-schema.json",
@@ -1889,27 +2214,31 @@
       },
       {
         "file": "utf8_template.txt",
-        "hash": "15583707923064494420"
+        "hash": "9680349044828204872"
+      },
+      {
+        "file": "validate-hduce.ps1",
+        "hash": "3051105771815007099"
       },
       {
         "file": "variables.tf",
-        "hash": "13065310837819671128"
+        "hash": "8053130211854240229"
       },
       {
         "file": "verify_auth.ps1",
-        "hash": "585086208535768205"
+        "hash": "9095714329120277794"
       },
       {
         "file": "verify_final.ps1",
-        "hash": "12902659884773858492"
+        "hash": "12939878881561192508"
       },
       {
         "file": "verify_test.json",
-        "hash": "9767365567986609613"
+        "hash": "1176450609580778155"
       },
       {
         "file": "workspace-simple.json",
-        "hash": "4125032062845087104"
+        "hash": "17217188070830787627"
       },
       {
         "file": "workspace.json",

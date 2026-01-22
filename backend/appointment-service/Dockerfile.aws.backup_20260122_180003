@@ -1,0 +1,37 @@
+﻿# backend/appointment-service/Dockerfile.aws
+FROM python:3.11-slim
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY backend/appointment-service/requirements.txt .
+COPY shared-libraries/ /app/shared-libraries/
+COPY backend/appointment-service/*.py ./
+COPY backend/appointment-service/services/ ./services/
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir "pydantic[email]==2.4.2" "pydantic-settings>=2.0.0"
+
+WORKDIR /app/shared-libraries
+RUN pip install --no-cache-dir -e .
+
+RUN cd /app/shared-libraries/hduce_shared/database && \
+    if [ ! -f base.py ]; then \
+        echo "from .postgres import Base" > base.py && \
+        echo "__all__ = [\"Base\"]" >> base.py; \
+    fi
+
+WORKDIR /app
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV PYTHONPATH=/app:/app/shared-libraries:$$PYTHONPATH
+
+EXPOSE 8002
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8002/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]

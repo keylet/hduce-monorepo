@@ -1,0 +1,58 @@
+# .github/workflows/hduce-ci.yml
+name: HDuce CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 8 * * *'  # Daily at 8 AM
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Docker
+      run: |
+        docker --version
+        docker-compose --version
+        
+    - name: Start HDuce Services
+      run: |
+        cd ${{ github.workspace }}
+        docker-compose up -d
+        Start-Sleep -Seconds 45
+        echo "=== Running Services ==="
+        docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+        
+    - name: Run Quick Smoke Test
+      run: |
+        cd ${{ github.workspace }}\ci-tests
+        .\test-quick.ps1
+        
+    - name: Run Full Integration Test
+      run: |
+        cd ${{ github.workspace }}\ci-tests
+        .\ci-pipeline.ps1 -CleanToken
+        
+    - name: Upload Test Reports
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports
+        path: |
+          ${{ github.workspace }}/ci-tests/pipeline-report-*.json
+          ${{ github.workspace }}/ci-tests/ci-report-*.json
+        
+    - name: Stop Services
+      if: always()
+      run: |
+        cd ${{ github.workspace }}
+        docker-compose down

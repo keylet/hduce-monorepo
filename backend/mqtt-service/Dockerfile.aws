@@ -1,0 +1,50 @@
+﻿# backend/mqtt-service/Dockerfile.aws
+# Build: docker build -f backend/mqtt-service/Dockerfile.aws -t hduce-mqtt:aws .
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir pydantic[email]==2.5.0 pydantic-settings>=2.0.0 && \
+    pip install --no-cache-dir psycopg2-binary
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 1. COPIAR shared-libraries
+COPY shared-libraries/ /app/shared-libraries/
+
+# Crear módulo base.py para compatibilidad (fix shared-libraries)
+RUN cd /app/shared-libraries/hduce_shared/database && \
+    if [ ! -f base.py ]; then \
+        echo "from .postgres import Base" > base.py && \
+        echo "__all__ = [\"Base\"]" >> base.py; \
+    fi
+WORKDIR /app/shared-libraries
+RUN pip install -e .
+
+# 2. COPIAR cÃ³digo del mqtt-service
+WORKDIR /app
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir pydantic[email]==2.5.0 pydantic-settings>=2.0.0 && \
+    pip install --no-cache-dir psycopg2-binary
+
+COPY backend/mqtt-service/requirements.txt .
+COPY backend/mqtt-service/*.py ./
+
+# 3. Instalar dependencias
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# 4. Configurar PYTHONPATH
+ENV PYTHONPATH=/app:/app/shared-libraries:$PYTHONPATH
+
+EXPOSE 8004
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8004/health || exit 1
+
+CMD ["python", "main.py"]

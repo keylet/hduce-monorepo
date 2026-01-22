@@ -1,0 +1,69 @@
+﻿# backend/notification-service/Dockerfile.aws
+# Build: docker build -f backend/notification-service/Dockerfile.aws -t hduce-notification:aws .
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir pydantic[email]==2.5.0 pydantic-settings>=2.0.0 && \
+    pip install --no-cache-dir psycopg2-binary
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 1. COPIAR SOLO shared-libraries PRINCIPAL (NO la copia local)
+COPY shared-libraries/ /app/shared-libraries/
+WORKDIR /app/shared-libraries
+RUN pip install -e .
+
+# 2. FIX: Crear base.py si no existe (compatibilidad)
+RUN cd /app/shared-libraries/hduce_shared/database && \
+    if [ ! -f base.py ]; then \
+        echo "from .postgres import Base" > base.py && \
+        echo "__all__ = [\"Base\"]" >> base.py; \
+    fi
+
+# 3. COPIAR código del notification-service (EXCLUYENDO shared-libraries local)
+WORKDIR /app
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir pydantic[email]==2.5.0 pydantic-settings>=2.0.0 && \
+    pip install --no-cache-dir psycopg2-binary
+
+COPY backend/notification-service/requirements.txt .
+
+# Copiar directorio src/ si existe (forma Docker correcta)
+COPY backend/notification-service/src/ ./src/
+
+# Copiar archivos Python principales, excluyendo backups y shared local
+COPY backend/notification-service/main.py .
+COPY backend/notification-service/database.py .
+COPY backend/notification-service/models.py .
+COPY backend/notification-service/routes.py .
+COPY backend/notification-service/schemas.py .
+COPY backend/notification-service/config.py .
+
+COPY backend/notification-service/independent_consumer.py .
+COPY backend/notification-service/enum_patch.py .
+# 4. Instalar pydantic primero (para evitar conflictos)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir "pydantic[email]==2.5.0" "pydantic-settings>=2.0.0"
+
+# 5. Instalar dependencias del servicio
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 6. Configurar PYTHONPATH (CORREGIDO: usar $$PYTHONPATH)
+ENV PYTHONPATH=/app:/app/shared-libraries:$$PYTHONPATH
+
+EXPOSE 8003
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8003/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
+
+
+

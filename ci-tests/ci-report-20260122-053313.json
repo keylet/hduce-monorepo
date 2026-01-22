@@ -1,0 +1,11 @@
+﻿{
+    "test_exit_code":  1,
+    "timestamp":  "2026-01-22T05:33:13",
+    "connectivity_passed":  5,
+    "data_counts":  {
+                        "appointments":  null,
+                        "notifications":  null
+                    },
+    "duration_seconds":  2.19,
+    "services_running":  14
+}

@@ -1,9 +1,62 @@
 {
-  "name": "frontend",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "frontend/src",
-  "projectType": "application",
-  "tags": [],
-  "// targets": "to see all targets run: nx show project frontend --web",
-  "targets": {}
+    "name":  "frontend",
+    "$schema":  "../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot":  "frontend/src",
+    "projectType":  "application",
+    "tags":  [
+
+             ],
+    "// targets":  "to see all targets run: nx show project frontend --web",
+    "targets":  {
+                    "serve":  {
+                                  "defaultConfiguration":  "development",
+                                  "executor":  "@nx/vite:dev-server",
+                                  "configurations":  {
+                                                         "development":  {
+                                                                             "buildTarget":  "frontend:build:development",
+                                                                             "hmr":  true
+                                                                         },
+                                                         "production":  {
+                                                                            "buildTarget":  "frontend:build:production",
+                                                                            "hmr":  false
+                                                                        }
+                                                     },
+                                  "options":  {
+                                                  "buildTarget":  "frontend:build"
+                                              }
+                              },
+                    "lint":  {
+                                 "executor":  "@nx/eslint:lint",
+                                 "outputs":  [
+                                                 "{options.outputFile}"
+                                             ]
+                             },
+                    "build":  {
+                                  "outputs":  [
+                                                  "{projectRoot}/../../dist"
+                                              ],
+                                  "defaultConfiguration":  "production",
+                                  "executor":  "@nx/vite:build",
+                                  "configurations":  {
+                                                         "development":  {
+                                                                             "mode":  "development"
+                                                                         },
+                                                         "production":  {
+                                                                            "mode":  "production"
+                                                                        }
+                                                     },
+                                  "options":  {
+                                                  "outputPath":  "{workspaceRoot}/dist/frontend"
+                                              }
+                              },
+                    "test":  {
+                                 "outputs":  [
+                                                 "{workspaceRoot}/coverage/{projectName}"
+                                             ],
+                                 "executor":  "@nx/jest:jest",
+                                 "options":  {
+                                                 "jestConfig":  "frontend/jest.config.cts"
+                                             }
+                             }
+                }
 }

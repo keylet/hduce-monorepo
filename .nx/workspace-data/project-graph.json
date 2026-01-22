@@ -157,108 +157,51 @@
         "root": "frontend",
         "targets": {
           "lint": {
-            "cache": true,
-            "options": {
-              "cwd": "frontend",
-              "command": "eslint ."
-            },
-            "inputs": [
-              "default",
-              "^default",
-              "{workspaceRoot}/eslint.config.mjs",
-              "{workspaceRoot}/frontend/eslint.config.mjs",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
-            ],
+            "executor": "@nx/eslint:lint",
             "outputs": [
               "{options.outputFile}"
             ],
-            "metadata": {
-              "technologies": [
-                "eslint"
-              ],
-              "description": "Runs ESLint on project",
-              "help": {
-                "command": "npx eslint --help",
-                "example": {
-                  "options": {
-                    "max-warnings": 0
-                  }
-                }
-              }
-            },
-            "executor": "nx:run-commands",
+            "options": {},
             "configurations": {},
             "parallelism": true
           },
           "build": {
-            "options": {
-              "cwd": "frontend",
-              "command": "vite build"
-            },
-            "cache": true,
-            "dependsOn": [
-              "^build"
-            ],
-            "inputs": [
-              "production",
-              "^production",
-              {
-                "externalDependencies": [
-                  "vite"
-                ]
-              }
-            ],
             "outputs": [
-              "dist\\frontend"
+              "{projectRoot}/../../dist"
             ],
-            "metadata": {
-              "technologies": [
-                "vite"
-              ],
-              "description": "Run Vite build",
-              "help": {
-                "command": "npx vite build --help",
-                "example": {
-                  "options": {
-                    "sourcemap": true,
-                    "manifest": "manifest.json"
-                  }
-                }
+            "defaultConfiguration": "production",
+            "executor": "@nx/vite:build",
+            "configurations": {
+              "development": {
+                "mode": "development"
+              },
+              "production": {
+                "mode": "production"
               }
             },
-            "executor": "nx:run-commands",
-            "configurations": {},
+            "options": {
+              "outputPath": "dist/frontend"
+            },
             "parallelism": true
           },
           "serve": {
-            "continuous": true,
-            "options": {
-              "cwd": "frontend",
-              "command": "vite"
-            },
-            "metadata": {
-              "technologies": [
-                "vite"
-              ],
-              "description": "Starts Vite dev server",
-              "help": {
-                "command": "npx vite --help",
-                "example": {
-                  "options": {
-                    "port": 3000
-                  }
-                }
+            "defaultConfiguration": "development",
+            "executor": "@nx/vite:dev-server",
+            "configurations": {
+              "development": {
+                "buildTarget": "frontend:build:development",
+                "hmr": true
               },
-              "deprecated": "Use devTargetName instead. This option will be removed in Nx 22."
+              "production": {
+                "buildTarget": "frontend:build:production",
+                "hmr": false
+              }
             },
-            "executor": "nx:run-commands",
-            "configurations": {},
-            "parallelism": true
+            "options": {
+              "buildTarget": "frontend:build"
+            },
+            "parallelism": true,
+            "continuous": true
           },
           "dev": {
             "continuous": true,
@@ -376,42 +319,13 @@
             "parallelism": true
           },
           "test": {
-            "options": {
-              "cwd": "frontend",
-              "env": {
-                "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"commonjs\",\"customConditions\":null}"
-              },
-              "command": "jest"
-            },
-            "metadata": {
-              "technologies": [
-                "jest"
-              ],
-              "description": "Run Jest Tests",
-              "help": {
-                "command": "npx jest --help",
-                "example": {
-                  "options": {
-                    "coverage": true
-                  }
-                }
-              }
-            },
-            "cache": true,
-            "inputs": [
-              "default",
-              "^production",
-              "{workspaceRoot}\\jest.preset.js",
-              {
-                "externalDependencies": [
-                  "jest"
-                ]
-              }
-            ],
             "outputs": [
-              "{workspaceRoot}\\coverage\\frontend"
+              "{workspaceRoot}/coverage/{projectName}"
             ],
-            "executor": "nx:run-commands",
+            "executor": "@nx/jest:jest",
+            "options": {
+              "jestConfig": "frontend/jest.config.cts"
+            },
             "configurations": {},
             "parallelism": true
           }
@@ -13001,6 +12915,16 @@
     "frontend": [
       {
         "source": "frontend",
+        "target": "npm:vite",
+        "type": "static"
+      },
+      {
+        "source": "frontend",
+        "target": "npm:@vitejs/plugin-react",
+        "type": "static"
+      },
+      {
+        "source": "frontend",
         "target": "npm:@nx/eslint-plugin",
         "type": "static"
       },
@@ -13032,16 +12956,6 @@
       {
         "source": "frontend",
         "target": "npm:axios",
-        "type": "static"
-      },
-      {
-        "source": "frontend",
-        "target": "npm:vite",
-        "type": "static"
-      },
-      {
-        "source": "frontend",
-        "target": "npm:@vitejs/plugin-react",
         "type": "static"
       },
       {
@@ -30748,5 +30662,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1769059235249
+  "computedAt": 1769086389220
 }

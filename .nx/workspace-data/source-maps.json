@@ -8,189 +8,9 @@
       "frontend/eslint.config.mjs",
       "@nx/eslint/plugin"
     ],
-    "targets.lint": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.cache": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.inputs": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.outputs": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.executor": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options.cwd": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options.command": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.technologies": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.technologies.0": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.description": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help.command": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help.example": [
-      "frontend/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
     "projectType": [
       "frontend/project.json",
       "nx/core/project-json"
-    ],
-    "targets.build": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.options": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.cache": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.dependsOn": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.inputs": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.outputs": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.executor": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.options.cwd": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.options.command": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.technologies": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.technologies.0": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.description": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.help": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.help.command": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build.metadata.help.example": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.continuous": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.options": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.executor": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.options.cwd": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.options.command": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.technologies": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.technologies.0": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.description": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.help": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.help.command": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.help.example": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve.metadata.deprecated": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
     ],
     "targets.dev": [
       "frontend/vite.config.mts",
@@ -300,30 +120,6 @@
       "frontend/vite.config.mts",
       "@nx/vite/plugin"
     ],
-    "targets.serve-static": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve-static.continuous": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve-static.executor": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve-static.options": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve-static.options.buildTarget": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.serve-static.options.spa": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
     "targets.typecheck": [
       "frontend/vite.config.mts",
       "@nx/vite/plugin"
@@ -380,14 +176,6 @@
       "frontend/vite.config.mts",
       "@nx/vite/plugin"
     ],
-    "targets.build-deps": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
-    "targets.build-deps.dependsOn": [
-      "frontend/vite.config.mts",
-      "@nx/vite/plugin"
-    ],
     "targets.watch-deps": [
       "frontend/vite.config.mts",
       "@nx/vite/plugin"
@@ -412,70 +200,6 @@
       "frontend/vite.config.mts",
       "@nx/vite/plugin"
     ],
-    "targets.test": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.options": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.cache": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.inputs": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.outputs": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.executor": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.options.cwd": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.options.env": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.options.command": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.technologies": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.technologies.0": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.description": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.help": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.help.command": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
-    "targets.test.metadata.help.example": [
-      "frontend/jest.config.cts",
-      "@nx/jest/plugin"
-    ],
     "name": [
       "frontend/project.json",
       "nx/core/project-json"
@@ -493,6 +217,130 @@
       "nx/core/project-json"
     ],
     "tags": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.defaultConfiguration": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.hmr": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.hmr": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.defaultConfiguration": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.mode": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.mode": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
       "frontend/project.json",
       "nx/core/project-json"
     ]

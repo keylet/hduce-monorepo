@@ -8,7 +8,7 @@ import os
 # Configuración de la base de datos
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    f"postgresql://{os.getenv('POSTGRES_USER', 'postgres')}:{os.getenv('POSTGRES_PASSWORD', 'postgres')}@{os.getenv('POSTGRES_HOST', 'localhost')}:{os.getenv('POSTGRES_PORT', '5432')}/{os.getenv('USER_DB', 'user_db')}"
+    f"postgresql://{os.getenv('POSTGRES_USER', 'postgres')}:{os.getenv('POSTGRES_PASSWORD', 'postgres')}@{os.getenv('POSTGRES_HOST', '172.31.27.77')}:{os.getenv('POSTGRES_PORT', '5432')}/{os.getenv('USER_DB', 'user_db')}"
 )
 
 engine = create_engine(DATABASE_URL)
@@ -41,3 +41,4 @@ def init_db():
     inspector = inspect(engine)
     tables = inspector.get_table_names()
     print(f"Tablas existentes en user_db: {tables}")
+

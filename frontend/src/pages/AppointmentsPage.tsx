@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -99,7 +99,7 @@ const AppointmentsPage: React.FC = () => {
       // In a real app, this would be a PUT request
       setUserAppointments(prev =>
         prev.map(apt =>
-          apt.id === id ? { ...apt, status: newStatus } : apt
+          apt.id === id ? { ...apt, status: newStatus as AppointmentStatus } : apt
         )
       );
       
@@ -444,4 +444,5 @@ const AppointmentsPage: React.FC = () => {
 };
 
 export default AppointmentsPage;
+
 

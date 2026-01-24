@@ -1,0 +1,131 @@
+﻿name: Deploy Monitoring on Push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/mqtt-service/**'
+      - 'backend/metrics-service/**'
+      - 'monitoring/**'
+
+env:
+  BASTION_HOST: '54.225.90.119'
+  MONITORING_INSTANCE: '172.31.83.90'
+  IOT_INSTANCE: '172.31.37.79'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          # Guardar la clave privada del secret
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          
+          # Agregar el bastion a known_hosts
+          ssh-keyscan -H ${{ env.BASTION_HOST }} >> ~/.ssh/known_hosts
+          
+          # Verificar que la clave funciona
+          echo "🔑 Testing SSH connection to bastion..."
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ env.BASTION_HOST }} "echo '✅ SSH connection successful'"
+      
+      - name: Deploy to Monitoring Instance
+        run: |
+          echo "📊 Deploying to Monitoring (172.31.83.90)..."
+          
+          # Comando SSH que pasa por el bastion
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ env.BASTION_HOST }} << 'BASTION_SCRIPT'
+            
+            # Ahora conectamos desde el bastion a la instancia monitoring
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/hduce-key.pem ubuntu@172.31.83.90 << 'MONITORING_SCRIPT'
+              
+              echo "🚀 Updating Monitoring Stack..."
+              
+              # 1. Crear/actualizar directorios
+              mkdir -p ~/monitoring/{prometheus,grafana}
+              mkdir -p ~/monitoring/grafana/provisioning/{datasources,dashboards}
+              
+              # 2. Aquí iría tu lógica de despliegue...
+              # Por ahora solo un ejemplo básico
+              cd ~/monitoring
+              
+              # Si no existe docker-compose, crearlo
+              if [ ! -f docker-compose.yml ]; then
+                echo "📝 Creating docker-compose.yml..."
+                cat > docker-compose.yml << 'EOF'
+              version: '3.8'
+              services:
+                prometheus:
+                  image: prom/prometheus:latest
+                  container_name: prometheus
+                  ports: ["9090:9090"]
+                  restart: unless-stopped
+                
+                grafana:
+                  image: grafana/grafana:latest
+                  container_name: grafana
+                  ports: ["3000:3000"]
+                  environment:
+                    - GF_SECURITY_ADMIN_PASSWORD=admin123
+                  restart: unless-stopped
+              EOF
+              fi
+              
+              # 3. Iniciar/Reiniciar servicios
+              docker-compose down || true
+              docker-compose up -d
+              
+              echo "✅ Monitoring Stack deployed!"
+              echo "📊 Prometheus: http://172.31.83.90:9090"
+              echo "📈 Grafana: http://172.31.83.90:3000 (admin/admin123)"
+              
+            MONITORING_SCRIPT
+          BASTION_SCRIPT
+      
+      - name: Deploy to IoT Instance
+        run: |
+          echo "📡 Deploying to IoT (172.31.37.79)..."
+          
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ env.BASTION_HOST }} << 'BASTION_SCRIPT'
+            
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/hduce-key.pem ubuntu@172.31.37.79 << 'IOT_SCRIPT'
+              
+              echo "🚀 Updating IoT Stack..."
+              
+              # Crear directorios
+              mkdir -p ~/iot/{config,data}
+              
+              # Configurar Mosquitto
+              cat > ~/iot/config/mosquitto.conf << 'EOF'
+              listener 1883 0.0.0.0
+              allow_anonymous true
+              persistence true
+              persistence_location /mosquitto/data/
+              EOF
+              
+              # Crear docker-compose para IoT
+              cat > ~/iot/docker-compose.yml << 'EOF'
+              version: '3.8'
+              services:
+                mosquitto:
+                  image: eclipse-mosquitto:latest
+                  container_name: mosquitto
+                  ports: ["1883:1883", "9001:9001"]
+                  restart: unless-stopped
+              EOF
+              
+              # Iniciar servicios
+              cd ~/iot
+              docker-compose down || true
+              docker-compose up -d
+              
+              echo "✅ IoT Stack deployed!"
+              echo "📡 MQTT Broker: mqtt://172.31.37.79:1883"
+              
+            IOT_SCRIPT
+          BASTION_SCRIPT

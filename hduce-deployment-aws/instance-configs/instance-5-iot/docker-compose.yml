@@ -1,0 +1,110 @@
+﻿version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: hduce-mosquitto
+    restart: always
+    ports:
+      - "1883:1883"   # MQTT
+      - "9001:9001"   # Websocket
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - hduce-network
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-h", "localhost", "-t", "\$SYS/broker/uptime", "-C", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mqtt-service:
+    image: hduce-mqtt-service:aws-latest
+    container_name: iot-mqtt-service
+    restart: always
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - MQTT_BROKER_PORT=1883
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - PORT=8004
+    depends_on:
+      - mosquitto
+    networks:
+      - hduce-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  metrics-service:
+    image: hduce-metrics-service:aws-latest
+    container_name: iot-metrics-service
+    restart: always
+    environment:
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - PORT=8005
+    networks:
+      - hduce-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mqtt-explorer:
+    image: node:18-alpine
+    container_name: mqtt-explorer
+    restart: always
+    ports:
+      - "8080:8080"
+    working_dir: /app
+    volumes:
+      - ./mqtt-explorer:/app
+    environment:
+      - MQTT_BROKER_HOST=mosquitto
+      - MQTT_BROKER_PORT=1883
+    command: >
+      sh -c "
+        npm install -g http-server &&
+        echo '<!DOCTYPE html>
+        <html>
+        <head>
+          <title>MQTT Explorer</title>
+          <script src=\"https://unpkg.com/mqtt/dist/mqtt.min.js\"></script>
+        </head>
+        <body>
+          <h1>HDuce MQTT Explorer</h1>
+          <div id=\"messages\"></div>
+          <script>
+            const client = mqtt.connect(\"ws://\" + window.location.hostname + \":9001\");
+            client.on(\"connect\", () => {
+              console.log(\"Connected to MQTT broker\");
+              client.subscribe(\"hduce/#\");
+            });
+            client.on(\"message\", (topic, message) => {
+              const div = document.getElementById(\"messages\");
+              div.innerHTML = `<p><strong>\${topic}:</strong> \${message.toString()}</p>` + div.innerHTML;
+            });
+          </script>
+        </body>
+        </html>' > index.html &&
+        http-server -p 8080
+      "
+    depends_on:
+      - mosquitto
+    networks:
+      - hduce-network
+
+networks:
+  hduce-network:
+    external: true
+    name: hduce-network
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:

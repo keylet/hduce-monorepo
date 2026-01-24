@@ -1,0 +1,28 @@
+﻿version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: hduce-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./html:/usr/share/nginx/html:ro
+    environment:
+      - SERVICES_HOST=${SERVICES_HOST}
+    networks:
+      - hduce-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  hduce-network:
+    external: true
+    name: hduce-network

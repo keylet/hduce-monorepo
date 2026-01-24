@@ -6,10 +6,10 @@ import logging
 import sys
 from typing import Dict, Any
 
-# Configurar logging
+
 logger = logging.getLogger(__name__)
 
-# Añadir path para shared-libraries
+
 sys.path.insert(0, '/app')
 sys.path.insert(0, '/app/shared-libraries')
 
@@ -19,7 +19,7 @@ try:
     logger.info("✅ Shared libraries importadas desde /app")
 except ImportError as e:
     logger.error(f"❌ Error importando shared libraries desde /app: {e}")
-    # Intentar importar desde local para desarrollo
+    
     try:
         sys.path.insert(0, '..')
         from shared_libraries.hduce_shared.rabbitmq import RabbitMQPublisher
@@ -35,10 +35,10 @@ def publish_appointment_created(appointment_data: Dict[str, Any]) -> bool:
     Publicar evento de cita creada usando RabbitMQPublisher de shared libraries
     """
     try:
-        # Crear instancia del publisher
+       
         publisher = RabbitMQPublisher()
         
-        # Publicar el evento
+      
         success = publisher.publish_appointment_created(appointment_data)
         
         if success:
@@ -53,5 +53,5 @@ def publish_appointment_created(appointment_data: Dict[str, Any]) -> bool:
         return False
 
 
-# Alias para compatibilidad
+
 publish_appointment_event = publish_appointment_created

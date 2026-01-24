@@ -8,28 +8,28 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 
-# Importar de shared-libraries
+
 from hduce_shared.database import DatabaseManager
 from hduce_shared.rabbitmq.publisher import RabbitMQPublisher
 
-# Importar modelos y esquemas locales
+
 from models import Appointment, Doctor
 from schemas import AppointmentCreate, AppointmentResponse, DoctorResponse
 from auth_client import get_current_user
 
 logger = logging.getLogger(__name__)
 
-# Crear router SIN prefix aquí - el prefix /api se añade en main.py
+
 router = APIRouter()
 
-# Dependencia de base de datos - usar DatabaseManager.get_session correctamente
+
 def get_db():
     """CORRECTO: Usar DatabaseManager.get_session() como context manager"""
     with DatabaseManager.get_session("appointments") as session:
         try:
             yield session
         except Exception:
-            # El context manager ya maneja commit/rollback automáticamente
+           
             raise
 
 def publish_appointment_created(appointment_data: dict):
@@ -95,7 +95,7 @@ async def create_appointment(
 ):
     """Create a new appointment - POST /api/appointments/"""
     try:
-        # Obtener patient_id del usuario actual
+       
         user_id = current_user.get("user_id")
         if not user_id:
             logger.error(f"Usuario no tiene user_id válido: {current_user}")
@@ -104,7 +104,7 @@ async def create_appointment(
                 detail="Usuario no tiene un ID válido"
             )
 
-        # Convertir user_id a int (patient_id)
+        
         try:
             patient_id = int(user_id)
         except (ValueError, TypeError):
@@ -114,15 +114,15 @@ async def create_appointment(
                 detail="ID de usuario no válido"
             )
 
-        # Crear diccionario con datos de la cita
+       
         appointment_dict = appointment.dict()
 
-        # Añadir información del paciente desde el usuario actual
+        
         appointment_dict["patient_id"] = patient_id
         appointment_dict["patient_email"] = current_user.get("email", f"user{patient_id}@example.com")
         appointment_dict["patient_name"] = current_user.get("username", f"Paciente {patient_id}")
 
-        # Crear objeto de cita
+      
         db_appointment = Appointment(**appointment_dict)
         db.add(db_appointment)
         db.commit()
@@ -130,7 +130,7 @@ async def create_appointment(
 
         logger.info(f"✅ Cita creada: ID={db_appointment.id}, Paciente={db_appointment.patient_id}")
 
-        # Preparar datos para RabbitMQ
+       
         rabbitmq_data = {
             "id": db_appointment.id,
             "patient_id": db_appointment.patient_id,
@@ -141,7 +141,7 @@ async def create_appointment(
             "reason": db_appointment.reason
         }
 
-        # Publicar a RabbitMQ en background
+       
         background_tasks.add_task(publish_appointment_created, rabbitmq_data)
 
         return db_appointment

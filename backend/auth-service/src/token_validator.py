@@ -9,7 +9,7 @@ import os
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
 
-# Initialize JWT Manager with your secret key
+
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 jwt_manager = JWTManager(secret_key=JWT_SECRET_KEY)
 

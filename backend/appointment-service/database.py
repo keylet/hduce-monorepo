@@ -4,41 +4,39 @@ Database configuration for Appointment Service - Using Shared Libraries
 import sys
 import os
 
-# Add path for shared-libraries
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, '/app')  # For Docker
 
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-# IMPORT FROM SHARED-LIBRARIES
+
 from hduce_shared.database import Base, DatabaseManager, create_all_tables
 from hduce_shared.config import settings
 
 print("?? Configurando appointment-service database con shared libraries...")
 
-# Service name constant
+
 SERVICE_NAME = "appointments"
 
-# ==============================================
-# FASTAPI COMPATIBLE DATABASE FUNCTIONS
-# ==============================================
+
 
 def get_db():
     """
     FastAPI dependency for appointment-service
     Returns a SQLAlchemy session
     """
-    # Get context manager from shared libraries
+   
     context_manager = DatabaseManager.get_session(SERVICE_NAME)
     
-    # Enter context to get the session
+ 
     db = context_manager.__enter__()
     
     try:
         yield db
     finally:
-        # Exit context
+      
         context_manager.__exit__(None, None, None)
 
 @contextmanager
@@ -47,15 +45,15 @@ def get_db_context():
     with DatabaseManager.get_session(SERVICE_NAME) as db:
         yield db
 
-# Alias for compatibility
+
 get_db_session_appointment = lambda: DatabaseManager.get_session(SERVICE_NAME)
 
-# Get engine for table creation (used in main.py)
+
 def get_engine():
     """Get SQLAlchemy engine for this service"""
     return DatabaseManager.get_engine(SERVICE_NAME)
 
-# Create tables for this service
+
 def create_tables():
     """Create tables for appointment-service"""
     try:

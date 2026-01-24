@@ -4,7 +4,7 @@ Authentication client - Robust version with proper error handling
 import sys
 import os
 
-# Add path for shared-libraries
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, '/app')  # For Docker
 
@@ -13,14 +13,13 @@ from typing import Dict, Any, Optional
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-# IMPORT FROM SHARED-LIBRARIES
+
 from hduce_shared.config import settings
 from hduce_shared.auth import JWTManager
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer()
 
-# Inicializar JWTManager desde shared
 try:
     jwt_secret_key = settings.jwt.jwt_secret_key
     logger.info(f"JWT Secret Key loaded (first 10 chars): {jwt_secret_key[:10]}...")
@@ -47,10 +46,10 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
     logger.info(f"Verifying token (first 20 chars): {jwt_token[:20]}...")
     
     try:
-        # Decode token using JWTManager
+       
         payload = jwt_manager.decode_token(jwt_token)
         
-        # Check if decode_token returned None (invalid token)
+       
         if payload is None:
             logger.error("decode_token returned None - invalid token or secret key mismatch")
             raise HTTPException(
@@ -59,10 +58,10 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
-        # Log successful decoding
+    
         logger.info(f"✅ Token decoded successfully for subject: {payload.get('sub', 'unknown')}")
         
-        # Format payload for compatibility with existing code
+       
         token_data = {
             "valid": True,
             "user_id": payload.get("user_id") or payload.get("sub") or "unknown",
@@ -78,7 +77,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
         return token_data
         
     except HTTPException:
-        # Re-raise HTTP exceptions
+     
         raise
     except Exception as e:
         logger.error(f"Error verifying token: {type(e).__name__}: {str(e)}")
@@ -88,7 +87,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-# Function for compatibility
+
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Alias for verify_token for compatibility with existing code"""
     return await verify_token(credentials)

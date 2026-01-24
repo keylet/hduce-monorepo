@@ -2,7 +2,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime, date, time
 
-# ==================== Specialty Schemas ====================
+
 class SpecialtyBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -17,7 +17,6 @@ class SpecialtyResponse(SpecialtyBase):
     class Config:
         from_attributes = True
 
-# ==================== Doctor Schemas ====================
 class DoctorBase(BaseModel):
     name: str
     email: Optional[str] = None
@@ -31,17 +30,16 @@ class DoctorCreate(DoctorBase):
 class DoctorUpdate(DoctorBase):
     pass
 
-# DoctorResponse CORREGIDO - maneja la relación specialty correctamente
+
 class DoctorResponse(DoctorBase):
     id: int
     created_at: Optional[datetime] = None
-    # Cambiado: en lugar de specialty: Optional[str], usamos specialty: Optional[SpecialtyResponse]
+    
     specialty: Optional[SpecialtyResponse] = None
     
     class Config:
         from_attributes = True
 
-# ==================== Appointment Schemas ====================
 class AppointmentBase(BaseModel):
     doctor_id: int
     appointment_date: date
@@ -71,10 +69,9 @@ class AppointmentResponse(AppointmentBase):
     class Config:
         from_attributes = True
 
-# Alias para compatibilidad con código existente
 Appointment = AppointmentResponse
 
-# ==================== Webhook Schemas ====================
+
 class WebhookPayload(BaseModel):
     event: str
     data: dict

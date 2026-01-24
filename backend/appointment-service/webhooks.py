@@ -10,10 +10,10 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# N8N Webhook URL - ¡ACTUALIZA ESTA URL!
+
 N8N_WEBHOOK_URL = "http://n8n:5678/webhook/test/appointment-created"
 
-# Test the connection to N8N
+
 async def test_n8n_connection() -> bool:
     """Test if N8N webhook is reachable"""
     try:
@@ -33,7 +33,6 @@ async def test_n8n_connection() -> bool:
         logger.error(f"N8N connection test failed: {e}")
         return False
 
-# Send appointment event to N8N
 async def send_to_n8n(event_type: str, appointment_data: Dict[str, Any]):
     """Send appointment event to N8N webhook"""
     try:
@@ -59,7 +58,6 @@ async def send_to_n8n(event_type: str, appointment_data: Dict[str, Any]):
     except Exception as e:
         logger.error(f"Failed to send to N8N: {e}")
 
-# Health check endpoint
 @router.get("/health")
 async def webhook_health():
     """Health check for webhooks"""
@@ -73,7 +71,7 @@ async def webhook_health():
         "timestamp": datetime.now().isoformat()
     }
 
-# Webhook endpoint for appointment created
+
 @router.post("/appointment-created")
 async def appointment_created_webhook(
     background_tasks: BackgroundTasks,
@@ -83,7 +81,7 @@ async def appointment_created_webhook(
     
     logger.info(f"Appointment created webhook received: {appointment_data.get('id')}")
     
-    # Forward to N8N in background
+  
     background_tasks.add_task(
         send_to_n8n,
         "appointment.created",
@@ -96,7 +94,7 @@ async def appointment_created_webhook(
         "appointment_id": appointment_data.get('id')
     }
 
-# Webhook endpoint for appointment updated
+
 @router.post("/appointment-updated")
 async def appointment_updated_webhook(
     background_tasks: BackgroundTasks,
@@ -106,7 +104,7 @@ async def appointment_updated_webhook(
     
     logger.info(f"Appointment updated webhook received: {appointment_data.get('id')}")
     
-    # Forward to N8N in background
+  
     background_tasks.add_task(
         send_to_n8n,
         "appointment.updated",

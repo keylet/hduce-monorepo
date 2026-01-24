@@ -9,11 +9,11 @@ import httpx
 from datetime import datetime
 from contextlib import asynccontextmanager
 
-# Configure logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Add shared libraries path
+
 sys.path.append('/app/shared-libraries')
 
 @asynccontextmanager
@@ -23,10 +23,10 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("🛑 Shutting down...")
 
-# Create app
+
 app = FastAPI(title="Appointment Service", version="1.0.0", lifespan=lifespan)
 
-# ========== WEBHOOKS ROUTES ==========
+
 webhooks_router = APIRouter(prefix="/api/webhooks", tags=["webhooks"])
 
 async def send_to_n8n(event_type: str, data: dict):
@@ -70,7 +70,7 @@ async def appointment_created(data: dict, background_tasks: BackgroundTasks):
     """Handle appointment created"""
     logger.info(f"Appointment created webhook: {data.get('id', 'unknown')}")
     
-    # Send to N8N in background
+ 
     background_tasks.add_task(send_to_n8n, "appointment.created", data)
     
     return {
@@ -85,7 +85,7 @@ async def appointment_updated(data: dict, background_tasks: BackgroundTasks):
     """Handle appointment updated"""
     logger.info(f"Appointment updated webhook: {data.get('id', 'unknown')}")
     
-    # Send to N8N in background
+   
     background_tasks.add_task(send_to_n8n, "appointment.updated", data)
     
     return {
@@ -95,7 +95,7 @@ async def appointment_updated(data: dict, background_tasks: BackgroundTasks):
         "timestamp": datetime.now().isoformat()
     }
 
-# ========== BASIC ROUTES ==========
+
 @app.get("/")
 async def root():
     """Root endpoint"""
@@ -115,7 +115,7 @@ async def health():
     """Health check"""
     return {"status": "healthy", "service": "appointment"}
 
-# Include routers
+
 app.include_router(webhooks_router)
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-﻿# backend/appointment-service/Dockerfile.aws
+﻿
 FROM python:3.11-slim
 WORKDIR /app
 

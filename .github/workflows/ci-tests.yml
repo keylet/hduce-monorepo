@@ -17,17 +17,17 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4  # ← CAMBIADO de v3 a v4
+      uses: actions/checkout@v4
 
     - name: Setup Docker
       run: |
         docker --version
-        docker-compose --version
+        docker compose version  # ← CAMBIADO: docker compose (con espacio)
 
     - name: Start HDuce Services
       run: |
         cd ${{ github.workspace }}
-        docker-compose up -d
+        docker compose up -d  # ← CAMBIADO: docker compose
         Start-Sleep -Seconds 45
         echo "=== Running Services ==="
         docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
@@ -44,7 +44,7 @@ jobs:
 
     - name: Upload Test Reports
       if: always()
-      uses: actions/upload-artifact@v4  # ← CAMBIADO de v3 a v4
+      uses: actions/upload-artifact@v4
       with:
         name: test-reports
         path: |
@@ -55,4 +55,4 @@ jobs:
       if: always()
       run: |
         cd ${{ github.workspace }}
-        docker-compose down
+        docker compose down  # ← CAMBIADO: docker compose

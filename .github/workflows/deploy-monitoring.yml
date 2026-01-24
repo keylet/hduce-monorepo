@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  SSH_USER: ubuntu
+  SSH_USER: ec2-user
   BASTION_HOST: 54.225.90.119
   MONITORING_INSTANCE: 172.31.83.90
   IOT_INSTANCE: 172.31.37.79

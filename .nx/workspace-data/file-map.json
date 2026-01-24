@@ -752,112 +752,6 @@
           "hash": "16206357420488112583"
         }
       ],
-      "auth-service": [
-        {
-          "file": "backend/auth-service/.dockerignore",
-          "hash": "17813528833182650020"
-        },
-        {
-          "file": "backend/auth-service/Dockerfile",
-          "hash": "14946131415743170754"
-        },
-        {
-          "file": "backend/auth-service/Dockerfile.aws",
-          "hash": "11644291211603018333"
-        },
-        {
-          "file": "backend/auth-service/Dockerfile.aws.backup_20260122_180003",
-          "hash": "8639861233873684202"
-        },
-        {
-          "file": "backend/auth-service/__init__.py",
-          "hash": "15036214574332298676"
-        },
-        {
-          "file": "backend/auth-service/analyze_imports.py",
-          "hash": "5108072220564627492"
-        },
-        {
-          "file": "backend/auth-service/analyze_jwt_usage.py",
-          "hash": "16412300827616051241"
-        },
-        {
-          "file": "backend/auth-service/auth_utils.py",
-          "hash": "1588686337905681560"
-        },
-        {
-          "file": "backend/auth-service/auth_utils_completo.txt",
-          "hash": "17833722300321523369"
-        },
-        {
-          "file": "backend/auth-service/check_auth_key.py",
-          "hash": "3896004413666714625"
-        },
-        {
-          "file": "backend/auth-service/check_jwt_direct.py",
-          "hash": "1929987946218838756"
-        },
-        {
-          "file": "backend/auth-service/create_default_users.py",
-          "hash": "16050071235584798215"
-        },
-        {
-          "file": "backend/auth-service/database.py",
-          "hash": "2497513121722478549"
-        },
-        {
-          "file": "backend/auth-service/find_jwt_usage.py",
-          "hash": "5713206111685734554"
-        },
-        {
-          "file": "backend/auth-service/find_token_creation.py",
-          "hash": "650535726754240926"
-        },
-        {
-          "file": "backend/auth-service/main.py",
-          "hash": "1711825959116711330"
-        },
-        {
-          "file": "backend/auth-service/models.py",
-          "hash": "1707925383497909240"
-        },
-        {
-          "file": "backend/auth-service/project.json",
-          "hash": "15955825266890914316"
-        },
-        {
-          "file": "backend/auth-service/requirements.txt",
-          "hash": "3397239597731815380"
-        },
-        {
-          "file": "backend/auth-service/requirements_minimal.txt",
-          "hash": "2278123858734971096"
-        },
-        {
-          "file": "backend/auth-service/routes.py",
-          "hash": "13922214774578694475"
-        },
-        {
-          "file": "backend/auth-service/routes_test.py",
-          "hash": "7701521972762107063"
-        },
-        {
-          "file": "backend/auth-service/schemas.py",
-          "hash": "11617331009904957980"
-        },
-        {
-          "file": "backend/auth-service/scripts for executions/auth-service.ps1",
-          "hash": "5308150900095659333"
-        },
-        {
-          "file": "backend/auth-service/src/token_validator.py",
-          "hash": "4126739400920134986"
-        },
-        {
-          "file": "backend/auth-service/tests/__init__.py",
-          "hash": "1604380669023410385"
-        }
-      ],
       "shared-libraries-root": [
         {
           "file": "shared-libraries/MANIFEST.in",
@@ -1216,6 +1110,112 @@
         {
           "file": "backend/notification-service/shared-libraries/setup.py",
           "hash": "12826394306350995508"
+        }
+      ],
+      "auth-service": [
+        {
+          "file": "backend/auth-service/.dockerignore",
+          "hash": "17813528833182650020"
+        },
+        {
+          "file": "backend/auth-service/Dockerfile",
+          "hash": "14946131415743170754"
+        },
+        {
+          "file": "backend/auth-service/Dockerfile.aws",
+          "hash": "11644291211603018333"
+        },
+        {
+          "file": "backend/auth-service/Dockerfile.aws.backup_20260122_180003",
+          "hash": "8639861233873684202"
+        },
+        {
+          "file": "backend/auth-service/__init__.py",
+          "hash": "15036214574332298676"
+        },
+        {
+          "file": "backend/auth-service/analyze_imports.py",
+          "hash": "5108072220564627492"
+        },
+        {
+          "file": "backend/auth-service/analyze_jwt_usage.py",
+          "hash": "16412300827616051241"
+        },
+        {
+          "file": "backend/auth-service/auth_utils.py",
+          "hash": "1588686337905681560"
+        },
+        {
+          "file": "backend/auth-service/auth_utils_completo.txt",
+          "hash": "17833722300321523369"
+        },
+        {
+          "file": "backend/auth-service/check_auth_key.py",
+          "hash": "3896004413666714625"
+        },
+        {
+          "file": "backend/auth-service/check_jwt_direct.py",
+          "hash": "1929987946218838756"
+        },
+        {
+          "file": "backend/auth-service/create_default_users.py",
+          "hash": "16050071235584798215"
+        },
+        {
+          "file": "backend/auth-service/database.py",
+          "hash": "2497513121722478549"
+        },
+        {
+          "file": "backend/auth-service/find_jwt_usage.py",
+          "hash": "5713206111685734554"
+        },
+        {
+          "file": "backend/auth-service/find_token_creation.py",
+          "hash": "650535726754240926"
+        },
+        {
+          "file": "backend/auth-service/main.py",
+          "hash": "1711825959116711330"
+        },
+        {
+          "file": "backend/auth-service/models.py",
+          "hash": "1707925383497909240"
+        },
+        {
+          "file": "backend/auth-service/project.json",
+          "hash": "15955825266890914316"
+        },
+        {
+          "file": "backend/auth-service/requirements.txt",
+          "hash": "3397239597731815380"
+        },
+        {
+          "file": "backend/auth-service/requirements_minimal.txt",
+          "hash": "2278123858734971096"
+        },
+        {
+          "file": "backend/auth-service/routes.py",
+          "hash": "13922214774578694475"
+        },
+        {
+          "file": "backend/auth-service/routes_test.py",
+          "hash": "7701521972762107063"
+        },
+        {
+          "file": "backend/auth-service/schemas.py",
+          "hash": "11617331009904957980"
+        },
+        {
+          "file": "backend/auth-service/scripts for executions/auth-service.ps1",
+          "hash": "5308150900095659333"
+        },
+        {
+          "file": "backend/auth-service/src/token_validator.py",
+          "hash": "4126739400920134986"
+        },
+        {
+          "file": "backend/auth-service/tests/__init__.py",
+          "hash": "1604380669023410385"
         }
       ]
     },

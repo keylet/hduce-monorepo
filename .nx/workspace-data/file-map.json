@@ -32,196 +32,6 @@
   ],
   "fileMap": {
     "projectFileMap": {
-      "shared-libraries-root": [
-        {
-          "file": "shared-libraries/MANIFEST.in",
-          "hash": "5272990151360349903"
-        },
-        {
-          "file": "shared-libraries/__init__.py",
-          "hash": "16637819469781383938"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/PKG-INFO",
-          "hash": "8230997925516338399"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/SOURCES.txt",
-          "hash": "10469267164356162011"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/dependency_links.txt",
-          "hash": "15036214574332298676"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/requires.txt",
-          "hash": "4577494559807045646"
-        },
-        {
-          "file": "shared-libraries/hduce_shared.egg-info/top_level.txt",
-          "hash": "8557583263086043608"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/__init__.py",
-          "hash": "1669487708641253851"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
-          "hash": "17518322013416807182"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__init__.py",
-          "hash": "6952816186556482872"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
-          "hash": "8337642780766725615"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
-          "hash": "13185588876216095579"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
-          "hash": "17706941776286652725"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
-          "hash": "9858352579526108815"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
-          "hash": "1816135038433782461"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/auth/models.py",
-          "hash": "3193116146641020817"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/__init__.py",
-          "hash": "7506492744676447590"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
-          "hash": "13482236695923283213"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
-          "hash": "14348383372012082700"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py",
-          "hash": "9641834381714293399"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
-          "hash": "848697214867587171"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
-          "hash": "1458518331998392213"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
-          "hash": "7305828763126006733"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__init__.py",
-          "hash": "15222087201286331172"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__init__.py.backup2",
-          "hash": "14525772102586922126"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
-          "hash": "5060774648440404081"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
-          "hash": "1961843873271190424"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/base.py",
-          "hash": "14343128056233647214"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/check_jwtmanager.py",
-          "hash": "2559772859923341951"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/postgres.py",
-          "hash": "17702638740765592762"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/database/postgres.py.backup",
-          "hash": "13143236577770082015"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/models/__init__.py",
-          "hash": "13473430670647865299"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/models/__pycache__/__init__.cpython-313.pyc",
-          "hash": "14338873368835124216"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
-          "hash": "12582658867451509286"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
-          "hash": "10535189147092543163"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/config.cpython-313.pyc",
-          "hash": "9383265793774403550"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/consumer.cpython-313.pyc",
-          "hash": "1047925966683933761"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
-          "hash": "15232028162615930654"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/config.py",
-          "hash": "8438536005104924461"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
-          "hash": "3012040559261423324"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
-          "hash": "2520291436147216813"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
-          "hash": "12932089014399532574"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "shared-libraries/hduce_shared/users/models.py",
-          "hash": "11561497110635772168"
-        },
-        {
-          "file": "shared-libraries/project.json",
-          "hash": "3691912510623639730"
-        },
-        {
-          "file": "shared-libraries/requirements.txt",
-          "hash": "17693975781177548029"
-        },
-        {
-          "file": "shared-libraries/setup.py",
-          "hash": "6717852542557102059"
-        }
-      ],
       "notification-service": [
         {
           "file": "backend/notification-service/Dockerfile",
@@ -482,258 +292,6 @@
         {
           "file": "backend/notification-service/start.sh",
           "hash": "16257420589032568406"
-        }
-      ],
-      "notification-shared-libs": [
-        {
-          "file": "backend/notification-service/shared-libraries/MANIFEST.in",
-          "hash": "5272990151360349903"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/__init__.py",
-          "hash": "16637819469781383938"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/PKG-INFO",
-          "hash": "3744346213689469982"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/SOURCES.txt",
-          "hash": "10469267164356162011"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/dependency_links.txt",
-          "hash": "15036214574332298676"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/requires.txt",
-          "hash": "13704119464853822097"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/top_level.txt",
-          "hash": "8557583263086043608"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/__init__.py",
-          "hash": "4891500053161560829"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
-          "hash": "16763308449428322137"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__init__.py",
-          "hash": "6952816186556482872"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
-          "hash": "17885241911294964134"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
-          "hash": "812629374085501095"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
-          "hash": "11901491760549374869"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py",
-          "hash": "9858352579526108815"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
-          "hash": "1816135038433782461"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/models.py",
-          "hash": "3193116146641020817"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__init__.py",
-          "hash": "7506492744676447590"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
-          "hash": "8192148975621453115"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
-          "hash": "116342575734476406"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py",
-          "hash": "11959024291828910724"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
-          "hash": "848697214867587171"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup2",
-          "hash": "1458518331998392213"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup_final",
-          "hash": "7305828763126006733"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__init__.py",
-          "hash": "15315504698999785157"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
-          "hash": "2801271685917385858"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
-          "hash": "14061619561625073946"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/check_jwtmanager.py",
-          "hash": "2559772859923341951"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/database/postgres.py",
-          "hash": "13143236577770082015"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/models/__init__.py",
-          "hash": "13473430670647865299"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__init__.py",
-          "hash": "12582658867451509286"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
-          "hash": "15717527966218290986"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
-          "hash": "4397052833388114194"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py",
-          "hash": "8438536005104924461"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
-          "hash": "3012040559261423324"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/consumer.py",
-          "hash": "2520291436147216813"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/publisher.py",
-          "hash": "12932089014399532574"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__init__.py",
-          "hash": "769905511232003074"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__pycache__/__init__.cpython-313.pyc",
-          "hash": "6171404035273358423"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/hduce_shared/users/models.py",
-          "hash": "11561497110635772168"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/project.json",
-          "hash": "8582516598725759667"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/requirements.txt",
-          "hash": "10302298233526660313"
-        },
-        {
-          "file": "backend/notification-service/shared-libraries/setup.py",
-          "hash": "12826394306350995508"
-        }
-      ],
-      "user-service": [
-        {
-          "file": "backend/user-service/Dockerfile",
-          "hash": "53534066649162800"
-        },
-        {
-          "file": "backend/user-service/Dockerfile.aws",
-          "hash": "15822431251630321392"
-        },
-        {
-          "file": "backend/user-service/Dockerfile.aws.backup_20260122_180003",
-          "hash": "3463794877245205958"
-        },
-        {
-          "file": "backend/user-service/auth_client.py",
-          "hash": "13816201411622752698"
-        },
-        {
-          "file": "backend/user-service/auth_client.py.backup",
-          "hash": "8666549912918405509"
-        },
-        {
-          "file": "backend/user-service/database.py",
-          "hash": "133452257585886217"
-        },
-        {
-          "file": "backend/user-service/main.py",
-          "hash": "6312489957109240414"
-        },
-        {
-          "file": "backend/user-service/models.py",
-          "hash": "13592606020168496958"
-        },
-        {
-          "file": "backend/user-service/project.json",
-          "hash": "2087094838259850057"
-        },
-        {
-          "file": "backend/user-service/protected_endpoint.py",
-          "hash": "16944010515277397963"
-        },
-        {
-          "file": "backend/user-service/requirements.txt",
-          "hash": "256818226757123767"
-        },
-        {
-          "file": "backend/user-service/routes.py",
-          "hash": "14992830030322457621"
-        },
-        {
-          "file": "backend/user-service/routes.py.backup_20260120_132133",
-          "hash": "14992830030322457621"
-        },
-        {
-          "file": "backend/user-service/routes_corrected.py",
-          "hash": "15897614574925382490"
-        },
-        {
-          "file": "backend/user-service/schemas.py",
-          "hash": "1802833276724735601"
-        },
-        {
-          "file": "backend/user-service/src/auth_dependency.py",
-          "hash": "9819372071793116306"
-        },
-        {
-          "file": "backend/user-service/src/protected_routes.py",
-          "hash": "1577785537661554588"
-        },
-        {
-          "file": "backend/user-service/start_debug.py",
-          "hash": "18430190949371566825"
-        },
-        {
-          "file": "backend/user-service/test_minimal.py",
-          "hash": "7986820741897846665"
-        },
-        {
-          "file": "backend/user-service/test_secret.py",
-          "hash": "16206357420488112583"
         }
       ],
       "frontend": [
@@ -1112,6 +670,88 @@
           "hash": "5444358409294045038"
         }
       ],
+      "user-service": [
+        {
+          "file": "backend/user-service/Dockerfile",
+          "hash": "53534066649162800"
+        },
+        {
+          "file": "backend/user-service/Dockerfile.aws",
+          "hash": "15822431251630321392"
+        },
+        {
+          "file": "backend/user-service/Dockerfile.aws.backup_20260122_180003",
+          "hash": "3463794877245205958"
+        },
+        {
+          "file": "backend/user-service/auth_client.py",
+          "hash": "13816201411622752698"
+        },
+        {
+          "file": "backend/user-service/auth_client.py.backup",
+          "hash": "8666549912918405509"
+        },
+        {
+          "file": "backend/user-service/database.py",
+          "hash": "133452257585886217"
+        },
+        {
+          "file": "backend/user-service/main.py",
+          "hash": "6312489957109240414"
+        },
+        {
+          "file": "backend/user-service/models.py",
+          "hash": "13592606020168496958"
+        },
+        {
+          "file": "backend/user-service/project.json",
+          "hash": "2087094838259850057"
+        },
+        {
+          "file": "backend/user-service/protected_endpoint.py",
+          "hash": "16944010515277397963"
+        },
+        {
+          "file": "backend/user-service/requirements.txt",
+          "hash": "256818226757123767"
+        },
+        {
+          "file": "backend/user-service/routes.py",
+          "hash": "14992830030322457621"
+        },
+        {
+          "file": "backend/user-service/routes.py.backup_20260120_132133",
+          "hash": "14992830030322457621"
+        },
+        {
+          "file": "backend/user-service/routes_corrected.py",
+          "hash": "15897614574925382490"
+        },
+        {
+          "file": "backend/user-service/schemas.py",
+          "hash": "1802833276724735601"
+        },
+        {
+          "file": "backend/user-service/src/auth_dependency.py",
+          "hash": "9819372071793116306"
+        },
+        {
+          "file": "backend/user-service/src/protected_routes.py",
+          "hash": "1577785537661554588"
+        },
+        {
+          "file": "backend/user-service/start_debug.py",
+          "hash": "18430190949371566825"
+        },
+        {
+          "file": "backend/user-service/test_minimal.py",
+          "hash": "7986820741897846665"
+        },
+        {
+          "file": "backend/user-service/test_secret.py",
+          "hash": "16206357420488112583"
+        }
+      ],
       "auth-service": [
         {
           "file": "backend/auth-service/.dockerignore",
@@ -1216,6 +856,366 @@
         {
           "file": "backend/auth-service/tests/__init__.py",
           "hash": "1604380669023410385"
+        }
+      ],
+      "shared-libraries-root": [
+        {
+          "file": "shared-libraries/MANIFEST.in",
+          "hash": "5272990151360349903"
+        },
+        {
+          "file": "shared-libraries/__init__.py",
+          "hash": "16637819469781383938"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/PKG-INFO",
+          "hash": "8230997925516338399"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/SOURCES.txt",
+          "hash": "10469267164356162011"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/dependency_links.txt",
+          "hash": "15036214574332298676"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/requires.txt",
+          "hash": "4577494559807045646"
+        },
+        {
+          "file": "shared-libraries/hduce_shared.egg-info/top_level.txt",
+          "hash": "8557583263086043608"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/__init__.py",
+          "hash": "1669487708641253851"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
+          "hash": "17518322013416807182"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "6952816186556482872"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
+          "hash": "8337642780766725615"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
+          "hash": "13185588876216095579"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
+          "hash": "17706941776286652725"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "9858352579526108815"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
+          "hash": "1816135038433782461"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/auth/models.py",
+          "hash": "3193116146641020817"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "7506492744676447590"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
+          "hash": "13482236695923283213"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
+          "hash": "14348383372012082700"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py",
+          "hash": "9641834381714293399"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
+          "hash": "848697214867587171"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup2",
+          "hash": "1458518331998392213"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/config/settings.py.backup_final",
+          "hash": "7305828763126006733"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "15222087201286331172"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__init__.py.backup2",
+          "hash": "14525772102586922126"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
+          "hash": "5060774648440404081"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
+          "hash": "1961843873271190424"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/base.py",
+          "hash": "14343128056233647214"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/check_jwtmanager.py",
+          "hash": "2559772859923341951"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "17702638740765592762"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/database/postgres.py.backup",
+          "hash": "13143236577770082015"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/models/__init__.py",
+          "hash": "13473430670647865299"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/models/__pycache__/__init__.cpython-313.pyc",
+          "hash": "14338873368835124216"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__init__.py",
+          "hash": "12582658867451509286"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
+          "hash": "10535189147092543163"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/config.cpython-313.pyc",
+          "hash": "9383265793774403550"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/consumer.cpython-313.pyc",
+          "hash": "1047925966683933761"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
+          "hash": "15232028162615930654"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/config.py",
+          "hash": "8438536005104924461"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
+          "hash": "3012040559261423324"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/consumer.py",
+          "hash": "2520291436147216813"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/rabbitmq/publisher.py",
+          "hash": "12932089014399532574"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "shared-libraries/hduce_shared/users/models.py",
+          "hash": "11561497110635772168"
+        },
+        {
+          "file": "shared-libraries/project.json",
+          "hash": "3691912510623639730"
+        },
+        {
+          "file": "shared-libraries/requirements.txt",
+          "hash": "17693975781177548029"
+        },
+        {
+          "file": "shared-libraries/setup.py",
+          "hash": "6717852542557102059"
+        }
+      ],
+      "notification-shared-libs": [
+        {
+          "file": "backend/notification-service/shared-libraries/MANIFEST.in",
+          "hash": "5272990151360349903"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/__init__.py",
+          "hash": "16637819469781383938"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/PKG-INFO",
+          "hash": "3744346213689469982"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/SOURCES.txt",
+          "hash": "10469267164356162011"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/dependency_links.txt",
+          "hash": "15036214574332298676"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/requires.txt",
+          "hash": "13704119464853822097"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared.egg-info/top_level.txt",
+          "hash": "8557583263086043608"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/__init__.py",
+          "hash": "4891500053161560829"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/__pycache__/__init__.cpython-313.pyc",
+          "hash": "16763308449428322137"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__init__.py",
+          "hash": "6952816186556482872"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/__init__.cpython-313.pyc",
+          "hash": "17885241911294964134"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/jwt_manager.cpython-313.pyc",
+          "hash": "812629374085501095"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/__pycache__/models.cpython-313.pyc",
+          "hash": "11901491760549374869"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py",
+          "hash": "9858352579526108815"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/jwt_manager.py.backup_143247",
+          "hash": "1816135038433782461"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/auth/models.py",
+          "hash": "3193116146641020817"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__init__.py",
+          "hash": "7506492744676447590"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/__init__.cpython-313.pyc",
+          "hash": "8192148975621453115"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/__pycache__/settings.cpython-313.pyc",
+          "hash": "116342575734476406"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py",
+          "hash": "11959024291828910724"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup.pydantic_fix",
+          "hash": "848697214867587171"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup2",
+          "hash": "1458518331998392213"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/config/settings.py.backup_final",
+          "hash": "7305828763126006733"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__init__.py",
+          "hash": "15315504698999785157"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/__init__.cpython-313.pyc",
+          "hash": "2801271685917385858"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/__pycache__/postgres.cpython-313.pyc",
+          "hash": "14061619561625073946"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/check_jwtmanager.py",
+          "hash": "2559772859923341951"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/database/postgres.py",
+          "hash": "13143236577770082015"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/models/__init__.py",
+          "hash": "13473430670647865299"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__init__.py",
+          "hash": "12582658867451509286"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/__init__.cpython-313.pyc",
+          "hash": "15717527966218290986"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/__pycache__/publisher.cpython-313.pyc",
+          "hash": "4397052833388114194"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py",
+          "hash": "8438536005104924461"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/config.py.backup_pydantic_211957",
+          "hash": "3012040559261423324"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/consumer.py",
+          "hash": "2520291436147216813"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/rabbitmq/publisher.py",
+          "hash": "12932089014399532574"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__init__.py",
+          "hash": "769905511232003074"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/__pycache__/__init__.cpython-313.pyc",
+          "hash": "6171404035273358423"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/hduce_shared/users/models.py",
+          "hash": "11561497110635772168"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/project.json",
+          "hash": "8582516598725759667"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/requirements.txt",
+          "hash": "10302298233526660313"
+        },
+        {
+          "file": "backend/notification-service/shared-libraries/setup.py",
+          "hash": "12826394306350995508"
         }
       ]
     },

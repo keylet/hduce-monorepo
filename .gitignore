@@ -46,3 +46,7 @@ backup_*.sql
 # Large files
 *.zip
 *.tar.gz
+*.pem
+*.crt
+*.key
+.ps1

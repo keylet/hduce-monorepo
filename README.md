@@ -1,552 +1,300 @@
-
-🏥 HDUCE - Hospital Digital UCE
-Medical Appointment Management System - Microservices Architecture
-Status: 🚀 FULLY OPERATIONAL - Complete Microservices Ecosystem
-Last Updated: January 2026 - Production-ready system with 4 microservices
-System Health: ✅ 100% Functional - All Services Validated
-
-📊 SYSTEM ARCHITECTURE OVERVIEW
-🏗️ TECHNOLOGY STACK
-┌─────────────────────────────────────────────────────────┐
-│                    API GATEWAY (NGINX)                  │
-│                   http://localhost/                     │
-└─────────────────────────────────────────────────────────┘
-                            │
-    ┌───────────────────────┼───────────────────────┐
-    │                       │                       │
-    ▼                       ▼                       ▼
-┌─────────┐           ┌─────────┐           ┌─────────┐
-│  AUTH   │           │  USER   │           │  APPT   │
-│ Service │           │ Service │           │ Service │
-└─────────┘           └─────────┘           └─────────┘
-    │                       │                       │
-    │                       ▼                       ▼
-    │               ┌─────────────┐           ┌─────────┐
-    └──────────────▶│ PostgreSQL │◀──────────▶│ NOTIFY │
-                    │   Main DB  │            │ Service│
-                    └─────────────┘           └─────────┘
-                            │                       │
-                    ┌───────┴───────┐               │
-                    ▼               ▼               ▼
-             ┌───────────┐   ┌───────────┐   ┌───────────┐
-             │   Redis   │   │ RabbitMQ  │   │ Logging   │
-             │  Cache    │   │  Message  │   │ & Monitoring│
-             └───────────┘   │   Broker  │   └───────────┘
-                             └───────────┘
-✅ IMPLEMENTED AND VALIDATED SERVICES
-Service	Port	Status	Functionality	Key Features
-🔐 Auth Service	8000	🟢 100%	JWT Authentication	Secure login, token generation/validation, user management
-👤 User Service	8001	🟢 100%	User CRUD Operations	Complete user lifecycle, PostgreSQL integration
-📅 Appointment Service	8002	🟢 100%	Medical Appointment Management	Doctor scheduling, patient bookings, RabbitMQ integration
-📧 Notification Service	8003	🟢 100%	Email & SMS Notifications	Appointment reminders, async processing, delivery tracking
-🌐 API Gateway	80	🟢 100%	Request Routing & Load Balancing	NGINX reverse proxy, service discovery
-🗄️ PostgreSQL	5432	🟢 100%	Main Database	Relational data storage, multiple schemas
-🧠 Redis	6379	🟢 100%	Cache & Sessions	Token storage, session management
-🐇 RabbitMQ	5672/15672	🟢 100%	Message Broker	Async communication, queue management
-📊 Adminer	8080	🟢 100%	DB Web Interface	Database administration GUI
-
-🎯 PROJECT ACHIEVEMENTS
-✅ COMPLETED PHASES 1-4
-PHASE 1: Foundation & Authentication
-✅ Full JWT authentication system implementation
-
-✅ Secure credential management with hashing
-
-✅ Token validation and refresh mechanisms
-
-✅ PostgreSQL + Redis integration for sessions
-
-PHASE 2: User Management & Data Layer
-✅ Complete user CRUD operations
-
-✅ Database schema design and implementation
-
-✅ RESTful API endpoints with proper validation
-
-✅ Data persistence and retrieval optimization
-
-PHASE 3: Business Logic & Appointment System
-✅ Medical appointment management microservice
-
-✅ Doctor and specialty management
-
-✅ Appointment scheduling with conflict detection
-
-✅ Complete test dataset for demonstration
-
-PHASE 4: Notification System & Async Communication
-✅ Email and SMS notification microservice
-
-✅ RabbitMQ integration for async processing
-
-✅ Appointment reminder automation
-
-✅ Notification statistics and logging system
-
-✅ Gateway implementation with NGINX
-
-PHASE 5: System Integration & Validation (NEW)
-✅ Complete system integration testing
-
-✅ Automated validation scripts
-
-✅ Performance optimization
-
-✅ Production-ready configuration
-
-✅ Comprehensive documentation
-
-🚀 QUICK START GUIDE
-1. Starting the Complete System
-bash
-# Clone and navigate to project
-cd hduce-monorepo
-
-# Start all services
-docker-compose up -d
-
-# Check system status
-docker-compose ps
-
-# Run comprehensive tests
-.inal-test-hduce.ps1
-2. System Verification
-bash
-# Quick health check
-.\check-hduce.ps1
-
-# Detailed system test
-.	est-hduce-system.ps1
-
-# Monitor real-time logs
-docker-compose logs -f
-3. Access Points
-text
-🔐 Auth Service:      http://localhost:8000/docs
-👥 User Service:      http://localhost:8001/docs
-📅 Appointment:       http://localhost:8002/docs
-📧 Notifications:     http://localhost:8003/docs
-🌐 API Gateway:       http://localhost/
-🐇 RabbitMQ UI:       http://localhost:15672 (admin/admin123)
-🗄️ PostgreSQL Admin:  http://localhost:8080
-📡 COMPREHENSIVE API ENDPOINTS
-🔐 Auth Service (http://localhost:8000)
-bash
-# Health check
-curl http://localhost:8000/health
-
-# Login (Returns JWT Token)
-curl -X POST "http://localhost:8000/login"   -H "Content-Type: application/json"   -d '{"username":"admin","password":"admin123"}'
-
-# Register new user
-curl -X POST "http://localhost:8000/auth/auth/register"   -H "Content-Type: application/json"   -d '{"username":"newuser","email":"user@example.com","password":"secure123"}'
-
-# Verify token
-curl -H "Authorization: Bearer YOUR_TOKEN" "http://localhost:8000/verify"
-👤 User Service (http://localhost:8001)
-bash
-# Health checks
-curl http://localhost:8001/health
-curl http://localhost:8001/health/db
-
-# List all users
-curl http://localhost:8001/
-
-# Create user (CORRECT SCHEMA - name, not full_name)
-curl -X POST http://localhost:8001/   -H "Content-Type: application/json"   -d '{"name":"Juan Pérez","email":"juan@example.com","age":30}'
-
-# Get specific user
-curl http://localhost:8001/USER_UUID
-📅 Appointment Service (http://localhost:8002)
-bash
-# Service status
-curl http://localhost:8002/
-
-# Medical specialties
-curl http://localhost:8002/specialties
-curl -X POST http://localhost:8002/specialties   -H "Content-Type: application/json"   -d '{"name":"Cardiology","description":"Heart specialist"}'
-
-# Doctors management
-curl http://localhost:8002/doctors
-curl -X POST http://localhost:8002/doctors   -H "Content-Type: application/json"   -d '{"user_id":"USER_UUID","license_number":"MED-12345","specialty_id":1}'
-
-# Medical appointments
-curl http://localhost:8002/appointments
-curl -X POST http://localhost:8002/appointments   -H "Content-Type: application/json"   -d '{"patient_id":"PATIENT_UUID","doctor_id":1,"appointment_date":"2026-01-10T10:00:00","reason":"Annual checkup"}'
-📧 Notification Service (http://localhost:8003)
-bash
-# Service status
-curl http://localhost:8003/
-
-# Send email notification
-curl -X POST "http://localhost:8003/api/v1/notifications/email"   -H "Content-Type: application/json"   -d '{"user_id":"UUID","subject":"Test","message":"Hello","recipient_email":"test@example.com"}'
-
-# Send SMS notification  
-curl -X POST "http://localhost:8003/api/v1/notifications/sms"   -H "Content-Type: application/json"   -d '{"user_id":"UUID","message":"Hello","recipient_phone":"+1234567890"}'
-
-# Send appointment reminder (automated)
-curl -X POST "http://localhost:8003/api/v1/notifications/appointment/reminder"   -H "Content-Type: application/json"   -d '{"patient_id":"UUID","patient_email":"patient@example.com","patient_phone":"+1234567890","doctor_name":"Dr. Smith","appointment_date":"2026-01-10 10:00:00"}'
-
-# Get notification statistics
-curl http://localhost:8003/api/v1/notifications/stats/simple
-🌐 API Gateway (http://localhost/)
-bash
-# Gateway health check
-curl http://localhost/health
-
-# Access services through gateway
-curl http://localhost/api/auth/login
-curl http://localhost/api/users/
-curl http://localhost/api/appointments/
-curl http://localhost/api/notifications/
-🗄️ DATABASE STRUCTURE
-PostgreSQL Schema
-sql
--- Main database: hduce_db
--- User: hduce_user / hduce_password
-
--- Auth Service Tables
-auth_users (
-    id UUID PRIMARY KEY,
-    username VARCHAR(100) UNIQUE,
-    email VARCHAR(255),
-    password_hash VARCHAR(255),
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP
-)
-
--- User Service Tables  
-users (
-    id UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    age INTEGER,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-)
-
--- Appointment Service Tables
-specialties (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE,
-    description TEXT
-)
-
-doctors (
-    id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES users(id),
-    license_number VARCHAR(50) UNIQUE,
-    specialty_id INTEGER REFERENCES specialties(id)
-)
-
-appointments (
-    id UUID PRIMARY KEY,
-    patient_id UUID REFERENCES users(id),
-    doctor_id INTEGER REFERENCES doctors(id),
-    appointment_date TIMESTAMP,
-    status VARCHAR(50),
-    reason TEXT,
-    notes TEXT,
-    created_at TIMESTAMP
-)
-
--- Notification Service Tables
-notifications (
-    id UUID PRIMARY KEY,
-    user_id UUID,
-    type VARCHAR(50),
-    subject TEXT,
-    message TEXT,
-    recipient_email VARCHAR(255),
-    recipient_phone VARCHAR(20),
-    status VARCHAR(50),
-    sent_at TIMESTAMP,
-    created_at TIMESTAMP
-)
-
-email_logs (
-    id SERIAL PRIMARY KEY,
-    notification_id UUID REFERENCES notifications(id),
-    recipient_email VARCHAR(255),
-    subject TEXT,
-    status VARCHAR(50),
-    error_message TEXT,
-    sent_at TIMESTAMP
-)
-
-sms_logs (
-    id SERIAL PRIMARY KEY,
-    notification_id UUID REFERENCES notifications(id),
-    recipient_phone VARCHAR(20),
-    message TEXT,
-    status VARCHAR(50),
-    error_message TEXT,
-    sent_at TIMESTAMP
-)
-🔧 AUTOMATED TESTING & MONITORING
-Testing Scripts
-powershell
-# 1. Quick system check
-.\check-hduce.ps1
-
-# 2. Comprehensive system test
-.	est-hduce-system.ps1
-
-# 3. Final validation test
-.inal-test-hduce.ps1
-
-# 4. Diagnostic tool (for troubleshooting)
-.\diagnostic-hduce.ps1
-Monitoring Commands
-bash
-# View all container logs
-docker-compose logs
-
-# Follow specific service logs
-docker-compose logs -f auth-service
-docker-compose logs -f user-service
-docker-compose logs -f appointment-service
-docker-compose logs -f notification-service
-
-# Check service health
-curl http://localhost/health
-curl http://localhost:8000/health
-curl http://localhost:8001/health
-curl http://localhost:8002/
-curl http://localhost:8003/
-
-# Database connection test
-docker-compose exec postgres pg_isready -U hduce_user
-
-# RabbitMQ status
-docker-compose exec rabbitmq rabbitmqctl status
-🛠️ TROUBLESHOOTING & COMMON ISSUES
-Issue: Authentication Fails
-bash
-# Verify endpoint is correct
-# USE: http://localhost:8000/login (NOT /auth/auth/login)
-
-# Check credentials
-curl -X POST "http://localhost:8000/login"   -H "Content-Type: application/json"   -d '{"username":"admin","password":"admin123"}'
-
-# Verify token format
-# Token should be ~200+ characters
-Issue: User Creation Fails (422 Error)
-bash
-# Use CORRECT schema: name (NOT full_name), email, age (optional)
-# ❌ WRONG: {"full_name":"John", "email":"x@y.com", "role":"patient"}
-# ✅ CORRECT: {"name":"John", "email":"x@y.com", "age":30}
-
-curl -X POST http://localhost:8001/   -H "Content-Type: application/json"   -d '{"name":"Test User","email":"test@example.com","age":25}'
-Issue: Services Not Responding
-bash
-# Check Docker containers
-docker-compose ps
-
-# Restart specific service
-docker-compose restart auth-service
-
-# Rebuild and restart
-docker-compose up -d --build auth-service
-
-# Check logs for errors
-docker-compose logs auth-service --tail=50
-Issue: Database Connection Problems
-bash
-# Test PostgreSQL connection
-docker-compose exec postgres pg_isready -U hduce_user
-
-# Check database tables
-docker-compose exec postgres psql -U hduce_user -d hduce_db -c "\dt"
-
-# Reset database (careful!)
-docker-compose down -v
-docker-compose up -d
-📈 PERFORMANCE METRICS
-Metric	Value	Status
-Service Uptime	100%	✅ Excellent
-API Response Time	< 200ms	✅ Optimal
-Database Latency	< 50ms	✅ Fast
-Concurrent Users	1000+	✅ Scalable
-Message Queue Throughput	1000 msg/sec	✅ High Performance
-System Availability	99.9%	✅ Production Ready
-🚀 DEPLOYMENT & PRODUCTION READINESS
-Environment Configuration
-bash
-# Copy example env file
-cp .env.example .env
-
-# Set production variables
-NODE_ENV=production
-DB_HOST=postgres
-REDIS_HOST=redis
-RABBITMQ_HOST=rabbitmq
-JWT_SECRET=your_secure_secret_key_here
-Security Hardening
-bash
-# 1. Change default passwords
-# 2. Enable SSL/TLS in NGINX
-# 3. Implement rate limiting
-# 4. Configure firewall rules
-# 5. Set up monitoring (Prometheus/Grafana)
-# 6. Enable logging and audit trails
-Scaling Configuration
-yaml
-# docker-compose.scale.yml
-services:
-  auth-service:
-    deploy:
-      replicas: 3
-    environment:
-      - SCALE_MODE=horizontal
-
-  user-service:
-    deploy:
-      replicas: 2
-
-  appointment-service:
-    deploy:
-      replicas: 2
-
-  notification-service:
-    deploy:
-      replicas: 2
-📚 DEVELOPMENT WORKFLOW
-Adding New Features
-bash
-# 1. Create new microservice
-cd backend
-mkdir new-service
-cd new-service
-
-# 2. Create Dockerfile
-# 3. Add to docker-compose.yml
-# 4. Configure NGINX routing
-# 5. Update test scripts
-# 6. Run validation tests
-.inal-test-hduce.ps1
-Code Structure
-text
+# 🏥 HDuce Medical Platform - Monorepo
+
+## 📋 Overview
+HDuce is a comprehensive medical platform built with microservices architecture using FastAPI, React, and Docker. The platform includes patient management, appointment scheduling, notifications, and IoT integration for medical devices.
+
+## 🏗️ Architecture
+
+### Technology Stack
+- **Backend**: Python 3.11 + FastAPI + PostgreSQL
+- **Frontend**: React + TypeScript + Vite
+- **Message Queue**: RabbitMQ + Redis
+- **IoT**: MQTT (Mosquitto) + Custom MQTT Service
+- **Monitoring**: Prometheus + Grafana + n8n
+- **Infrastructure**: Docker + Docker Compose + Terraform (AWS)
+
+### Microservices Architecture
+```
+┌─────────────────────────────────────────────────────┐
+│              React Frontend                          │
+└──────────────────────────┬──────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────┐
+│           NGINX Reverse Proxy                        │
+└─────┬───────────────────┬───────────────────┬──────┘
+      │                   │                   │
+┌─────▼─────┐       ┌──────▼──────┐    ┌──────▼──────┐
+│   Auth    │       │    User     │    │ Appointment │
+│  Service  │       │   Service   │    │   Service   │
+└─────┬─────┘       └──────┬──────┘    └──────┬──────┘
+      │                    │                   │
+┌─────▼───────────────────▼───────────────────▼──────┐
+│           Notification Service                      │
+└─────┬───────────────────┬───────────────────┬──────┘
+      │                   │                   │
+┌─────▼─────┐       ┌──────▼──────┐    ┌──────▼──────┐
+│   MQTT    │       │   Metrics   │    │  Database   │
+│  Service  │       │   Service   │    │    Layer    │
+└───────────┘       └─────────────┘    └─────────────┘
+```
+
+## 📁 Project Structure
+```
 hduce-monorepo/
-├── docker-compose.yml          # Complete system orchestration
-├── nginx/
-│   ├── nginx.conf             # API Gateway configuration
-│   └── Dockerfile
-├── backend/
-│   ├── auth-service/          # 🔐 Authentication
-│   │   ├── main.py
-│   │   ├── schemas.py
-│   │   ├── Dockerfile
-│   │   └── requirements.txt
-│   ├── user-service/          # 👤 User Management
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   ├── schemas.py
-│   │   ├── database.py
-│   │   └── Dockerfile
-│   ├── appointment-service/    # 📅 Appointments
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   └── Dockerfile
-│   └── notification-service/   # 📧 Notifications
-│       ├── main.py
-│       ├── consumer.py
-│       └── Dockerfile
-├── scripts/
-│   ├── check-hduce.ps1        # Quick verification
-│   ├── test-hduce-system.ps1  # Comprehensive tests
-│   └── final-test-hduce.ps1   # Final validation
-└── README.md                  # This documentation
-🔮 FUTURE ENHANCEMENTS
-Planned Features
-Frontend Dashboard - React/Vue.js administrative interface
+├── backend/                        # Microservices backend
+│   ├── auth-service/              # Authentication & Authorization (8000)
+│   ├── user-service/              # User Management (8001)
+│   ├── appointment-service/       # Appointment Scheduling (8002)
+│   ├── notification-service/      # Notifications (8003)
+│   ├── mqtt-service/              # MQTT Integration (8004)
+│   └── metrics-service/           # Metrics Collection (8005)
+├── frontend/                      # React frontend application
+├── shared-libraries/              # Shared Python libraries
+├── nginx/                         # NGINX configuration
+├── docker-compose.yml             # Local development setup
+├── hduce-deployment-aws/          # AWS deployment configuration
+└── README.md                      # This file
+```
 
-Mobile App - Patient and doctor mobile applications
+## 🚀 Getting Started
 
-AI Integration - Appointment recommendation engine
+### Prerequisites
+- Docker & Docker Compose
+- Python 3.11+
+- Node.js 18+ (for frontend)
+- PostgreSQL 15+
+- Redis 7+
 
-Telemedicine - Video consultation capabilities
+### Local Development Setup
 
-Analytics Dashboard - Business intelligence and reporting
+**1. Clone and navigate:**
+```bash
+cd C:\Users\raich\Desktop\hduce-monorepo
+```
 
-Payment Integration - Online payment processing
+**2. Start all services:**
+```bash
+docker-compose up -d
+```
 
-Multi-language Support - Internationalization
+**3. Verify services are running:**
+```bash
+docker-compose ps
+```
 
-Biometric Authentication - Advanced security features
+**4. Access services:**
+- Frontend: http://localhost
+- API Documentation: http://localhost:8000/docs
+- RabbitMQ Management: http://localhost:15672
+- Grafana: http://localhost:3000
 
-Infrastructure Upgrades
-Kubernetes Deployment - Container orchestration
+### Environment Variables
+Critical environment variables (DO NOT MODIFY in production):
 
-CI/CD Pipeline - Automated testing and deployment
+```env
+# Database Configuration
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres
 
-Monitoring Stack - Prometheus + Grafana
+# JWT Configuration (CRITICAL - NEVER CHANGE)
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_ALGORITHM=HS256
+TOKEN_EXPIRY=24h
 
-Load Balancing - HAProxy or Traefik
+# Test User (Pre-configured)
+TEST_USER_EMAIL=testuser@example.com
+TEST_USER_PASSWORD=secret
+```
 
-Database Replication - High availability setup
+## 🔧 Development Guidelines
 
-Disaster Recovery - Backup and restore procedures
+### Code Structure
+- **Python Code**: Follow FastAPI best practices with Pydantic models
+- **Frontend**: React with TypeScript, functional components
+- **Database**: PostgreSQL with SQLAlchemy ORM
+- **API Documentation**: Auto-generated with OpenAPI/Swagger
 
-🤝 CONTRIBUTING
-We welcome contributions! Here's how to get started:
+### Shared Libraries
+The `shared-libraries/` directory contains common Python modules used across all microservices:
+- Database models and connection handling
+- JWT authentication utilities
+- Common schemas and validators
 
-Fork the repository
+### Docker Configuration
+Each service has two Dockerfiles:
+- `Dockerfile`: For local development
+- `Dockerfile.aws`: For AWS deployment (with specific optimizations)
 
-Create a feature branch
+## 📊 Production Data
 
-bash
-git checkout -b feature/amazing-feature
-Commit your changes
+### Current Data Statistics
+- 37 medical appointments (real patient data)
+- 11 system notifications
+- 3 registered users including test user
+- All data preserved in backup files
 
-bash
-git commit -m 'Add amazing feature'
-Push to the branch
+### Database Schemas
+- **auth_db**: User authentication and JWT tokens
+- **user_db**: User profiles and personal information
+- **appointment_db**: Medical appointments and scheduling
+- **notification_db**: System and user notifications
 
-bash
-git push origin feature/amazing-feature
-Open a Pull Request
+## 🚀 Deployment
 
-Development Guidelines
-Follow microservices architecture principles
+### AWS Deployment Architecture
+The platform is designed for deployment on AWS with 6 EC2 instances:
 
-Write comprehensive tests for new features
+```
+Instance 0: Bastion Host (SSH Gateway)
+Instance 1: Databases (PostgreSQL, Redis, RabbitMQ)
+Instance 2: Core Services (Auth, User, Appointment, Notification)
+Instance 3: Frontend (NGINX + React)
+Instance 4: Monitoring (Grafana, Prometheus, n8n)
+Instance 5: IoT Services (MQTT Broker, MQTT Service, Metrics)
+```
 
-Update documentation for API changes
+### Deployment Steps
 
-Maintain backward compatibility
+**1. Infrastructure Setup:**
+```bash
+cd hduce-deployment-aws\terraform
+terraform init
+terraform plan
+terraform apply
+```
 
-Use Docker for consistent environments
+**2. Service Deployment:**
+```powershell
+.\deployment-scripts\Deploy-HDuce-AWS.ps1
+```
 
-📄 LICENSE
-This project is licensed under the MIT License - see the LICENSE file for details.
+**3. Backup Restoration:**
+```powershell
+.\deployment-scripts\Restore-Backup.ps1
+```
 
-🙏 ACKNOWLEDGMENTS
-FastAPI - For the amazing Python web framework
+## 🔐 Security
 
-Docker - For containerization technology
+### Authentication & Authorization
+- JWT-based authentication with HS256 algorithm
+- Role-based access control (patient, doctor, admin)
+- Password hashing with bcrypt
+- Secure token management with refresh tokens
 
-PostgreSQL - For reliable data storage
+### Network Security
+- Bastion host pattern for SSH access
+- VPC-only communication for internal services
+- Security groups with least-privilege access
+- Encrypted database connections
 
-RabbitMQ - For async message processing
+### Secrets Management
+- Environment variables for sensitive data
+- Never commit secrets to version control
+- Use AWS Secrets Manager for production
 
-NGINX - For API gateway capabilities
+## 📈 Monitoring & Observability
 
-UCE Community - For support and collaboration
+### Built-in Monitoring
+- Prometheus metrics collection
+- Grafana dashboards for service health
+- Application logging with structured JSON
+- Health check endpoints on all services
 
-🆘 SUPPORT
-For support, please:
+### Key Metrics Tracked
+- API response times and error rates
+- Database connection pool status
+- MQTT message throughput
+- Service uptime and health status
 
-Check the troubleshooting section above
+## 🔄 CI/CD Pipeline
 
-Review the logs: docker-compose logs
+### Development Workflow
+```
+Local Development → Docker Build → AWS Deployment
+```
 
-Run diagnostics: .\diagnostic-hduce.ps1
+### Version Control
+- **Main branch**: Production-ready code
+- **Feature branches**: New development
+- **Pull requests** with code review required
+- Automated testing before merge
 
-Open an issue on GitHub
+## 🛠️ Troubleshooting
 
-Contact the development team
+### Common Issues
 
-🎉 Congratulations! You now have a fully operational, production-ready hospital management system with microservices architecture!
+**Docker Compose Fails:**
+```bash
+# Clean and rebuild
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up -d
+```
 
-Last Updated: January 2026 | System Version: 4.0.0 | Status: 🟢 PRODUCTION READY
+**Database Connection Issues:**
+```bash
+# Check PostgreSQL
+docker exec hduce-postgres psql -U postgres -c "\l"
+```
+
+**Service Health Checks:**
+```bash
+# Check all services
+curl http://localhost:8000/health
+curl http://localhost:8001/health
+```
+
+### Logs Access
+```bash
+# View logs for specific service
+docker-compose logs auth-service
+docker-compose logs postgres
+
+# Follow logs in real-time
+docker-compose logs -f auth-service
+```
+
+## 📚 API Documentation
+
+Each microservice provides OpenAPI documentation:
+
+| Service | Port | Documentation URL |
+|---------|------|-------------------|
+| Auth Service | 8000 | http://localhost:8000/docs |
+| User Service | 8001 | http://localhost:8001/docs |
+| Appointment Service | 8002 | http://localhost:8002/docs |
+| Notification Service | 8003 | http://localhost:8003/docs |
+| MQTT Service | 8004 | http://localhost:8004/docs |
+| Metrics Service | 8005 | http://localhost:8005/docs |
+
+## 🤝 Contributing
+
+### Development Process
+1. Create feature branch from main
+2. Implement changes with tests
+3. Update documentation
+4. Create pull request
+5. Code review and approval
+6. Merge to main
+
+### Code Standards
+- **Python**: PEP 8 compliance
+- **TypeScript**: ESLint with strict rules
+- **Commit messages**: Conventional commits
+- **Documentation**: In-code docstrings + README updates
+
+## 📄 License
+This project is proprietary software. All rights reserved.
+
+## 📞 Support
+For technical support or questions:
+1. Check existing documentation
+2. Review API documentation
+3. Contact development team
+
+---
+
+**Last Updated**: 2026-01-23  
+**Version**: 1.0.0  
+**Status**: Production Ready - AWS Deployment Configured

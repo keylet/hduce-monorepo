@@ -1,4 +1,4 @@
-# .github/workflows/ci-tests.yml
+# .github/workflows/ci-tests.yml (actualizado)
 name: HDuce CI Pipeline
 
 on:
@@ -27,37 +27,36 @@ jobs:
         cd ${{ github.workspace }}
         echo "🚀 Starting Docker services..."
         docker compose up -d
-        Start-Sleep -Seconds 30
+        Start-Sleep -Seconds 45  # Más tiempo para que servicios inicien
         echo "=== Running Services ==="
         docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
     - name: Run CI Pipeline Test
       run: |
         cd ${{ github.workspace }}\ci-tests
-        echo "🚀 Ejecutando CI Pipeline..."
-        .\ci-pipeline.ps1 -CleanToken
+        echo "🚀 Ejecutando CI Pipeline para GitHub Actions..."
+        
+        # Si existe versión CI, usarla, sino la normal
+        if (Test-Path "ci-pipeline-ci.ps1") {
+          .\ci-pipeline-ci.ps1
+        } else {
+          .\ci-pipeline.ps1 -CleanToken
+        }
+        
         $pipelineExitCode = $LASTEXITCODE
         echo "Pipeline exit code: $pipelineExitCode"
-        
-        # Verificar si hay reportes generados
-        if (Test-Path "pipeline-report-*.json") {
-          echo "📄 Reportes generados:"
-          Get-ChildItem pipeline-report-*.json | ForEach-Object { echo "  - $($_.Name)" }
-        }
 
     - name: Stop Services
       if: always()
       run: |
         cd ${{ github.workspace }}
         docker compose down
-        echo "✅ Servicios detenidos"
 
     - name: Upload CI Reports
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: ci-pipeline-reports
+        name: ci-reports
         path: |
-          ${{ github.workspace }}/ci-tests/pipeline-report-*.json
           ${{ github.workspace }}/ci-tests/ci-report-*.json
-          ${{ github.workspace }}/ci-tests/token.txt
+          ${{ github.workspace }}/ci-tests/pipeline-report-*.json

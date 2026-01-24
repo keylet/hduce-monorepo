@@ -1,0 +1,22 @@
+﻿{
+    "pipeline_run":  {
+                         "test_exit_code":  0,
+                         "phases":  [
+
+                                    ],
+                         "timestamp":  "2026-01-22T05:37:55",
+                         "token_file":  "C:\\Users\\raich\\Desktop\\hduce-monorepo\\token.txt",
+                         "summary":  {
+                                         "failed":  0,
+                                         "warnings":  0,
+                                         "total_phases":  0,
+                                         "passed":  0
+                                     },
+                         "duration_seconds":  2.12
+                     },
+    "system_info":  {
+                        "powershell_version":  "5.1.19041.6456",
+                        "user":  "raich",
+                        "hostname":  "DESKTOP-JJKI10B"
+                    }
+}

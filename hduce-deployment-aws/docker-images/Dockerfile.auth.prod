@@ -1,0 +1,48 @@
+﻿# Dockerfile.auth.prod - Auth Service para AWS
+# Ubicación: ../hduce-deployment-aws/docker-images/
+
+# Etapa de construcción
+FROM python:3.11-slim AS builder
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# 1. Copiar shared-libraries
+WORKDIR /build
+COPY ../../../shared-libraries ./shared-libraries
+WORKDIR /build/shared-libraries
+RUN pip wheel --wheel-dir /wheels .
+
+# 2. Copiar auth-service y construir
+WORKDIR /build
+COPY ../../../backend/auth-service ./auth-service
+WORKDIR /build/auth-service
+RUN pip wheel --wheel-dir /wheels -r requirements.txt
+
+# Etapa de producción
+FROM python:3.11-slim
+
+# Dependencias de runtime
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copiar e instalar wheels
+COPY --from=builder /wheels /wheels
+RUN pip install --no-index --find-links=/wheels /wheels/*
+
+# Copiar código
+COPY --from=builder /build/auth-service /app
+
+# Variables de entorno (se sobreescriben en docker-compose)
+ENV PYTHONPATH=/app
+ENV PORT=8000
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,64 @@
+﻿import os
+from typing import Optional
+from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
+
+class DatabaseSettings(BaseSettings):
+    """Database configuration settings"""
+    postgres_host: str = os.getenv("POSTGRES_HOST", "postgres")
+    postgres_port: int = int(os.getenv("POSTGRES_PORT", "5432"))
+    postgres_user: str = os.getenv("POSTGRES_USER", "postgres")
+      postgres_password: str = os.getenv("POSTGRES_PASSWORD", "")
+
+    # Database names per service
+    auth_db: str = os.getenv("AUTH_DB", "auth_db")
+    user_db: str = os.getenv("USER_DB", "user_db")
+    appointment_db: str = os.getenv("APPOINTMENT_DB", "appointment_db")
+    medical_db: str = os.getenv("MEDICAL_DB", "medical_db")
+    notification_db: str = os.getenv("NOTIFICATION_DB", "notification_db")
+
+    model_config = ConfigDict(extra="allow")
+
+class RedisSettings(BaseSettings):
+    """Redis configuration settings"""
+    redis_host: str = os.getenv("REDIS_HOST", "redis")
+    redis_port: int = int(os.getenv("REDIS_PORT", "6379"))
+    redis_password: Optional[str] = os.getenv("REDIS_PASSWORD")
+    redis_db: int = int(os.getenv("REDIS_DB", "0"))
+
+    model_config = ConfigDict(extra="allow")
+
+class RabbitMQSettings(BaseSettings):
+    """RabbitMQ configuration settings"""
+    rabbitmq_host: str = os.getenv("RABBITMQ_HOST", "rabbitmq")
+    rabbitmq_port: int = int(os.getenv("RABBITMQ_PORT", "5672"))
+    rabbitmq_user: str = os.getenv("RABBITMQ_USER", "admin")
+    rabbitmq_password: str = os.getenv("RABBITMQ_PASSWORD", "")
+
+    model_config = ConfigDict(extra="allow")
+
+class JWTSettings(BaseSettings):
+    """JWT configuration settings"""
+    jwt_secret_key: str = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+    jwt_algorithm: str = os.getenv("JWT_ALGORITHM", "HS256")
+    access_token_expire_minutes: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+
+    model_config = ConfigDict(extra="allow")
+
+class Settings(BaseSettings):
+    """Main settings class that combines all configurations"""
+    database: DatabaseSettings = DatabaseSettings()
+    redis: RedisSettings = RedisSettings()
+    rabbitmq: RabbitMQSettings = RabbitMQSettings()
+    jwt: JWTSettings = JWTSettings()
+
+    # Configuración principal - PERMITE VARIABLES EXTRA
+    model_config = ConfigDict(
+        env_file=".env",
+        case_sensitive=False,
+        extra="allow"  # ¡ESTO ES LO MÁS IMPORTANTE!
+    )
+
+# Singleton instance
+settings = Settings()
+

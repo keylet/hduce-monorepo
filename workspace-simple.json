@@ -1,0 +1,27 @@
+﻿{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "auth-service": {
+      "root": "backend/auth-service",
+      "sourceRoot": "backend/auth-service",
+      "projectType": "application",
+      "targets": {
+        "serve": {
+          "executor": "nx:run-commands",
+          "options": {
+            "command": "echo 'Ejecutando auth-service en puerto 8000'",
+            "cwd": "{workspaceRoot}"
+          }
+        },
+        "docker-build": {
+          "executor": "nx:run-commands",
+          "options": {
+            "command": "docker build -t hduce/auth-service:latest ./backend/auth-service",
+            "cwd": "{workspaceRoot}"
+          }
+        }
+      }
+    }
+  }
+}

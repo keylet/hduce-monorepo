@@ -1,0 +1,29 @@
+{
+  "name": "auth-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "backend/auth-service",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uvicorn main:app --host 0.0.0.0 --port 8000",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "docker-build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t hduce/auth-service:latest .",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Tests para auth-service (por implementar)'",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

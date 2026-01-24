@@ -1,0 +1,249 @@
+﻿{
+    "PassedTests":  19,
+    "Timestamp":  "2026-01-03 14:33:59",
+    "TotalTests":  22,
+    "FailedTests":  [
+                        {
+                            "Service":  "Auth",
+                            "Test":  "Login Admin",
+                            "Status":  "FAIL",
+                            "Details":  "Status: 404 - Error en el servidor remoto: (404) No se encontró.",
+                            "Response":  null,
+                            "Timestamp":  "14:33:55"
+                        },
+                        {
+                            "Service":  "User",
+                            "Test":  "Crear Usuario",
+                            "Status":  "FAIL",
+                            "Details":  "Status: 422 - Error en el servidor remoto: (422) Unprocessable Entity.",
+                            "Response":  null,
+                            "Timestamp":  "14:33:56"
+                        },
+                        {
+                            "Service":  "Notification",
+                            "Test":  "Health Check",
+                            "Status":  "FAIL",
+                            "Details":  "Health endpoint no disponible: Status: 422 - Error en el servidor remoto: (422) Unprocessable Entity.",
+                            "Response":  null,
+                            "Timestamp":  "14:33:57"
+                        }
+                    ],
+    "SystemStatus":  "DEGRADED",
+    "Tests":  [
+                  {
+                      "Service":  "Docker",
+                      "Test":  "Contenedores ejecutándose",
+                      "Status":  "PASS",
+                      "Details":  "9 contenedores encontrados",
+                      "Response":  null,
+                      "Timestamp":  "14:33:53"
+                  },
+                  {
+                      "Service":  "PostgreSQL",
+                      "Test":  "Conexión a DB",
+                      "Status":  "PASS",
+                      "Details":  "PostgreSQL aceptando conexiones",
+                      "Response":  null,
+                      "Timestamp":  "14:33:54"
+                  },
+                  {
+                      "Service":  "Redis",
+                      "Test":  "Servicio Redis",
+                      "Status":  "PASS",
+                      "Details":  "Redis respondiendo PONG",
+                      "Response":  null,
+                      "Timestamp":  "14:33:54"
+                  },
+                  {
+                      "Service":  "RabbitMQ",
+                      "Test":  "Interfaz Web",
+                      "Status":  "PASS",
+                      "Details":  "RabbitMQ Management disponible",
+                      "Response":  null,
+                      "Timestamp":  "14:33:54"
+                  },
+                  {
+                      "Service":  "Gateway",
+                      "Test":  "Health Check",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "status":  "ok",
+                                       "gateway":  "hduce"
+                                   },
+                      "Timestamp":  "14:33:54"
+                  },
+                  {
+                      "Service":  "Gateway",
+                      "Test":  "Endpoint Raíz",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "message":  "HDUCE Gateway OK"
+                                   },
+                      "Timestamp":  "14:33:55"
+                  },
+                  {
+                      "Service":  "Auth",
+                      "Test":  "Health Check Directo",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "status":  "healthy",
+                                       "service":  "auth-service"
+                                   },
+                      "Timestamp":  "14:33:55"
+                  },
+                  {
+                      "Service":  "Auth",
+                      "Test":  "Health Check vía Gateway",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "status":  "healthy",
+                                       "service":  "auth-service"
+                                   },
+                      "Timestamp":  "14:33:55"
+                  },
+                  {
+                      "Service":  "Auth",
+                      "Test":  "Login Admin",
+                      "Status":  "FAIL",
+                      "Details":  "Status: 404 - Error en el servidor remoto: (404) No se encontró.",
+                      "Response":  null,
+                      "Timestamp":  "14:33:55"
+                  },
+                  {
+                      "Service":  "Auth",
+                      "Test":  "Login vía Gateway",
+                      "Status":  "PASS",
+                      "Details":  "Token obtenido por gateway",
+                      "Response":  {
+                                       "token_length":  161
+                                   },
+                      "Timestamp":  "14:33:55"
+                  },
+                  {
+                      "Service":  "User",
+                      "Test":  "Health Check Directo",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "status":  "healthy",
+                                       "service":  "user-service"
+                                   },
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "User",
+                      "Test":  "Health Check DB",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "status":  "healthy",
+                                       "service":  "user-service",
+                                       "database":  "connected"
+                                   },
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "User",
+                      "Test":  "Listar Usuarios",
+                      "Status":  "PASS",
+                      "Details":  "0 usuarios encontrados",
+                      "Response":  {
+                                       "count":  0
+                                   },
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "User",
+                      "Test":  "Crear Usuario",
+                      "Status":  "FAIL",
+                      "Details":  "Status: 422 - Error en el servidor remoto: (422) Unprocessable Entity.",
+                      "Response":  null,
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "User",
+                      "Test":  "Listar vía Gateway",
+                      "Status":  "PASS",
+                      "Details":  "0 usuarios por gateway",
+                      "Response":  {
+                                       "count":  0
+                                   },
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "Appointment",
+                      "Test":  "Endpoint Raíz",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "value":  [
+
+                                                 ],
+                                       "Count":  0
+                                   },
+                      "Timestamp":  "14:33:56"
+                  },
+                  {
+                      "Service":  "Appointment",
+                      "Test":  "Gateway Endpoint",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "message":  "HDUCE Gateway OK"
+                                   },
+                      "Timestamp":  "14:33:57"
+                  },
+                  {
+                      "Service":  "Notification",
+                      "Test":  "Endpoint Raíz",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "value":  [
+
+                                                 ],
+                                       "Count":  0
+                                   },
+                      "Timestamp":  "14:33:57"
+                  },
+                  {
+                      "Service":  "Notification",
+                      "Test":  "Health Check",
+                      "Status":  "FAIL",
+                      "Details":  "Health endpoint no disponible: Status: 422 - Error en el servidor remoto: (422) Unprocessable Entity.",
+                      "Response":  null,
+                      "Timestamp":  "14:33:57"
+                  },
+                  {
+                      "Service":  "Notification",
+                      "Test":  "Gateway Endpoint",
+                      "Status":  "PASS",
+                      "Details":  "Status: 200",
+                      "Response":  {
+                                       "message":  "HDUCE Gateway OK"
+                                   },
+                      "Timestamp":  "14:33:57"
+                  },
+                  {
+                      "Service":  "Integration",
+                      "Test":  "RabbitMQ Consumer",
+                      "Status":  "PASS",
+                      "Details":  "Notification service tiene consumer RabbitMQ activo",
+                      "Response":  null,
+                      "Timestamp":  "14:33:57"
+                  },
+                  {
+                      "Service":  "Integration",
+                      "Test":  "Todos los servicios",
+                      "Status":  "PASS",
+                      "Details":  "Todos los servicios están ejecutándose (8 contenedores)",
+                      "Response":  null,
+                      "Timestamp":  "14:33:58"
+                  }
+              ],
+    "SuccessRate":  86.36
+}

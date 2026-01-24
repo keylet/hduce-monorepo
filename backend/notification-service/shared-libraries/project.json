@@ -1,0 +1,4 @@
+{
+  "name": "notification-shared-libs",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json"
+}

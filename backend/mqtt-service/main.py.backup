@@ -1,0 +1,216 @@
+﻿from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+import uvicorn
+import logging
+import paho.mqtt.client as mqtt
+import json
+from typing import Dict, List
+from datetime import datetime
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# In-memory storage for messages
+message_store: Dict[str, List[Dict]] = {}
+
+class MQTTManager:
+    def __init__(self):
+        self.client = None
+        self.connected = False
+        
+    def connect(self):
+        """Connect to MQTT broker"""
+        try:
+            self.client = mqtt.Client()
+            self.client.on_connect = self.on_connect
+            self.client.on_message = self.on_message
+            
+            # Connect to Mosquitto broker
+            self.client.connect("hduce-mosquitto", 1883, 60)
+            self.client.loop_start()
+            logger.info("MQTT client connected to broker")
+        except Exception as e:
+            logger.error(f"Failed to connect to MQTT broker: {e}")
+    
+    def on_connect(self, client, userdata, flags, rc):
+        """Callback when connected to MQTT broker"""
+        if rc == 0:
+            self.connected = True
+            logger.info("Connected to MQTT broker successfully")
+            
+            # Subscribe to system topics
+            self.subscribe("hduce/health/#")
+            self.subscribe("hduce/metrics/#")
+            self.subscribe("hduce/appointments/#")
+        else:
+            logger.error(f"Failed to connect to MQTT broker with code: {rc}")
+    
+    def on_message(self, client, userdata, msg):
+        """Callback when message is received"""
+        try:
+            topic = msg.topic
+            payload = msg.payload.decode()
+            
+            # Store message
+            if topic not in message_store:
+                message_store[topic] = []
+            
+            message_data = {
+                "timestamp": datetime.now().isoformat(),
+                "topic": topic,
+                "payload": payload,
+                "qos": msg.qos
+            }
+            
+            message_store[topic].append(message_data)
+            
+            # Keep only last 100 messages per topic
+            if len(message_store[topic]) > 100:
+                message_store[topic] = message_store[topic][-100:]
+            
+            logger.info(f"Received MQTT message on {topic}: {payload[:50]}...")
+            
+        except Exception as e:
+            logger.error(f"Error processing MQTT message: {e}")
+    
+    def subscribe(self, topic: str, qos: int = 0):
+        """Subscribe to MQTT topic"""
+        if self.client and self.connected:
+            self.client.subscribe(topic, qos)
+            logger.info(f"Subscribed to topic: {topic}")
+    
+    def publish(self, topic: str, payload: str, qos: int = 0):
+        """Publish message to MQTT topic"""
+        if self.client and self.connected:
+            self.client.publish(topic, payload, qos)
+            logger.info(f"Published to {topic}: {payload[:50]}...")
+            return True
+        return False
+    
+    def get_messages(self, topic: str, limit: int = 50) -> List[Dict]:
+        """Get recent messages for a topic"""
+        if topic in message_store:
+            return message_store[topic][-limit:]
+        return []
+    
+    def disconnect(self):
+        """Disconnect from MQTT broker"""
+        if self.client:
+            self.client.loop_stop()
+            self.client.disconnect()
+            self.connected = False
+
+# Global MQTT manager
+mqtt_manager = MQTTManager()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan events for MQTT client"""
+    # Startup
+    logger.info("Starting MQTT Service...")
+    mqtt_manager.connect()
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down MQTT Service...")
+    mqtt_manager.disconnect()
+
+app = FastAPI(
+    title="HDuce MQTT Service",
+    description="MQTT messaging service for IoT and real-time communication",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {
+        "service": "HDuce MQTT Service",
+        "version": "1.0.0",
+        "status": "running",
+        "mqtt_broker": "mqtt://hduce-mosquitto:1883",
+        "endpoints": {
+            "health": "/health",
+            "publish": "/publish",
+            "subscribe": "/subscribe",
+            "messages": "/messages/{topic}",
+            "topics": "/topics"
+        }
+    }
+
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "mqtt_connected": mqtt_manager.connected,
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.post("/publish")
+async def publish_message(topic: str, payload: str, qos: int = 0):
+    """Publish message to MQTT topic"""
+    try:
+        success = mqtt_manager.publish(topic, payload, qos)
+        if success:
+            return {
+                "success": True,
+                "message": f"Published to {topic}",
+                "payload": payload,
+                "qos": qos,
+                "timestamp": datetime.now().isoformat()
+            }
+        else:
+            raise HTTPException(status_code=503, detail="MQTT client not connected")
+    except Exception as e:
+        logger.error(f"Error publishing message: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/subscribe")
+async def subscribe_topic(topic: str, qos: int = 0):
+    """Subscribe to MQTT topic"""
+    try:
+        mqtt_manager.subscribe(topic, qos)
+        return {
+            "success": True,
+            "message": f"Subscribed to {topic}",
+            "qos": qos,
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        logger.error(f"Error subscribing to topic: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/messages/{topic}")
+async def get_messages(topic: str, limit: int = 50):
+    """Get recent messages for a topic"""
+    messages = mqtt_manager.get_messages(topic, limit)
+    return {
+        "topic": topic,
+        "count": len(messages),
+        "messages": messages
+    }
+
+@app.get("/topics")
+async def get_topics():
+    """Get all subscribed topics"""
+    return {
+        "topics": list(message_store.keys()),
+        "count": len(message_store)
+    }
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8004, reload=True)

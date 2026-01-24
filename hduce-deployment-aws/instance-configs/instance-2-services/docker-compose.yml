@@ -1,0 +1,157 @@
+﻿version: '3.8'
+
+services:
+  auth-service:
+    image: hduce-auth-service:aws-latest
+    container_name: auth-service
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@${DATABASE_HOST}:5432/auth_db
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - JWT_ALGORITHM=HS256
+      - TOKEN_EXPIRY=24h
+      - PORT=8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+  user-service:
+    image: hduce-user-service:aws-latest
+    container_name: user-service
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@${DATABASE_HOST}:5432/user_db
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - PORT=8001
+    ports:
+      - "8001:8001"
+    depends_on:
+      - auth-service
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+  appointment-service:
+    image: hduce-appointment-service:aws-latest
+    container_name: appointment-service
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@${DATABASE_HOST}:5432/appointment_db
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - RABBITMQ_HOST=${DATABASE_HOST}
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - PORT=8002
+    ports:
+      - "8002:8002"
+    depends_on:
+      - user-service
+      - postgres
+      - redis
+      - rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+  notification-service:
+    image: hduce-notification-service:aws-latest
+    container_name: notification-service
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@${DATABASE_HOST}:5432/notification_db
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - RABBITMQ_HOST=${DATABASE_HOST}
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - PORT=8003
+    ports:
+      - "8003:8003"
+    depends_on:
+      - appointment-service
+      - postgres
+      - redis
+      - rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+  mqtt-service:
+    image: hduce-mqtt-service:aws-latest
+    container_name: mqtt-service
+    restart: always
+    environment:
+      - MQTT_BROKER_HOST=${IOT_HOST}
+      - MQTT_BROKER_PORT=1883
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - PORT=8004
+    ports:
+      - "8004:8004"
+    depends_on:
+      - notification-service
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+  metrics-service:
+    image: hduce-metrics-service:aws-latest
+    container_name: metrics-service
+    restart: always
+    environment:
+      - REDIS_HOST=${DATABASE_HOST}
+      - REDIS_PORT=6379
+      - PORT=8005
+    ports:
+      - "8005:8005"
+    depends_on:
+      - mqtt-service
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hduce-network
+
+networks:
+  hduce-network:
+    external: true
+    name: hduce-network

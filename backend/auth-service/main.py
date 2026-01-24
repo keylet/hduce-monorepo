@@ -1,143 +1,76 @@
-﻿from fastapi import FastAPI, HTTPException
-from routes import router as auth_router  # <-- Cambiado a routes (NO routes_fixed)
-from datetime import datetime, timedelta
-import jwt
-from jwt.exceptions import PyJWTError as JWTError
+﻿import sys
+import os
 
-app = FastAPI(title="Auth Service", version="1.0.0")
+# Configurar path para imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+sys.path.insert(0, '/app')  # Para shared-libraries
 
-# ¡¡¡ESTO ES LO MÁS IMPORTANTE!!! 
-app.include_router(auth_router, prefix="/api/auth")
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import json
+from fastapi.responses import JSONResponse
+import json
+from fastapi.responses import JSONResponse
+import json
+from fastapi.middleware.cors import CORSMiddleware
+import logging
 
-# Simple config
-SECRET_KEY = "dev-secret-key-change-in-production"
-ALGORITHM = "HS256"
+# IMPORTAR DE SHARED-LIBRARIES (MANTENER)
+from hduce_shared.auth import JWTManager
+from hduce_shared.config import settings
 
-# Simple in-memory database
-users_db = {
-    "admin": {
-        "username": "admin",
-        "email": "admin@example.com",
-        "password": "admin123",
-        "is_active": True
-    }
-}
+# Importar rutas locales
+from routes import router
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(
+    docs_url="/auth/docs",
+    redoc_url="/auth/redoc",
+    openapi_url="/auth/openapi.json",
+
+    title="HDUCE Auth Service",
+    description="Authentication service with real JWT and PostgreSQL",
+    version="3.0.0"
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Incluir rutas
+app.include_router(router, prefix="/auth")
+
+@app.on_event("startup")
+async def startup_event():
+    """Inicializar base de datos al iniciar"""
+    try:
+        from database import create_auth_tables
+        create_auth_tables()
+        logger.info("✅ Database tables created")
+    except Exception as e:
+        logger.error(f"❌ Database error: {e}")
 
 @app.get("/")
-def read_root():
-    return {"service": "auth-service", "status": "running"}
+async def root():
+    return {
+        "service": "auth-service",
+        "version": "3.0.0",
+        "status": "running",
+        "using_shared_libraries": True
+    }
 
 @app.get("/health")
-def health_check():
-    return {"status": "healthy", "service": "auth-service"}
-
-@app.post("/register")
-def register(username: str, email: str, password: str):
-    if username in users_db:
-        raise HTTPException(status_code=400, detail="Username already exists")
-    
-    users_db[username] = {
-        "username": username,
-        "email": email,
-        "password": password,
-        "is_active": True
-    }
-    
-    return {"message": "User registered successfully", "username": username}
-
-@app.post("/login")
-def login(username: str, password: str):
-    user = users_db.get(username)
-    
-    if not user or user["password"] != password:
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-    
-    # Create JWT token
-    token_data = {
-        "sub": username,
-        "email": user["email"],
-        "exp": datetime.utcnow() + timedelta(hours=24)
-    }
-    
-    token = jwt.encode(token_data, SECRET_KEY, algorithm=ALGORITHM)
-    
-    return {"access_token": token, "token_type": "bearer"}
-
-@app.get("/verify/{token}")
-def verify_token_endpoint(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return {"valid": True, "user": payload.get("sub"), "expires": payload.get("exp")}
-    except JWTError:
-        raise HTTPException(status_code=400, detail="Invalid token")
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8007)  # <-- Puerto NUEVO 8006
-
-# === ENDPOINT DE PRUEBA SIMPLE ===
-from pydantic import BaseModel
-
-class TestData(BaseModel):
-    username: str
-    email: str
-    password: str
-
-@app.post("/test-json")
-def test_json(data: TestData):
-    return {
-        "status": "success",
-        "received": {
-            "username": data.username,
-            "email": data.email,
-            "password": data.password
-        },
-        "message": "JSON recibido correctamente"
-    }
-
-@app.post("/test-raw")
-def test_raw(body: dict):
-    return {
-        "status": "success", 
-        "raw_body": body,
-        "message": "Raw body recibido"
-    }
-
-# ====== ENDPOINTS DE PRUEBA ======
-from pydantic import BaseModel
-
-class TestUser(BaseModel):
-    username: str
-    email: str
-    password: str
-
-@app.post("/test-json")
-def test_json_endpoint(user: TestUser):
-    return {
-        "status": "success",
-        "message": "✅ JSON recibido correctamente",
-        "data": {
-            "username": user.username,
-            "email": user.email,
-            "password": user.password
-        }
-    }
-
-@app.post("/test-raw")
-def test_raw_endpoint(body: dict):
-    return {
-        "status": "success",
-        "message": "✅ Raw body recibido",
-        "raw_data": body
-    }
-
-@app.post("/test-simple")
-def test_simple_endpoint(username: str, email: str, password: str):
-    return {
-        "status": "success",
-        "message": "✅ Parámetros simples recibidos",
-        "data": {"username": username, "email": email, "password": password}
-    }
+async def health():
+    return {"status": "healthy", "service": "auth"}
 
 
 

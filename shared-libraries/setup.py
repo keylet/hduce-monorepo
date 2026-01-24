@@ -1,17 +1,20 @@
-﻿from setuptools import setup
+﻿from setuptools import setup, find_packages
 
 setup(
-    name="hduce-shared-libs",
-    version="0.1.0",
-    packages=["hduce_shared_libs"],
-    package_dir={
-        "hduce_shared_libs": "."
-    },
+    name="hduce_shared",
+    version="1.0.0",
+    packages=find_packages(),
     install_requires=[
+        "fastapi>=0.104.0",
+        "sqlalchemy>=2.0.0",
         "pydantic>=2.0.0",
-        "PyJWT>=2.0.0",
-        "python-dotenv>=1.0.0",
-        "email-validator>=2.0.0",  # <- AGREGADO
+        "pydantic-settings>=2.0.0",  # Añadido para settings.py
+        "python-jose>=3.3.0",
+        "passlib>=1.7.4",
+        "python-multipart>=0.0.6",
+        "psycopg2-binary>=2.9.0",
+        "redis>=5.0.0",
+        "pika>=1.3.0",
     ],
-    python_requires=">=3.8",
 )
+

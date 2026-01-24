@@ -1,0 +1,7 @@
+{
+    "patient_id": "final-success-test",
+    "doctor_id": 1,
+    "appointment_date": "2026-02-05T10:00:00",
+    "reason": "Prueba final despu?s de reinicio",
+    "notes": "Esta deber?a funcionar sin errores"
+}

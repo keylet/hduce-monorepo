@@ -1,0 +1,12 @@
+﻿# HDUCE AWS Academy Configuration
+SERVER_IP=ificar estado
+SSH_KEY=C:\Users\raich\.ssh\hduce-ssh-key.pem
+USER=ec2-user
+REMOTE_DIR=/home/ec2-user/hduce
+WEB_URL=http://ificar estado
+
+# Comandos útiles:
+# SSH: ssh -i C:\Users\raich\.ssh\hduce-ssh-key.pem ec2-user@ificar estado
+# Ver servicios: ssh -i C:\Users\raich\.ssh\hduce-ssh-key.pem ec2-user@ificar estado 'cd /home/ec2-user/hduce && docker-compose ps'
+# Ver logs: ssh -i C:\Users\raich\.ssh\hduce-ssh-key.pem ec2-user@ificar estado 'cd /home/ec2-user/hduce && docker-compose logs'
+# Reiniciar: ssh -i C:\Users\raich\.ssh\hduce-ssh-key.pem ec2-user@ificar estado 'cd /home/ec2-user/hduce && docker-compose restart'

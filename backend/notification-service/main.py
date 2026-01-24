@@ -1,88 +1,86 @@
-﻿from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
+﻿"""
+Notification Service - 100% usando Shared Libraries
+SOLO UN consumer: desde independent_consumer.py
+"""
 import uvicorn
-from datetime import datetime
+import sys
+import os
+import logging
+import threading
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-from database import engine, get_db
-import models
-import schemas
-from routes import router as notification_router
+# Añadir path para shared libraries
+sys.path.insert(0, '/app')
+
+# Importar módulos locales
+from independent_consumer import start_consumer
+from routes import router as notifications_router
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Variable para controlar el hilo del consumer
+consumer_thread = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    print("🚀 Starting Notification Service...")
-    
-    # Crear tablas SI NO EXISTEN (evitar errores de foreign keys)
-    try:
-        print("📦 Creating database tables (if not exist)...")
-        models.Base.metadata.create_all(bind=engine)
-        print("✅ Database tables created/verified")
-    except Exception as e:
-        print(f"⚠️ Warning creating tables: {e}")
-    
-    yield
-    
-    # Shutdown
-    print("🛑 Shutting down Notification Service...")
+    global consumer_thread
 
-# Crear aplicacion FastAPI
+    logger.info("🚀 Iniciando Notification Service con SHARED LIBRARIES...")
+
+    # Crear tablas si no existen
+    try:
+        from database import create_tables
+        if create_tables():
+            logger.info("✅ Tablas verificadas/creadas en notification_db")
+        else:
+            logger.warning("⚠️ No se pudieron crear las tablas")
+    except Exception as e:
+        logger.error(f"Error creando tablas: {e}")
+
+    # Iniciar consumer en un hilo separado SOLO SI NO HAY YA UNO
+    if consumer_thread is None or not consumer_thread.is_alive():
+        consumer_thread = threading.Thread(
+            target=start_consumer,
+            name="RabbitMQ-Consumer",
+            daemon=True
+        )
+        consumer_thread.start()
+        logger.info("✅ Consumer iniciado en hilo separado")
+    else:
+        logger.info("✅ Consumer ya está ejecutándose")
+
+    yield  # La app está ejecutándose
+
+    # Cierre: limpiar recursos
+    logger.info("👋 Cerrando Notification Service...")
+
+# Crear aplicación FastAPI
 app = FastAPI(
-    title="HDUCE Notification Service",
-    description="Microservicio para manejo de notificaciones (email, SMS, push)",
+    title="Notification Service",
+    description="Servicio de notificaciones con RabbitMQ Consumer",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
     lifespan=lifespan
 )
 
-# Configurar CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Para desarrollo
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Incluir rutas (usando el mismo patrón que appointment-service)
+# main.py prefix="/api" + routes.py prefix="/notifications" = /api/notifications/
+app.include_router(notifications_router, prefix="/api")
 
-# Incluir rutas
-app.include_router(notification_router, prefix="/api/v1", tags=["notifications"])
-
-# Health check endpoint
-@app.get("/health", response_model=schemas.HealthCheck, tags=["health"])
-async def health_check():
-    from sqlalchemy import text
-    from database import SessionLocal
-    
-    db_status = "healthy"
-    try:
-        db = SessionLocal()
-        db.execute(text("SELECT 1"))
-        db.close()
-    except Exception as e:
-        db_status = f"unhealthy: {str(e)}"
-    
-    return schemas.HealthCheck(
-        status="healthy",
-        service="notification-service",
-        database=db_status,
-        timestamp=datetime.now()
-    )
-
-@app.get("/", tags=["root"])
+@app.get("/")
 async def root():
+    return {"message": "Notification Service is running with SHARED LIBRARIES"}
+
+@app.get("/health")
+async def health_check():
     return {
-        "message": "HDUCE Notification Service",
-        "version": "1.0.0",
-        "status": "running",
-        "endpoints": {
-            "health": "/health",
-            "docs": "/docs",
-            "send_email": "/api/v1/notifications/email",
-            "send_sms": "/api/v1/notifications/sms",
-            "list_notifications": "/api/v1/notifications"
-        }
+        "status": "healthy",
+        "service": "notification",
+        "shared_libraries": "yes",
+        "database": "postgresql",
+        "consumer_alive": consumer_thread.is_alive() if consumer_thread else False
     }
 
 if __name__ == "__main__":
@@ -90,6 +88,5 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",
         port=8003,
-        reload=True,
-        log_level="info"
+        reload=True
     )

@@ -1,87 +1,22 @@
-from pydantic import BaseModel, EmailStr, Field
+﻿from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, List
-from enum import Enum
+from typing import Optional
 
-# Enums
-class NotificationType(str, Enum):
-    EMAIL = "email"
-    SMS = "sms"
-    PUSH = "push"
-    IN_APP = "in_app"
-
-class NotificationStatus(str, Enum):
-    PENDING = "pending"
-    SENT = "sent"
-    FAILED = "failed"
-    DELIVERED = "delivered"
-    READ = "read"
-
-# Base schemas
 class NotificationBase(BaseModel):
-    user_id: str = Field(..., description="UUID del usuario")
-    notification_type: NotificationType
-    subject: Optional[str] = None
+    user_id: int
+    user_email: str
+    title: Optional[str] = None
     message: str
-    recipient_email: Optional[EmailStr] = None
-    recipient_phone: Optional[str] = None
-    appointment_id: Optional[int] = None
-    scheduled_at: Optional[datetime] = None
+    notification_type: str = "appointment_created"
+    is_read: bool = False
 
 class NotificationCreate(NotificationBase):
     pass
 
-class NotificationUpdate(BaseModel):
-    status: Optional[NotificationStatus] = None
-    last_error: Optional[str] = None
-    sent_at: Optional[datetime] = None
-
-# Response schemas
-class Notification(NotificationBase):
+class NotificationSchema(NotificationBase):
     id: int
-    status: NotificationStatus
-    retry_count: int
-    max_retries: int
-    last_error: Optional[str]
-    sent_at: Optional[datetime]
     created_at: datetime
-    updated_at: Optional[datetime]
-    
+    read_at: Optional[datetime] = None
+
     class Config:
         from_attributes = True
-
-class EmailLogBase(BaseModel):
-    sender: str
-    recipients: str
-    subject: str
-    success: bool
-    error_message: Optional[str]
-
-class EmailLog(EmailLogBase):
-    id: int
-    notification_id: int
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True
-
-class SMSLogBase(BaseModel):
-    phone_number: str
-    message: str
-    success: bool
-    error_message: Optional[str]
-
-class SMSLog(SMSLogBase):
-    id: int
-    notification_id: int
-    created_at: datetime
-    
-    class Config:
-        from_attributes = True
-
-# Health check
-class HealthCheck(BaseModel):
-    status: str
-    service: str
-    database: str
-    timestamp: datetime

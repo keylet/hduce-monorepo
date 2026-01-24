@@ -1,0 +1,52 @@
+﻿# Dockerfile.auth.prod - CON RUTAS CORRECTAS
+# Se construye desde: C:\Users\raich\Desktop\hduce-monorepo\hduce-deployment-aws\docker-images\
+
+# Etapa 1: Builder
+FROM python:3.11-slim AS builder
+
+# Instalar compiladores necesarios
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear directorio de trabajo
+WORKDIR /hduce-build
+
+# Copiar shared-libraries (ruta CORRECTA desde el contexto raíz)
+COPY ../../../shared-libraries ./shared-libraries
+WORKDIR /hduce-build/shared-libraries
+RUN pip wheel --wheel-dir /wheels .
+
+# Copiar auth-service (ruta CORRECTA desde el contexto raíz)
+WORKDIR /hduce-build
+COPY ../../../backend/auth-service ./auth-service
+WORKDIR /hduce-build/auth-service
+RUN pip wheel --wheel-dir /wheels -r requirements.txt
+
+# Etapa 2: Runtime
+FROM python:3.11-slim
+
+# Dependencias de runtime
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Directorio de trabajo
+WORKDIR /app
+
+# Copiar e instalar wheels
+COPY --from=builder /wheels /wheels
+RUN pip install --no-index --find-links=/wheels /wheels/*
+
+# Copiar código del servicio
+COPY --from=builder /hduce-build/auth-service /app
+
+# Configurar Python path
+ENV PYTHONPATH=/app:$PYTHONPATH
+ENV PORT=8000
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,46 @@
+﻿# backend/auth-service/Dockerfile.aws
+# VERSIÓN AWS - Construido para funcionar desde la raíz del monorepo
+# Build: docker build -f backend/auth-service/Dockerfile.aws -t hduce-auth:aws .
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 1. COPIAR shared-libraries DESDE EL CONTEXTO RAÍZ
+COPY shared-libraries/ /app/shared-libraries/
+WORKDIR /app/shared-libraries
+RUN pip install -e .
+
+# 2. COPIAR código del auth-service DESDE EL CONTEXTO RAÍZ
+WORKDIR /app
+COPY backend/auth-service/requirements.txt .
+COPY backend/auth-service/src/ ./src/
+COPY backend/auth-service/main.py .
+COPY backend/auth-service/database.py .
+COPY backend/auth-service/models.py .
+COPY backend/auth-service/routes.py .
+COPY backend/auth-service/schemas.py .
+COPY backend/auth-service/auth_utils.py .
+COPY backend/auth-service/__init__.py .
+
+# 3. Instalar dependencias del servicio
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# 4. Configurar PYTHONPATH
+ENV PYTHONPATH=/app:/app/shared-libraries:$PYTHONPATH
+
+EXPOSE 8000
+
+# Health check para AWS
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+

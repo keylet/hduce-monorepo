@@ -1,74 +1,115 @@
-﻿from fastapi import FastAPI, Depends, HTTPException, status
+﻿#!/usr/bin/env python3
+"""Appointment Service - HDuce Medical System"""
+
+import os
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from typing import List
-import models
-import schemas
-from database import engine, get_db
-from routes import appointment_router, doctor_router, specialty_router
 
-# Crear tablas en la base de datos
-models.Base.metadata.create_all(bind=engine)
 
-# Crear aplicacion FastAPI
+import sys
+sys.path.append("/app/shared-libraries")
+
+
+from hduce_shared import setup_logging
+from hduce_shared.database import init_db, check_db_connection
+
+import webhooks
+
+
+setup_logging()
+logger = logging.getLogger(__name__)
+
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@postgres:5432/appointment_db")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup/shutdown events."""
+ 
+    logger.info("🚀 Starting appointment-service...")
+
+    try:
+     
+        logger.info("📦 Configurando appointment-service database con shared libraries...")
+        db_manager = init_db()  
+        logger.info("✅ Appointment-service configured to use shared libraries")
+        logger.info(f"🔧 Service: appointments, Database: appointment_db")
+
+       
+        if check_db_connection("appointments"):
+            logger.info("✅ Database connection verified")
+        else:
+            logger.error("❌ Database connection failed")
+            raise Exception("Database connection failed")
+
+        yield
+
+    except Exception as e:
+        logger.error(f"❌ Error durante startup: {e}")
+        raise
+
+    
+    logger.info("🛑 Shutting down appointment-service...")
+
+
 app = FastAPI(
-    title="HDUCE Appointment Service",
-    description="Microservicio para gestion de citas medicas",
-    version="1.0.0",
-    openapi_tags=[
-        {"name": "Appointments", "description": "Operaciones con citas"},
-        {"name": "Doctors", "description": "Gestion de doctores"},
-        {"name": "Specialties", "description": "Especialidades medicas"},
-    ],
-    default_response_class=JSONResponse
+    title="HDuce Appointment Service",
+    description="Microservicio para gestión de doctores y citas médicas",
+    version="2.0.0",
+    lifespan=lifespan
 )
 
-# Configurar CORS
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En produccion, especificar dominios
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Incluir routers
-app.include_router(appointment_router, prefix="/appointments", tags=["Appointments"])
-app.include_router(doctor_router, prefix="/doctors", tags=["Doctors"])
-app.include_router(specialty_router, prefix="/specialties", tags=["Specialties"])
 
-@app.get("/")
-async def root():
-    return {
-        "service": "Appointment Service",
-        "version": "1.0.0",
-        "status": "running"
-    }
+@app.middleware("http")
+async def add_utf8_charset(request: Request, call_next):
+    response = await call_next(request)
+    content_type = response.headers.get("content-type", "")
+    if "application/json" in content_type and "charset=utf-8" not in content_type:
+        response.headers["content-type"] = "application/json; charset=utf-8"
+    return response
+
+
+from routes import router as appointments_router
+app.include_router(
+    appointments_router,
+    prefix="/api",
+    tags=["appointments"]
+)
+app.include_router(webhooks.router, prefix="/api/webhooks")
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "appointment-service"}
+    """Health endpoint"""
+    return {
+        "status": "healthy",
+        "service": "appointment-service",
+        "version": "2.0.0",
+        "using_shared_libraries": True,
+        "database": "appointment_db"
+    }
 
-# Endpoint para verificar conexion a base de datos
-@app.get("/db-check")
-async def db_check(db: Session = Depends(get_db)):
-    try:
-        # Intentar una consulta simple
-        db.execute("SELECT 1")
-        return {"database": "connected"}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Database connection error: {str(e)}"
-        )
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8002,
+        reload=True,
+        log_level="info"
+    )
 
-# Crear foreign keys después de iniciar
-@app.on_event("startup")
-async def startup_event():
-    try:
-        from foreign_keys import create_foreign_keys
-        create_foreign_keys()
-        print("Foreign keys creadas exitosamente")
-    except Exception as e:
-        print(f"Error creando foreign keys: {e}")
+
+
+
 

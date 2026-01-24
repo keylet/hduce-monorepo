@@ -1,0 +1,11 @@
+﻿{
+    "$schema":  "./node_modules/nx/schemas/workspace-schema.json",
+    "version":  2,
+    "projects":  {
+                     "auth-service":  "backend/auth-service",
+                     "user-service":  "backend/user-service",
+                     "appointment-service":  "backend/appointment-service",
+                     "notification-service":  "backend/notification-service",
+                     "shared-libraries":  "shared-libraries"
+                 }
+}

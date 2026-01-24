@@ -1,0 +1,3 @@
+﻿-- init-appointment-data-fixed.sql - VERSIÓN SIMPLE
+-- Este script se ejecutará en la base de datos appointment_db
+-- Crear tablas básicas si no existen

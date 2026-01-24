@@ -1,0 +1,7 @@
+﻿{
+    "patient_id": "test_curl_fixed",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-07T12:30:00",
+    "reason": "Prueba con curl corregido",
+    "notes": null
+}

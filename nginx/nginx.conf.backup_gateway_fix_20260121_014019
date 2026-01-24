@@ -1,0 +1,24 @@
+http {
+    server {
+        listen 80;
+        server_name localhost;
+        
+        # Headers CRÍTICOS para autenticación (¡FUNCIONA!)
+        proxy_set_header Authorization $http_authorization;
+        
+        # Rutas validadas:
+        location /auth/ { proxy_pass http://auth-service:8000/auth/; }
+        location /api/v1/users/ { proxy_pass http://user-service:8001/; }
+        location /api/doctors/ { proxy_pass http://appointment-service:8002/doctors/; }
+        location /api/appointments/ { proxy_pass http://appointment-service:8002/appointments/; }
+        location /api/notifications/ { proxy_pass http://notification-service:8003/; }
+        
+        # Health checks
+        location /health { return 200 "healthy"; }
+        location / { return 200 "HDuce Gateway OK - Use /auth/, /api/v1/users/, /api/doctors/, /api/appointments/, /api/notifications/"; }
+    }
+}
+events {
+    worker_connections 1024;
+}
+

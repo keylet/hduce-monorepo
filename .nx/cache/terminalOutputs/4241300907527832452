@@ -1,0 +1,225 @@
+[2m> [22mpython -m pip install -e .
+
+WARNING: Ignoring invalid distribution ~qlalchemy (C:\Users\raich\AppData\Local\Programs\Python\Python313\Lib\site-packages)
+WARNING: Ignoring invalid distribution ~qlalchemy (C:\Users\raich\AppData\Local\Programs\Python\Python313\Lib\site-packages)
+Obtaining file:///C:/Users/raich/Desktop/hduce-monorepo/shared-libraries
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: sqlalchemy>=2.0.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (2.0.45)
+Collecting pydantic==2.5.0 (from hduce-shared==0.1.0)
+  Using cached pydantic-2.5.0-py3-none-any.whl.metadata (174 kB)
+Collecting pydantic-settings==2.1.0 (from hduce-shared==0.1.0)
+  Using cached pydantic_settings-2.1.0-py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: python-jose>=3.3.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (3.5.0)
+Requirement already satisfied: passlib>=1.7.4 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from passlib[bcrypt]>=1.7.4->hduce-shared==0.1.0) (1.7.4)
+Requirement already satisfied: python-multipart>=0.0.6 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (0.0.21)
+Requirement already satisfied: pika>=1.3.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (1.3.2)
+Requirement already satisfied: psycopg2-binary>=2.9.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (2.9.11)
+Requirement already satisfied: redis>=4.5.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (7.1.0)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic==2.5.0->hduce-shared==0.1.0) (0.7.0)
+Collecting pydantic-core==2.14.1 (from pydantic==2.5.0->hduce-shared==0.1.0)
+  Using cached pydantic_core-2.14.1.tar.gz (359 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: typing-extensions>=4.6.1 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic==2.5.0->hduce-shared==0.1.0) (4.15.0)
+Requirement already satisfied: python-dotenv>=0.21.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic-settings==2.1.0->hduce-shared==0.1.0) (1.2.1)
+Requirement already satisfied: bcrypt>=3.1.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from passlib[bcrypt]>=1.7.4->hduce-shared==0.1.0) (5.0.0)
+Requirement already satisfied: ecdsa!=0.15 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (0.19.1)
+Requirement already satisfied: rsa!=4.1.1,!=4.4,<5.0,>=4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (4.9.1)
+Requirement already satisfied: pyasn1>=0.5.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (0.6.1)
+Requirement already satisfied: six>=1.9.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from ecdsa!=0.15->python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (1.17.0)
+Requirement already satisfied: cryptography>=3.4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (46.0.3)
+Requirement already satisfied: cffi>=2.0.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from cryptography>=3.4.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (2.0.0)
+Requirement already satisfied: pycparser in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (2.23)
+Requirement already satisfied: greenlet>=1 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from sqlalchemy>=2.0.0->hduce-shared==0.1.0) (3.3.0)
+Downloading pydantic-2.5.0-py3-none-any.whl (407 kB)
+Downloading pydantic_settings-2.1.0-py3-none-any.whl (11 kB)
+Building wheels for collected packages: hduce-shared, pydantic-core
+  Building editable for hduce-shared (pyproject.toml): started
+  Building editable for hduce-shared (pyproject.toml): finished with status 'done'
+  Created wheel for hduce-shared: filename=hduce_shared-0.1.0-0.editable-py3-none-any.whl size=2922 sha256=842aa5f9fc2393f8adf850a4163e6e758aa27c14663ef6485fbca66698751bb4
+  Stored in directory: C:\Users\raich\AppData\Local\Temp\pip-ephem-wheel-cache-006r5g55\wheels\40\c1\ac\60da0dc277de9df502f3bcb983816cfecd680cec7ba1afd269
+  Building wheel for pydantic-core (pyproject.toml): started
+  Building wheel for pydantic-core (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  Building wheel for pydantic-core (pyproject.toml) did not run successfully.
+  exit code: 1
+  
+  [42 lines of output]
+  Running `maturin pep517 build-wheel -i C:\Users\raich\AppData\Local\Programs\Python\Python313\python.exe --compatibility off`
+  📦 Including license file `LICENSE`
+  �\x8d� Building a mixed python/rust project
+  🔗 Found pyo3 bindings
+  �\x90\x8d Found CPython 3.13 at C:\Users\raich\AppData\Local\Programs\Python\Python313\python.exe
+  📡 Using build options features, bindings from pyproject.toml
+     Compiling autocfg v1.1.0
+     Compiling proc-macro2 v1.0.69
+     Compiling unicode-ident v1.0.10
+     Compiling target-lexicon v0.12.9
+     Compiling quote v1.0.29
+     Compiling cc v1.0.79
+     Compiling once_cell v1.18.0
+     Compiling static_assertions v1.1.0
+     Compiling windows_x86_64_msvc v0.48.0
+     Compiling heck v0.4.1
+     Compiling version_check v0.9.4
+     Compiling cfg-if v1.0.0
+     Compiling lexical-util v0.8.5
+     Compiling rustversion v1.0.13
+     Compiling parking_lot_core v0.9.8
+  error: linker `link.exe` not found
+    |
+    = note: program not found
+  
+  note: the msvc targets depend on the msvc linker but `link.exe` was not found
+  
+  note: please ensure that Visual Studio 2017 or later, or Build Tools for Visual Studio were installed with the Visual C++ option.
+  
+  note: VS Code is a different product, and is not sufficient.
+  
+  error: could not compile `windows_x86_64_msvc` (build script) due to 1 previous error
+  warning: build failed, waiting for other jobs to finish...
+  error: could not compile `quote` (build script) due to 1 previous error
+  error: could not compile `rustversion` (build script) due to 1 previous error
+  error: could not compile `proc-macro2` (build script) due to 1 previous error
+  error: could not compile `parking_lot_core` (build script) due to 1 previous error
+  error: could not compile `target-lexicon` (build script) due to 1 previous error
+  💥 maturin failed
+    Caused by: Failed to build a native library through cargo
+    Caused by: Cargo build finished with "exit code: 101": `"cargo" "rustc" "--profile" "release" "--features" "pyo3/extension-module" "--message-format" "json-render-diagnostics" "--manifest-path" "C:\\Users\\raich\\AppData\\Local\\Temp\\pip-install-bga37iev\\pydantic-core_3c4b50cbc8cc47f8b69d19ba40f1cc90\\Cargo.toml" "--lib" "--crate-type" "cdylib"`
+  Error: command ['maturin', 'pep517', 'build-wheel', '-i', 'C:\\Users\\raich\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '--compatibility', 'off'] returned non-zero exit status 1
+  [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for pydantic-core
+Successfully built hduce-shared
+Failed to build pydantic-core
+error: failed-wheel-build-for-install
+
+Failed to build installable wheels for some pyproject.toml based projects
+
+pydantic-core
+[2m> [22mpython -m pip install -e .
+
+WARNING: Ignoring invalid distribution ~qlalchemy (C:\Users\raich\AppData\Local\Programs\Python\Python313\Lib\site-packages)
+WARNING: Ignoring invalid distribution ~qlalchemy (C:\Users\raich\AppData\Local\Programs\Python\Python313\Lib\site-packages)
+Obtaining file:///C:/Users/raich/Desktop/hduce-monorepo/shared-libraries
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: sqlalchemy>=2.0.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (2.0.45)
+Collecting pydantic==2.5.0 (from hduce-shared==0.1.0)
+  Using cached pydantic-2.5.0-py3-none-any.whl.metadata (174 kB)
+Collecting pydantic-settings==2.1.0 (from hduce-shared==0.1.0)
+  Using cached pydantic_settings-2.1.0-py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: python-jose>=3.3.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (3.5.0)
+Requirement already satisfied: passlib>=1.7.4 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from passlib[bcrypt]>=1.7.4->hduce-shared==0.1.0) (1.7.4)
+Requirement already satisfied: python-multipart>=0.0.6 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (0.0.21)
+Requirement already satisfied: pika>=1.3.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (1.3.2)
+Requirement already satisfied: psycopg2-binary>=2.9.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (2.9.11)
+Requirement already satisfied: redis>=4.5.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from hduce-shared==0.1.0) (7.1.0)
+Requirement already satisfied: annotated-types>=0.4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic==2.5.0->hduce-shared==0.1.0) (0.7.0)
+Collecting pydantic-core==2.14.1 (from pydantic==2.5.0->hduce-shared==0.1.0)
+  Using cached pydantic_core-2.14.1.tar.gz (359 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: typing-extensions>=4.6.1 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic==2.5.0->hduce-shared==0.1.0) (4.15.0)
+Requirement already satisfied: python-dotenv>=0.21.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from pydantic-settings==2.1.0->hduce-shared==0.1.0) (1.2.1)
+Requirement already satisfied: bcrypt>=3.1.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from passlib[bcrypt]>=1.7.4->hduce-shared==0.1.0) (5.0.0)
+Requirement already satisfied: ecdsa!=0.15 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (0.19.1)
+Requirement already satisfied: rsa!=4.1.1,!=4.4,<5.0,>=4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (4.9.1)
+Requirement already satisfied: pyasn1>=0.5.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (0.6.1)
+Requirement already satisfied: six>=1.9.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from ecdsa!=0.15->python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (1.17.0)
+Requirement already satisfied: cryptography>=3.4.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (46.0.3)
+Requirement already satisfied: cffi>=2.0.0 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from cryptography>=3.4.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (2.0.0)
+Requirement already satisfied: pycparser in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from cffi>=2.0.0->cryptography>=3.4.0->python-jose[cryptography]>=3.3.0->hduce-shared==0.1.0) (2.23)
+Requirement already satisfied: greenlet>=1 in c:\users\raich\appdata\local\programs\python\python313\lib\site-packages (from sqlalchemy>=2.0.0->hduce-shared==0.1.0) (3.3.0)
+Downloading pydantic-2.5.0-py3-none-any.whl (407 kB)
+Downloading pydantic_settings-2.1.0-py3-none-any.whl (11 kB)
+Building wheels for collected packages: hduce-shared, pydantic-core
+  Building editable for hduce-shared (pyproject.toml): started
+  Building editable for hduce-shared (pyproject.toml): finished with status 'done'
+  Created wheel for hduce-shared: filename=hduce_shared-0.1.0-0.editable-py3-none-any.whl size=2922 sha256=842aa5f9fc2393f8adf850a4163e6e758aa27c14663ef6485fbca66698751bb4
+  Stored in directory: C:\Users\raich\AppData\Local\Temp\pip-ephem-wheel-cache-006r5g55\wheels\40\c1\ac\60da0dc277de9df502f3bcb983816cfecd680cec7ba1afd269
+  Building wheel for pydantic-core (pyproject.toml): started
+  Building wheel for pydantic-core (pyproject.toml): finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  Building wheel for pydantic-core (pyproject.toml) did not run successfully.
+  exit code: 1
+  
+  [42 lines of output]
+  Running `maturin pep517 build-wheel -i C:\Users\raich\AppData\Local\Programs\Python\Python313\python.exe --compatibility off`
+  📦 Including license file `LICENSE`
+  �\x8d� Building a mixed python/rust project
+  🔗 Found pyo3 bindings
+  �\x90\x8d Found CPython 3.13 at C:\Users\raich\AppData\Local\Programs\Python\Python313\python.exe
+  📡 Using build options features, bindings from pyproject.toml
+     Compiling autocfg v1.1.0
+     Compiling proc-macro2 v1.0.69
+     Compiling unicode-ident v1.0.10
+     Compiling target-lexicon v0.12.9
+     Compiling quote v1.0.29
+     Compiling cc v1.0.79
+     Compiling once_cell v1.18.0
+     Compiling static_assertions v1.1.0
+     Compiling windows_x86_64_msvc v0.48.0
+     Compiling heck v0.4.1
+     Compiling version_check v0.9.4
+     Compiling cfg-if v1.0.0
+     Compiling lexical-util v0.8.5
+     Compiling rustversion v1.0.13
+     Compiling parking_lot_core v0.9.8
+  error: linker `link.exe` not found
+    |
+    = note: program not found
+  
+  note: the msvc targets depend on the msvc linker but `link.exe` was not found
+  
+  note: please ensure that Visual Studio 2017 or later, or Build Tools for Visual Studio were installed with the Visual C++ option.
+  
+  note: VS Code is a different product, and is not sufficient.
+  
+  error: could not compile `windows_x86_64_msvc` (build script) due to 1 previous error
+  warning: build failed, waiting for other jobs to finish...
+  error: could not compile `quote` (build script) due to 1 previous error
+  error: could not compile `rustversion` (build script) due to 1 previous error
+  error: could not compile `proc-macro2` (build script) due to 1 previous error
+  error: could not compile `parking_lot_core` (build script) due to 1 previous error
+  error: could not compile `target-lexicon` (build script) due to 1 previous error
+  💥 maturin failed
+    Caused by: Failed to build a native library through cargo
+    Caused by: Cargo build finished with "exit code: 101": `"cargo" "rustc" "--profile" "release" "--features" "pyo3/extension-module" "--message-format" "json-render-diagnostics" "--manifest-path" "C:\\Users\\raich\\AppData\\Local\\Temp\\pip-install-bga37iev\\pydantic-core_3c4b50cbc8cc47f8b69d19ba40f1cc90\\Cargo.toml" "--lib" "--crate-type" "cdylib"`
+  Error: command ['maturin', 'pep517', 'build-wheel', '-i', 'C:\\Users\\raich\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '--compatibility', 'off'] returned non-zero exit status 1
+  [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for pydantic-core
+Successfully built hduce-shared
+Failed to build pydantic-core
+error: failed-wheel-build-for-install
+
+Failed to build installable wheels for some pyproject.toml based projects
+
+pydantic-core
+Warning: command "python -m pip install -e ." exited with non-zero status code

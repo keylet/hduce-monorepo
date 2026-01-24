@@ -1,0 +1,8 @@
+﻿__pycache__
+*.pyc
+*.pyo
+*.backup*
+*test*.py
+.git
+.gitignore
+README.md

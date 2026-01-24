@@ -1,0 +1,298 @@
+﻿=== ESTRUCTURA AUTH-SERVICE ===
+
+
+    Directorio: C:\Users\raich\Desktop\hduce-monorepo\backend\auth-service
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+d-----          1/3/2026   9:30 AM                scripts for executions                                               
+d-----          1/3/2026   9:30 AM                src                                                                  
+d-----          1/5/2026   9:38 AM                tests                                                                
+d-----         1/11/2026   6:38 PM                __pycache__                                                          
+-a----         1/11/2026   1:40 PM            283 .env                                                                 
+-a----         1/11/2026   5:28 PM            544 auth_utils.py                                                        
+-a----          1/4/2026   8:22 PM           1896 auth_utils.py.backup2                                                
+-a----         1/10/2026   4:26 PM           2031 create_default_users.py                                              
+-a----         1/11/2026   3:20 PM           2396 database.py                                                          
+-a----         1/11/2026   2:50 AM           2407 database.py.backup_20260111_151913                                   
+-a----         1/10/2026   7:43 PM            728 Dockerfile                                                           
+-a----         1/11/2026   6:34 PM           1369 main-simple-test.py                                                  
+-a----         1/11/2026   6:38 PM           1488 main.py                                                              
+-a----         1/11/2026   5:11 PM            421 main.py.backup_172330                                                
+-a----         1/11/2026   5:48 PM           1509 main.py.backup_175418                                                
+-a----          1/5/2026   2:52 AM           6687 main.py.backup_20260105_025312                                       
+-a----         1/11/2026  12:21 AM           2677 main.py.backup_database_fix                                          
+-a----         1/11/2026   5:23 PM           1500 main.py.backup_final                                                 
+-a----          1/3/2026   9:05 PM            745 project.json                                                         
+-a----         1/10/2026   8:09 PM            222 requirements.txt                                                     
+-a----          1/3/2026  10:49 AM             95 requirements_minimal.txt                                             
+-a----         1/11/2026   6:34 PM           1386 routes-simple-test.py                                                
+-a----         1/17/2026   1:58 PM           1699 routes.py                                                            
+-a----         1/11/2026   5:16 PM           5608 routes.py.backup_before_clean_172327                                 
+-a----         1/11/2026  12:12 AM              0 routes.py.empty_backup                                               
+-a----         1/11/2026   5:33 PM            770 routes_test.py                                                       
+-a----         1/11/2026   5:33 PM            851 test_imports.py                                                      
+-a----         1/11/2026   6:33 PM           1334 test_imports_detailed.py                                             
+-a----         1/11/2026   5:11 PM              5 __init__.py                                                          
+
+
+    Directorio: C:\Users\raich\Desktop\hduce-monorepo\backend\auth-service\scripts for executions
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          1/3/2026   9:30 AM          11611 auth-service.ps1                                                     
+
+
+    Directorio: C:\Users\raich\Desktop\hduce-monorepo\backend\auth-service\src
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          1/3/2026   9:30 AM           1301 token_validator.py                                                   
+
+
+    Directorio: C:\Users\raich\Desktop\hduce-monorepo\backend\auth-service\tests
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          1/5/2026   9:38 AM             17 __init__.py                                                          
+
+
+    Directorio: C:\Users\raich\Desktop\hduce-monorepo\backend\auth-service\__pycache__
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----         1/11/2026   6:33 PM            928 auth_utils.cpython-313.pyc                                           
+-a----         1/11/2026   3:20 PM           3816 database.cpython-313.pyc                                             
+-a----         1/11/2026   6:38 PM           2442 main.cpython-313.pyc                                                 
+-a----         1/11/2026   6:38 PM           1758 routes.cpython-313.pyc                                               
+
+
+
+
+=== requirements.txt ===
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+pydantic==2.4.2
+python-multipart==0.0.6
+httpx==0.25.2
+
+
+=== main.py ===
+import sys
+import os
+
+# Configurar path para imports dentro de auth-service
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import logging
+
+# Importar desde shared libraries
+from hduce_shared.auth import JWTManager
+from hduce_shared.config import settings
+
+# Importar rutas SIMPLES (temporalmente)
+import routes
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI(
+    title="HDUCE Auth Service - SIMPLE VERSION",
+    description="Authentication service - testing simple version",
+    version="2.0.0"
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Incluir rutas
+app.include_router(routes.router)
+
+@app.on_event("startup")
+async def startup_event():
+    """Inicializar base de datos al iniciar"""
+    try:
+        from database import create_tables
+        create_tables()
+        logger.info("Database tables verified/created")
+    except Exception as e:
+        logger.error(f"Database initialization failed: {e}")
+
+@app.get("/")
+async def root():
+    return {
+        "service": "auth-service",
+        "version": "2.0.0",
+        "status": "running",
+        "mode": "simple-test"
+    }
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "mode": "simple"}
+
+
+
+=== routes.py ===
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
+
+# Schema para login con JSON
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+@router.post("/login")
+async def login(login_data: LoginRequest):
+    """Login con JSON - compatible con todos los servicios"""
+    # Usuarios hardcodeados temporalmente (luego con base de datos)
+    users = {
+        "doctor@hospital.com": {
+            "password": "Doctor123!",
+            "user": {
+                "id": 1,
+                "username": "doctor",
+                "email": "doctor@hospital.com",
+                "role": "doctor"
+            }
+        },
+        "patient@hospital.com": {
+            "password": "Patient123!",
+            "user": {
+                "id": 2,
+                "username": "patient",
+                "email": "patient@hospital.com", 
+                "role": "patient"
+            }
+        }
+    }
+    
+    if login_data.email in users and login_data.password == users[login_data.email]["password"]:
+        return {
+            "access_token": "jwt_token_for_" + login_data.email,
+            "token_type": "bearer",
+            "user": users[login_data.email]["user"]
+        }
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+# Mantener los otros endpoints igual...
+@router.get("/test")
+async def test():
+    return {"status": "ok", "message": "Auth service working"}
+
+@router.get("/health")
+async def health():
+    return {"status": "healthy", "service": "auth"}
+
+@router.get("/check")
+async def check():
+    return {"status": "ok", "version": "1.0", "working": True}
+
+
+=== DOCKER-COMPOSE (fragmento PostgreSQL) ===
+
+> docker-compose.yml:2:  # PostgreSQL Database
+> docker-compose.yml:3:  postgres:
+> docker-compose.yml:4:    image: postgres:15-alpine
+> docker-compose.yml:5:    container_name: hduce-postgres
+  docker-compose.yml:6:    environment:
+> docker-compose.yml:7:      POSTGRES_PASSWORD: postgres
+> docker-compose.yml:8:      POSTGRES_USER: postgres
+> docker-compose.yml:9:      POSTGRES_DB: postgres
+  docker-compose.yml:10:    ports:
+  docker-compose.yml:11:      - "5432:5432"
+  docker-compose.yml:12:    volumes:
+> docker-compose.yml:13:      - postgres_data:/var/lib/postgresql/data
+  docker-compose.yml:14:      - ./init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+  docker-compose.yml:15:    healthcheck:
+> docker-compose.yml:16:      test: ["CMD-SHELL", "pg_isready -U postgres"]
+  docker-compose.yml:17:      interval: 10s
+  docker-compose.yml:18:      timeout: 5s
+  docker-compose.yml:19:      retries: 5
+  docker-compose.yml:20:
+  docker-compose.yml:21:  # Redis Cache
+> docker-compose.yml:53:      postgres:
+  docker-compose.yml:54:        condition: service_healthy
+  docker-compose.yml:55:      redis:
+  docker-compose.yml:56:        condition: service_started
+  docker-compose.yml:57:
+  docker-compose.yml:58:  # User Service
+> docker-compose.yml:67:      POSTGRES_HOST: postgres
+> docker-compose.yml:68:      POSTGRES_PORT: 5432
+> docker-compose.yml:69:      POSTGRES_USER: postgres
+> docker-compose.yml:70:      POSTGRES_PASSWORD: postgres
+  docker-compose.yml:71:      USER_DB: user_db
+  docker-compose.yml:72:      REDIS_HOST: redis
+  docker-compose.yml:73:      REDIS_PORT: 6379
+  docker-compose.yml:74:    depends_on:
+> docker-compose.yml:75:      postgres:
+  docker-compose.yml:76:        condition: service_healthy
+  docker-compose.yml:77:      redis:
+  docker-compose.yml:78:        condition: service_started
+  docker-compose.yml:79:
+  docker-compose.yml:80:  # Appointment Service
+> docker-compose.yml:89:      POSTGRES_HOST: postgres
+> docker-compose.yml:90:      POSTGRES_PORT: 5432
+> docker-compose.yml:91:      POSTGRES_USER: postgres
+> docker-compose.yml:92:      POSTGRES_PASSWORD: postgres
+  docker-compose.yml:93:      APPOINTMENT_DB: appointment_db
+  docker-compose.yml:94:      REDIS_HOST: redis
+  docker-compose.yml:95:      REDIS_PORT: 6379
+  docker-compose.yml:96:      RABBITMQ_HOST: rabbitmq
+  docker-compose.yml:97:      RABBITMQ_PORT: 5672
+> docker-compose.yml:101:      postgres:
+  docker-compose.yml:102:        condition: service_healthy
+  docker-compose.yml:103:      redis:
+  docker-compose.yml:104:        condition: service_started
+  docker-compose.yml:105:      rabbitmq:
+  docker-compose.yml:106:        condition: service_started
+> docker-compose.yml:117:      POSTGRES_HOST: postgres
+> docker-compose.yml:118:      POSTGRES_PORT: 5432
+> docker-compose.yml:119:      POSTGRES_USER: postgres
+> docker-compose.yml:120:      POSTGRES_PASSWORD: postgres
+  docker-compose.yml:121:      NOTIFICATION_DB: notification_db
+  docker-compose.yml:122:      REDIS_HOST: redis
+  docker-compose.yml:123:      REDIS_PORT: 6379
+  docker-compose.yml:124:      RABBITMQ_HOST: rabbitmq
+  docker-compose.yml:125:      RABBITMQ_PORT: 5672
+> docker-compose.yml:129:      postgres:
+  docker-compose.yml:130:        condition: service_healthy
+  docker-compose.yml:131:      redis:
+  docker-compose.yml:132:        condition: service_started
+  docker-compose.yml:133:      rabbitmq:
+  docker-compose.yml:134:        condition: service_started
+> docker-compose.yml:152:  postgres_data:
+  docker-compose.yml:153:  redis_data:
+  docker-compose.yml:154:
+  docker-compose.yml:155:
+  docker-compose.yml:156:
+  docker-compose.yml:157:
+
+
+
+
+=== SHARED-LIBRARIES EXISTE? ===
+True

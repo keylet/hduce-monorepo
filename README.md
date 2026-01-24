@@ -1,77 +1,300 @@
-# HduceMonorepo
+# 🏥 HDuce Medical Platform - Monorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## 📋 Overview
+HDuce is a comprehensive medical platform built with microservices architecture using FastAPI, React, and Docker. The platform includes patient management, appointment scheduling, notifications, and IoT integration for medical devices.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## 🏗️ Architecture
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### Technology Stack
+- **Backend**: Python 3.11 + FastAPI + PostgreSQL
+- **Frontend**: React + TypeScript + Vite
+- **Message Queue**: RabbitMQ + Redis
+- **IoT**: MQTT (Mosquitto) + Custom MQTT Service
+- **Monitoring**: Prometheus + Grafana + n8n
+- **Infrastructure**: Docker + Docker Compose + Terraform (AWS)
 
-## Finish your remote caching setup
-
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/560fYvroaq)
-
-
-## Run tasks
-
-To run tasks with Nx use:
-
-```sh
-npx nx <target> <project-name>
+### Microservices Architecture
+```
+┌─────────────────────────────────────────────────────┐
+│              React Frontend                          │
+└──────────────────────────┬──────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────┐
+│           NGINX Reverse Proxy                        │
+└─────┬───────────────────┬───────────────────┬──────┘
+      │                   │                   │
+┌─────▼─────┐       ┌──────▼──────┐    ┌──────▼──────┐
+│   Auth    │       │    User     │    │ Appointment │
+│  Service  │       │   Service   │    │   Service   │
+└─────┬─────┘       └──────┬──────┘    └──────┬──────┘
+      │                    │                   │
+┌─────▼───────────────────▼───────────────────▼──────┐
+│           Notification Service                      │
+└─────┬───────────────────┬───────────────────┬──────┘
+      │                   │                   │
+┌─────▼─────┐       ┌──────▼──────┐    ┌──────▼──────┐
+│   MQTT    │       │   Metrics   │    │  Database   │
+│  Service  │       │   Service   │    │    Layer    │
+└───────────┘       └─────────────┘    └─────────────┘
 ```
 
-For example:
-
-```sh
-npx nx build myproject
+## 📁 Project Structure
+```
+hduce-monorepo/
+├── backend/                        # Microservices backend
+│   ├── auth-service/              # Authentication & Authorization (8000)
+│   ├── user-service/              # User Management (8001)
+│   ├── appointment-service/       # Appointment Scheduling (8002)
+│   ├── notification-service/      # Notifications (8003)
+│   ├── mqtt-service/              # MQTT Integration (8004)
+│   └── metrics-service/           # Metrics Collection (8005)
+├── frontend/                      # React frontend application
+├── shared-libraries/              # Shared Python libraries
+├── nginx/                         # NGINX configuration
+├── docker-compose.yml             # Local development setup
+├── hduce-deployment-aws/          # AWS deployment configuration
+└── README.md                      # This file
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## 🚀 Getting Started
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Prerequisites
+- Docker & Docker Compose
+- Python 3.11+
+- Node.js 18+ (for frontend)
+- PostgreSQL 15+
+- Redis 7+
 
-## Add new projects
+### Local Development Setup
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
+**1. Clone and navigate:**
+```bash
+cd C:\Users\raich\Desktop\hduce-monorepo
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
-
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
-
-# Generate a library
-npx nx g @nx/react:lib some-lib
+**2. Start all services:**
+```bash
+docker-compose up -d
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+**3. Verify services are running:**
+```bash
+docker-compose ps
+```
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+**4. Access services:**
+- Frontend: http://localhost
+- API Documentation: http://localhost:8000/docs
+- RabbitMQ Management: http://localhost:15672
+- Grafana: http://localhost:3000
 
+### Environment Variables
+Critical environment variables (DO NOT MODIFY in production):
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```env
+# Database Configuration
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=postgres
 
-## Install Nx Console
+# JWT Configuration (CRITICAL - NEVER CHANGE)
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_ALGORITHM=HS256
+TOKEN_EXPIRY=24h
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+# Test User (Pre-configured)
+TEST_USER_EMAIL=testuser@example.com
+TEST_USER_PASSWORD=secret
+```
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🔧 Development Guidelines
 
-## Useful links
+### Code Structure
+- **Python Code**: Follow FastAPI best practices with Pydantic models
+- **Frontend**: React with TypeScript, functional components
+- **Database**: PostgreSQL with SQLAlchemy ORM
+- **API Documentation**: Auto-generated with OpenAPI/Swagger
 
-Learn more:
+### Shared Libraries
+The `shared-libraries/` directory contains common Python modules used across all microservices:
+- Database models and connection handling
+- JWT authentication utilities
+- Common schemas and validators
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Docker Configuration
+Each service has two Dockerfiles:
+- `Dockerfile`: For local development
+- `Dockerfile.aws`: For AWS deployment (with specific optimizations)
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📊 Production Data
+
+### Current Data Statistics
+- 37 medical appointments (real patient data)
+- 11 system notifications
+- 3 registered users including test user
+- All data preserved in backup files
+
+### Database Schemas
+- **auth_db**: User authentication and JWT tokens
+- **user_db**: User profiles and personal information
+- **appointment_db**: Medical appointments and scheduling
+- **notification_db**: System and user notifications
+
+## 🚀 Deployment
+
+### AWS Deployment Architecture
+The platform is designed for deployment on AWS with 6 EC2 instances:
+
+```
+Instance 0: Bastion Host (SSH Gateway)
+Instance 1: Databases (PostgreSQL, Redis, RabbitMQ)
+Instance 2: Core Services (Auth, User, Appointment, Notification)
+Instance 3: Frontend (NGINX + React)
+Instance 4: Monitoring (Grafana, Prometheus, n8n)
+Instance 5: IoT Services (MQTT Broker, MQTT Service, Metrics)
+```
+
+### Deployment Steps
+
+**1. Infrastructure Setup:**
+```bash
+cd hduce-deployment-aws\terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+**2. Service Deployment:**
+```powershell
+.\deployment-scripts\Deploy-HDuce-AWS.ps1
+```
+
+**3. Backup Restoration:**
+```powershell
+.\deployment-scripts\Restore-Backup.ps1
+```
+
+## 🔐 Security
+
+### Authentication & Authorization
+- JWT-based authentication with HS256 algorithm
+- Role-based access control (patient, doctor, admin)
+- Password hashing with bcrypt
+- Secure token management with refresh tokens
+
+### Network Security
+- Bastion host pattern for SSH access
+- VPC-only communication for internal services
+- Security groups with least-privilege access
+- Encrypted database connections
+
+### Secrets Management
+- Environment variables for sensitive data
+- Never commit secrets to version control
+- Use AWS Secrets Manager for production
+
+## 📈 Monitoring & Observability
+
+### Built-in Monitoring
+- Prometheus metrics collection
+- Grafana dashboards for service health
+- Application logging with structured JSON
+- Health check endpoints on all services
+
+### Key Metrics Tracked
+- API response times and error rates
+- Database connection pool status
+- MQTT message throughput
+- Service uptime and health status
+
+## 🔄 CI/CD Pipeline
+
+### Development Workflow
+```
+Local Development → Docker Build → AWS Deployment
+```
+
+### Version Control
+- **Main branch**: Production-ready code
+- **Feature branches**: New development
+- **Pull requests** with code review required
+- Automated testing before merge
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+**Docker Compose Fails:**
+```bash
+# Clean and rebuild
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+**Database Connection Issues:**
+```bash
+# Check PostgreSQL
+docker exec hduce-postgres psql -U postgres -c "\l"
+```
+
+**Service Health Checks:**
+```bash
+# Check all services
+curl http://localhost:8000/health
+curl http://localhost:8001/health
+```
+
+### Logs Access
+```bash
+# View logs for specific service
+docker-compose logs auth-service
+docker-compose logs postgres
+
+# Follow logs in real-time
+docker-compose logs -f auth-service
+```
+
+## 📚 API Documentation
+
+Each microservice provides OpenAPI documentation:
+
+| Service | Port | Documentation URL |
+|---------|------|-------------------|
+| Auth Service | 8000 | http://localhost:8000/docs |
+| User Service | 8001 | http://localhost:8001/docs |
+| Appointment Service | 8002 | http://localhost:8002/docs |
+| Notification Service | 8003 | http://localhost:8003/docs |
+| MQTT Service | 8004 | http://localhost:8004/docs |
+| Metrics Service | 8005 | http://localhost:8005/docs |
+
+## 🤝 Contributing
+
+### Development Process
+1. Create feature branch from main
+2. Implement changes with tests
+3. Update documentation
+4. Create pull request
+5. Code review and approval
+6. Merge to main
+
+### Code Standards
+- **Python**: PEP 8 compliance
+- **TypeScript**: ESLint with strict rules
+- **Commit messages**: Conventional commits
+- **Documentation**: In-code docstrings + README updates
+
+## 📄 License
+This project is proprietary software. All rights reserved.
+
+## 📞 Support
+For technical support or questions:
+1. Check existing documentation
+2. Review API documentation
+3. Contact development team
+
+---
+
+**Last Updated**: 2026-01-23  
+**Version**: 1.0.0  
+**Status**: Production Ready - AWS Deployment Configured

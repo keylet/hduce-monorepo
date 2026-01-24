@@ -1,123 +1,115 @@
-﻿from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from contextlib import asynccontextmanager
-import uvicorn
-import os
-from typing import List
-from datetime import datetime
+﻿#!/usr/bin/env python3
+"""Appointment Service - HDuce Medical System"""
 
-from database import engine, get_db
-import models
-import schemas
-from routes import router as notification_router
+import os
+import logging
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
+
+# Import shared libraries first
+import sys
+sys.path.append("/app/shared-libraries")
+
+# IMPORTANTE: setup_logging ahora está en hduce_shared directamente
+from hduce_shared import setup_logging
+from hduce_shared.database import init_db, check_db_connection
+
+import webhooks
+
+# Configure logging
+setup_logging()
+logger = logging.getLogger(__name__)
+
+# Database configuration
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@postgres:5432/appointment_db")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup/shutdown events."""
     # Startup
-    print("Starting Notification Service...")
-    
-    # Solo crear tablas si no existen
-    try:
-        from sqlalchemy import text
-        from database import SessionLocal
-        
-        # Verificar si la tabla notifications existe
-        db = SessionLocal()
-        db.execute(text("SELECT 1 FROM notifications LIMIT 1"))
-        print("Table 'notifications' exists")
-        db.close()
-    except Exception:
-        print("Table 'notifications' does not exist, creating...")
-        models.Base.metadata.create_all(bind=engine)
-        print("Database tables created")
-    
-    # Verificar conexion a base de datos
-    from sqlalchemy import text
-    from database import SessionLocal
-    
-    try:
-        db = SessionLocal()
-        db.execute(text("SELECT 1"))
-        db.close()
-        print("Database connection successful")
-    except Exception as e:
-        print(f"Database connection failed: {e}")
-    
-    yield
-    
-    # Shutdown
-    print("Shutting down Notification Service...")
+    logger.info("🚀 Starting appointment-service...")
 
-# Crear aplicacion FastAPI
+    try:
+        # Initialize database
+        logger.info("📦 Configurando appointment-service database con shared libraries...")
+        db_manager = init_db()  # Esto ahora retorna DatabaseManager
+        logger.info("✅ Appointment-service configured to use shared libraries")
+        logger.info(f"🔧 Service: appointments, Database: appointment_db")
+
+        # Verify database connection
+        if check_db_connection("appointments"):
+            logger.info("✅ Database connection verified")
+        else:
+            logger.error("❌ Database connection failed")
+            raise Exception("Database connection failed")
+
+        yield
+
+    except Exception as e:
+        logger.error(f"❌ Error durante startup: {e}")
+        raise
+
+    # Shutdown
+    logger.info("🛑 Shutting down appointment-service...")
+
+# Create FastAPI app
 app = FastAPI(
-    title="HDUCE Notification Service",
-    description="Microservicio para manejo de notificaciones (email, SMS, push)",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    title="HDuce Appointment Service",
+    description="Microservicio para gestión de doctores y citas médicas",
+    version="2.0.0",
     lifespan=lifespan
 )
 
-# Configurar CORS
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:8000", "http://localhost:8001", "http://localhost:8002"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Middleware para hosts confiables
-app.add_middleware(
-    TrustedHostMiddleware,
-    allowed_hosts=["localhost", "127.0.0.1", "notification-service", "0.0.0.0"]
+# UTF-8 Response Middleware
+@app.middleware("http")
+async def add_utf8_charset(request: Request, call_next):
+    response = await call_next(request)
+    content_type = response.headers.get("content-type", "")
+    if "application/json" in content_type and "charset=utf-8" not in content_type:
+        response.headers["content-type"] = "application/json; charset=utf-8"
+    return response
+
+# Import and include routes
+from routes import router as appointments_router
+app.include_router(
+    appointments_router,
+    prefix="/api",
+    tags=["appointments"]
 )
+app.include_router(webhooks.router, prefix="/api/webhooks")
 
-# Incluir rutas
-app.include_router(notification_router, prefix="/api/v1", tags=["notifications"])
-
-# Health check endpoint
-@app.get("/health", response_model=schemas.HealthCheck, tags=["health"])
+@app.get("/health")
 async def health_check():
-    from sqlalchemy import text
-    from database import SessionLocal
-    
-    db_status = "healthy"
-    try:
-        db = SessionLocal()
-        db.execute(text("SELECT 1"))
-        db.close()
-    except Exception:
-        db_status = "unhealthy"
-    
-    return schemas.HealthCheck(
-        status="healthy",
-        service="notification-service",
-        database=db_status,
-        timestamp=datetime.now()
-    )
-
-@app.get("/", tags=["root"])
-async def root():
+    """Health endpoint"""
     return {
-        "message": "HDUCE Notification Service",
-        "version": "1.0.0",
-        "status": "running",
-        "endpoints": {
-            "health": "/health",
-            "docs": "/docs",
-            "send_email": "/api/v1/notifications/email",
-            "send_sms": "/api/v1/notifications/sms",
-            "list_notifications": "/api/v1/notifications"
-        }
+        "status": "healthy",
+        "service": "appointment-service",
+        "version": "2.0.0",
+        "using_shared_libraries": True,
+        "database": "appointment_db"
     }
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8003,
+        port=8002,
         reload=True,
         log_level="info"
     )
+
+
+
+
+

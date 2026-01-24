@@ -1,0 +1,47 @@
+﻿import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import Dashboard from '../components/Common/Dashboard';
+import './DashboardPage.css';
+
+const DashboardPage: React.FC = () => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    console.log('[DashboardPage] User logged out');
+    navigate('/login');
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p className="loading-text">Loading dashboard...</p>
+      </div>
+    );
+  }
+  
+  if (!user) {
+    return (
+      <div className="unauthorized-container">
+        <div className="unauthorized-content">
+          <h2>Access Required</h2>
+          <p>Please sign in to view the dashboard</p>
+          <button 
+            onClick={() => navigate('/login')}
+            className="login-redirect-button"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+  
+  return <Dashboard onLogout={handleLogout} />;
+};
+
+export default DashboardPage;
+
+

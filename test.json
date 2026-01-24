@@ -1,0 +1,6 @@
+﻿{
+    "patient_id": "test_direct_json",
+    "doctor_id": 2,
+    "appointment_date": "2026-01-08T15:30:00",
+    "reason": "Prueba directa"
+}

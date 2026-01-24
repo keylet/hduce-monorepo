@@ -1,0 +1,497 @@
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import endpoints from '../services/endpoints';
+import { Notification } from '../types/hduce';
+import './NotificationsPage.css';
+
+const NotificationsPage: React.FC = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<string>('all');
+  const [filterRead, setFilterRead] = useState<string>('all');
+
+  const notificationTypes = ['appointment', 'reminder', 'alert', 'system'];
+
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      navigate('/login');
+      return;
+    }
+    if (isAuthenticated) {
+      fetchNotifications();
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(endpoints.notifications.list);
+      const notificationsData = response.data;
+      setNotifications(notificationsData);
+      setFilteredNotifications(notificationsData);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching notifications:', err);
+      setError('Failed to load notifications. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let filtered = notifications;
+
+    // Filter by type
+    if (filterType !== 'all') {
+      filtered = filtered.filter(notification => notification.type === filterType);
+    }
+
+    // Filter by read status
+    if (filterRead !== 'all') {
+      const isRead = filterRead === 'read';
+      filtered = filtered.filter(notification => notification.is_read === isRead);
+    }
+
+    // Sort by date (newest first)
+    filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_date).getTime());
+
+    setFilteredNotifications(filtered);
+  }, [notifications, filterType, filterRead]);
+
+  const markAsRead = async (id: number) => {
+    try {
+      // In a real app, this would be a PUT request
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === id ? { ...notification, is_read: true } : notification
+        )
+      );
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+      alert('Failed to update notification');
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      // In a real app, this would be a PUT request
+      setNotifications(prev =>
+        prev.map(notification => ({ ...notification, is_read: true }))
+      );
+    } catch (err) {
+      console.error('Error marking all as read:', err);
+      alert('Failed to update notifications');
+    }
+  };
+
+  const deleteNotification = async (id: number) => {
+    if (window.confirm('Are you sure you want to delete this notification?')) {
+      try {
+        // In a real app, this would be a DELETE request
+        setNotifications(prev =>
+          prev.filter(notification => notification.id !== id)
+        );
+      } catch (err) {
+        console.error('Error deleting notification:', err);
+        alert('Failed to delete notification');
+      }
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    if (window.confirm('Are you sure you want to clear all notifications?')) {
+      try {
+        // In a real app, this would be a DELETE request
+        setNotifications([]);
+      } catch (err) {
+        console.error('Error clearing notifications:', err);
+        alert('Failed to clear notifications');
+      }
+    }
+  };
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'appointment':
+        return '??';
+      case 'reminder':
+        return '?';
+      case 'alert':
+        return '??';
+      case 'system':
+        return '??';
+      default:
+        return '??';
+    }
+  };
+
+  const getNotificationClass = (notification: Notification) => {
+    if (!notification.is_read) {
+      if (notification.type === 'alert') return 'urgent';
+      if (notification.type === 'reminder') return 'important';
+      return 'unread';
+    }
+    return 'read';
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+    if (diffInHours < 1) {
+      return 'Just now';
+    } else if (diffInHours < 24) {
+      return `${Math.floor(diffInHours)} hours ago`;
+    } else if (diffInHours < 48) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  };
+
+  const getStats = () => {
+    const total = notifications.length;
+    const unread = notifications.filter(n => !n.is_read).length;
+    const read = total - unread;
+    const appointments = notifications.filter(n => n.type === 'appointment').length;
+    const alerts = notifications.filter(n => n.type === 'alert').length;
+
+    return { total, unread, read, appointments, alerts };
+  };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    navigate('/login');
+    return null;
+  }
+
+  const stats = getStats();
+
+  return (
+    <div className="notifications-page">
+      {/* Header */}
+      <div className="notifications-header">
+        <div className="header-top">
+          <div className="page-title">
+            <h1>Notifications</h1>
+            <p>Stay updated with your medical activities and alerts</p>
+          </div>
+          
+          {stats.unread > 0 && (
+            <div className="unread-badge">
+              <span>??</span>
+              {stats.unread} Unread Notification{stats.unread !== 1 ? 's' : ''}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="stats-overview">
+        <div className="stat-item">
+          <div className="stat-icon">??</div>
+          <h3>Total</h3>
+          <div className="stat-number">{stats.total}</div>
+        </div>
+        
+        <div className="stat-item">
+          <div className="stat-icon">??</div>
+          <h3>Unread</h3>
+          <div className="stat-number">{stats.unread}</div>
+        </div>
+        
+        <div className="stat-item">
+          <div className="stat-icon">??</div>
+          <h3>Appointments</h3>
+          <div className="stat-number">{stats.appointments}</div>
+        </div>
+        
+        <div className="stat-item">
+          <div className="stat-icon">??</div>
+          <h3>Alerts</h3>
+          <div className="stat-number">{stats.alerts}</div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="notifications-filters">
+        <div className="filter-group">
+          <label>Filter by Type</label>
+          <select 
+            className="filter-select"
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="all">All Types</option>
+            {notificationTypes.map(type => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="filter-group">
+          <label>Filter by Status</label>
+          <select 
+            className="filter-select"
+            value={filterRead}
+            onChange={(e) => setFilterRead(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="unread">Unread Only</option>
+            <option value="read">Read Only</option>
+          </select>
+        </div>
+        
+        <div className="filter-buttons">
+          <button 
+            className={`filter-btn ${filterType === 'all' ? 'active' : ''}`}
+            onClick={() => setFilterType('all')}
+          >
+            All
+          </button>
+          {notificationTypes.map(type => (
+            <button
+              key={type}
+              className={`filter-btn ${filterType === type ? 'active' : ''}`}
+              onClick={() => setFilterType(type)}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+        
+        <div className="bulk-actions">
+          {stats.unread > 0 && (
+            <button 
+              className="bulk-btn mark-all"
+              onClick={markAllAsRead}
+            >
+              Mark All as Read
+            </button>
+          )}
+          <button 
+            className="bulk-btn clear-all"
+            onClick={clearAllNotifications}
+            disabled={notifications.length === 0}
+          >
+            Clear All
+          </button>
+        </div>
+      </div>
+
+      {/* Notifications List */}
+      <div className="notifications-container">
+        {loading ? (
+          <div className="loading-skeleton">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="skeleton-item">
+                <div className="skeleton-icon"></div>
+                <div className="skeleton-content">
+                  <div className="skeleton-line short"></div>
+                  <div className="skeleton-line medium"></div>
+                  <div className="skeleton-line long"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="empty-notifications">
+            <div className="empty-icon">??</div>
+            <h3>Unable to Load Notifications</h3>
+            <p>{error}</p>
+            <button onClick={fetchNotifications} className="action-btn primary">
+              Retry
+            </button>
+          </div>
+        ) : filteredNotifications.length === 0 ? (
+          <div className="empty-notifications">
+            <div className="empty-icon">??</div>
+            <h3>No Notifications</h3>
+            <p>
+              {notifications.length === 0 
+                ? "You don't have any notifications yet. They'll appear here when you have new updates."
+                : "No notifications match your current filters. Try changing your filter criteria."}
+            </p>
+            {notifications.length > 0 && (
+              <button 
+                className="action-btn"
+                onClick={() => {
+                  setFilterType('all');
+                  setFilterRead('all');
+                }}
+              >
+                Clear Filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="notifications-list">
+            {filteredNotifications.map((notification) => (
+              <div 
+                key={notification.id} 
+                className={`notification-item ${getNotificationClass(notification)}`}
+              >
+                <div className="notification-icon">
+                  {getNotificationIcon(notification.type)}
+                </div>
+                
+                <div className="notification-content">
+                  <div className="notification-header">
+                    <h3 className="notification-title">
+                      {notification.type.charAt(0).toUpperCase() + notification.type.slice(1)} Notification
+                      <span className={`type-badge ${notification.type}`}>
+                        {notification.type}
+                      </span>
+                    </h3>
+                    <span className="notification-time">
+                      {formatDate(notification.created_at)}
+                    </span>
+                  </div>
+                  
+                  <p className="notification-message">
+                    {notification.message}
+                  </p>
+                  
+                  <p className="notification-details">
+                    {notification.type === 'appointment' && 'Medical Appointment'}
+                    {notification.type === 'reminder' && 'Reminder'}
+                    {notification.type === 'alert' && 'Important Alert'}
+                    {notification.type === 'system' && 'System Update'}
+                  </p>
+                  
+                  <div className="notification-actions">
+                    {!notification.is_read && (
+                      <button 
+                        className="action-btn mark-read"
+                        onClick={() => markAsRead(notification.id)}
+                      >
+                        Mark as Read
+                      </button>
+                    )}
+                    
+                    {notification.type === 'appointment' && (
+                      <button 
+                        className="action-btn view"
+                        onClick={() => navigate('/appointments')}
+                      >
+                        View Appointment
+                      </button>
+                    )}
+                    
+                    <button 
+                      className="action-btn delete"
+                      onClick={() => deleteNotification(notification.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                
+                {!notification.is_read && (
+                  <div className="unread-indicator"></div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Notification Preferences */}
+      <div className="preferences-section">
+        <div className="preferences-header">
+          <h2>Notification Preferences</h2>
+          <button className="action-btn primary">
+            Save Preferences
+          </button>
+        </div>
+        
+        <div className="preferences-grid">
+          <div className="preference-item">
+            <div className="preference-info">
+              <h4>Appointment Reminders</h4>
+              <p>Get reminded about upcoming appointments</p>
+            </div>
+            <label className="toggle-switch">
+              <input type="checkbox" defaultChecked />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div className="preference-item">
+            <div className="preference-info">
+              <h4>Medical Alerts</h4>
+              <p>Important updates about your health</p>
+            </div>
+            <label className="toggle-switch">
+              <input type="checkbox" defaultChecked />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div className="preference-item">
+            <div className="preference-info">
+              <h4>System Notifications</h4>
+              <p>Updates about HDuce platform</p>
+            </div>
+            <label className="toggle-switch">
+              <input type="checkbox" defaultChecked />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div className="preference-item">
+            <div className="preference-info">
+              <h4>Email Notifications</h4>
+              <p>Receive notifications via email</p>
+            </div>
+            <label className="toggle-switch">
+              <input type="checkbox" defaultChecked />
+              <span className="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="page-footer">
+        <div className="footer-summary">
+          <p>
+            Showing {filteredNotifications.length} of {notifications.length} notifications
+            {filterType !== 'all' && ` (filtered by: ${filterType})`}
+            {filterRead !== 'all' && ` (${filterRead} only)`}
+          </p>
+        </div>
+        
+        <div className="footer-actions">
+          <button onClick={fetchNotifications} className="action-btn">
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NotificationsPage;

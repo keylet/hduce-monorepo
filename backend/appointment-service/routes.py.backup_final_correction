@@ -1,0 +1,70 @@
+﻿from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session, joinedload
+import logging
+
+from database import get_db
+from models import Doctor, Appointment
+from auth_client import verify_token
+
+router = APIRouter()
+logger = logging.getLogger(__name__)
+
+async def get_current_user(current_user: dict = Depends(verify_token)):
+    return current_user
+
+@router.get("/doctors/")
+async def read_doctors(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    """Endpoint corregido - Devuelve specialty_name"""
+    doctors = db.query(Doctor).options(joinedload(Doctor.specialty)).all()
+    
+    result = []
+    for doctor in doctors:
+        doctor_data = {
+            "id": doctor.id,
+            "name": doctor.name,
+            "email": doctor.email or "",
+            "phone": doctor.phone or "",
+            "is_active": doctor.is_active,
+            "specialty_id": doctor.specialty_id,
+            "specialty_name": doctor.specialty.name if doctor.specialty else ""
+        }
+        result.append(doctor_data)
+    
+    return result
+
+@router.get("/appointments/")
+async def read_appointments(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    """Endpoint corregido - Devuelve doctor_name"""
+    appointments = db.query(Appointment).options(joinedload(Appointment.doctor)).all()
+    
+    result = []
+    for apt in appointments:
+        apt_data = {
+            "id": apt.id,
+            "patient_id": apt.patient_id,
+            "patient_email": apt.patient_email,
+            "patient_name": apt.patient_name,
+            "doctor_id": apt.doctor_id,
+            "doctor_name": apt.doctor.name if apt.doctor else "",
+            "appointment_date": apt.appointment_date.isoformat() if apt.appointment_date else "",
+            "appointment_time": str(apt.appointment_time) if apt.appointment_time else "",
+            "status": apt.status or "",
+            "reason": apt.reason or "",
+            "notes": apt.notes or "",
+            "created_at": apt.created_at.isoformat() if apt.created_at else "",
+            "updated_at": apt.updated_at.isoformat() if apt.updated_at else ""
+        }
+        result.append(apt_data)
+    
+    return result
+
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+@router.get("/")
+async def root():
+    return {
+        "service": "appointment-service",
+        "endpoints": ["GET /doctors/", "GET /appointments/", "GET /health"]
+    }

@@ -1,0 +1,7 @@
+{
+    "patient_id": "simple-test-1234",
+    "doctor_id": 1,
+    "appointment_date": "2026-02-10T10:00:00",
+    "reason": "Test simple RabbitMQ",
+    "notes": "Test sin errores"
+}

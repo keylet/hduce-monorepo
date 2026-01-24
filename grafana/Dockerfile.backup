@@ -1,0 +1,12 @@
+﻿FROM grafana/grafana:10.1.0
+
+COPY grafana.ini /etc/grafana/grafana.ini
+COPY dashboards/ /etc/grafana/provisioning/dashboards/
+
+USER root
+RUN mkdir -p /etc/grafana/provisioning/dashboards && \
+    chown -R grafana:grafana /etc/grafana/provisioning
+
+USER grafana
+
+EXPOSE 3000

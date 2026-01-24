@@ -1,18 +1,8 @@
-from pydantic import BaseModel, Field
-from datetime import datetime
-from typing import Optional, List
-from enum import Enum
+﻿from typing import List, Optional
+from pydantic import BaseModel, EmailStr
+from datetime import datetime, date, time
 
-# Enums
-class AppointmentStatus(str, Enum):
-    SCHEDULED = "scheduled"
-    CONFIRMED = "confirmed"
-    IN_PROGRESS = "in_progress"
-    COMPLETED = "completed"
-    CANCELLED = "cancelled"
-    NO_SHOW = "no_show"
 
-# Esquemas base
 class SpecialtyBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -20,49 +10,74 @@ class SpecialtyBase(BaseModel):
 class SpecialtyCreate(SpecialtyBase):
     pass
 
-class Specialty(SpecialtyBase):
+class SpecialtyResponse(SpecialtyBase):
     id: int
+    created_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True
 
 class DoctorBase(BaseModel):
-    user_id: str
-    license_number: str
-    specialty_id: int
-    consultation_duration: int = 30
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    specialty_id: Optional[int] = None
+    is_active: bool = True
 
 class DoctorCreate(DoctorBase):
     pass
 
-class Doctor(DoctorBase):
+class DoctorUpdate(DoctorBase):
+    pass
+
+
+class DoctorResponse(DoctorBase):
     id: int
-    specialty: Optional[Specialty] = None
+    created_at: Optional[datetime] = None
+    
+    specialty: Optional[SpecialtyResponse] = None
     
     class Config:
         from_attributes = True
 
 class AppointmentBase(BaseModel):
-    patient_id: str
     doctor_id: int
-    appointment_date: datetime
+    appointment_date: date
+    appointment_time: time
     reason: Optional[str] = None
-    notes: Optional[str] = None
+    status: Optional[str] = "scheduled"
 
 class AppointmentCreate(AppointmentBase):
     pass
 
 class AppointmentUpdate(BaseModel):
-    status: Optional[AppointmentStatus] = None
-    notes: Optional[str] = None
+    """Esquema para actualizar citas - todos los campos opcionales"""
+    doctor_id: Optional[int] = None
+    appointment_date: Optional[date] = None
+    appointment_time: Optional[time] = None
     reason: Optional[str] = None
+    status: Optional[str] = None
 
-class Appointment(AppointmentBase):
+class AppointmentResponse(AppointmentBase):
     id: int
-    status: AppointmentStatus
+    patient_id: int
+    patient_email: str
+    patient_name: str
     created_at: datetime
     updated_at: Optional[datetime] = None
-    doctor: Optional[Doctor] = None
     
     class Config:
         from_attributes = True
+
+Appointment = AppointmentResponse
+
+
+class WebhookPayload(BaseModel):
+    event: str
+    data: dict
+    timestamp: datetime
+
+class WebhookResponse(BaseModel):
+    success: bool
+    message: str
+    data: Optional[dict] = None

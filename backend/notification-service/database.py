@@ -1,22 +1,30 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import os
+ï»¿"""
+Database configuration 100% usando shared libraries
+Compatibilidad total con notification-service - CORREGIDO DEFINITIVAMENTE
+"""
 
-# URL de conexión a la base de datos (usando variable de entorno)
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hduce_user:hduce_pass@localhost:5432/hduce_db")
+from hduce_shared.database import DatabaseManager
+from sqlalchemy.orm import sessionmaker, Session
 
-# Crear el motor de SQLAlchemy
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+# Service name debe coincidir con el nombre de la base de datos
+SERVICE_NAME = "notifications"
 
-# Crear SessionLocal
+# Obtener engine desde DatabaseManager
+engine = DatabaseManager.get_engine(SERVICE_NAME)
+
+# Crear SessionLocal CORRECTAMENTE usando sessionmaker
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base para los modelos
-Base = declarative_base()
+# FunciÃ³n para crear tablas
+def create_tables():
+    """Create all tables if they don't exist"""
+    from models import Base
+    Base.metadata.create_all(bind=engine)
+    return True
 
-# Dependencia para obtener la sesión de base de datos
-def get_db():
+# Dependencia para FastAPI - CORREGIDA
+def get_db() -> Session:
+    """Dependency to get database session for FastAPI routes"""
     db = SessionLocal()
     try:
         yield db

@@ -1,0 +1,95 @@
+﻿"""
+RabbitMQ Consumer estandarizado usando shared libraries hduce_shared
+Versión simplificada y compatible
+"""
+import json
+import logging
+import threading
+import time
+from typing import Dict, Any
+
+# Configuración de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+try:
+    from hduce_shared.rabbitmq.consumer import RabbitMQConsumer
+    SHARED_LIB_AVAILABLE = True
+    logger.info("✅ Usando RabbitMQConsumer de shared libraries")
+except ImportError as e:
+    SHARED_LIB_AVAILABLE = False
+    logger.error(f"❌ No se pudo importar shared libraries: {e}")
+    # Mantener como fallback
+    import pika
+
+def process_appointment_message(message_data: Dict[str, Any]) -> None:
+    """
+    Procesa mensajes de creación de citas.
+    Compatible con múltiples formatos de mensajes.
+    """
+    try:
+        logger.info(f"📨 Mensaje recibido: {json.dumps(message_data, indent=2)}")
+        
+        # Extraer datos del mensaje (compatible con múltiples formatos)
+        appointment_data = message_data.get('data', message_data)
+        
+        # Extraer appointment_id
+        appointment_id = (
+            appointment_data.get('appointment_id') or 
+            appointment_data.get('id') or 
+            message_data.get('appointment_id')
+        )
+        
+        # Extraer patient_email
+        patient_email = (
+            appointment_data.get('patient_email') or
+            message_data.get('patient_email')
+        )
+        
+        if appointment_id and patient_email:
+            logger.info(f"✅ Procesando cita #{appointment_id} para {patient_email}")
+            
+            # Aquí iría la lógica para guardar en la base de datos
+            # Por ahora solo logueamos
+            
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Error procesando mensaje: {e}")
+        return False
+
+def start_consumer():
+    """Inicia el consumer usando shared libraries"""
+    if not SHARED_LIB_AVAILABLE:
+        logger.error("❌ Shared libraries no disponibles. No se puede iniciar consumer.")
+        return
+    
+    try:
+        consumer = RabbitMQConsumer()
+        
+        def callback(message_data: Dict[str, Any]):
+            """Callback para procesar mensajes"""
+            process_appointment_message(message_data)
+        
+        # Iniciar en background
+        thread = consumer.start_in_background(callback)
+        logger.info(f"✅ Consumer iniciado en thread: {thread.name}")
+        
+        return consumer
+        
+    except Exception as e:
+        logger.error(f"❌ Error iniciando consumer: {e}")
+
+if __name__ == "__main__":
+    logger.info("🚀 Iniciando RabbitMQ Consumer con shared libraries...")
+    consumer = start_consumer()
+    
+    if consumer:
+        try:
+            # Mantener el script corriendo
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("👋 Deteniendo consumer...")
+            if SHARED_LIB_AVAILABLE:
+                consumer.close()

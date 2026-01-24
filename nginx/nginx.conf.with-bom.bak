@@ -1,0 +1,182 @@
+﻿# HDUCE Healthcare System - Nginx API Gateway
+# Updated: $(Get-Date)
+# ACTUAL API GATEWAY WITH PROXY
+
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    # MIME types
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+    
+    # Log format
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+    
+    access_log /var/log/nginx/access.log main;
+    error_log /var/log/nginx/error.log warn;
+    
+    # Timeouts
+    keepalive_timeout 65;
+    
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/json application/javascript application/xml+rss;
+    
+    # Upstream services
+    upstream auth_service {
+        server auth-service:8000;
+    }
+    
+    upstream user_service {
+        server user-service:8001;
+    }
+    
+    upstream appointment_service {
+        server appointment-service:8002;
+    }
+    
+    upstream notification_service {
+        server notification-service:8003;
+    }
+    
+    server {
+        listen 80;
+        server_name localhost;
+        
+        # Root endpoint - Show gateway info
+        location = / {
+            add_header Content-Type text/plain;
+            return 200 '=== HDUCE HEALTHCARE API GATEWAY ===\n\nAVAILABLE ENDPOINTS:\n?  POST   /auth/login           - Authenticate user\n?  GET    /api/v1/users/users/  - Get users (requires auth)\n?  GET    /api/v1/users/me      - Get current user\n?  POST   /api/v1/appointments/ - Create appointment\n?  GET    /health               - Gateway health\n\nGATEWAY STATUS: ACTIVE - All requests are proxied through gateway\n';
+        }
+        
+        # Gateway health check
+        location /health {
+            add_header Content-Type application/json;
+            return 200 '{"status": "healthy", "service": "nginx-gateway", "timestamp": "$time_iso8601", "version": "2.0"}';
+        }
+        
+        # ====== AUTH SERVICE PROXY ======
+        location /auth/ {
+            proxy_pass http://auth_service/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # CORS headers
+            add_header Access-Control-Allow-Origin * always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
+            
+            # Handle preflight
+            if ($request_method = 'OPTIONS') {
+                add_header Access-Control-Allow-Origin *;
+                add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS";
+                add_header Access-Control-Allow-Headers "Authorization, Content-Type";
+                add_header Access-Control-Max-Age 1728000;
+                add_header Content-Type 'text/plain charset=UTF-8';
+                add_header Content-Length 0;
+                return 204;
+            }
+        }
+        
+        # ====== USER SERVICE PROXY ======
+        location /api/v1/users/ {
+            proxy_pass http://user_service/api/v1/users/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # CORS headers
+            add_header Access-Control-Allow-Origin * always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
+        }
+        
+        # ====== APPOINTMENT SERVICE PROXY ======
+        location /api/v1/appointments/ {
+            proxy_pass http://appointment_service/api/v1/appointments/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # CORS headers
+            add_header Access-Control-Allow-Origin * always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
+        }
+        
+        # ====== NOTIFICATION SERVICE PROXY ======
+        location /api/v1/notifications/ {
+            proxy_pass http://notification_service/api/v1/notifications/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # CORS headers
+            add_header Access-Control-Allow-Origin * always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Authorization, Content-Type" always;
+        }
+        
+        # ====== SERVICE HEALTH CHECKS ======
+        location /health/auth {
+            proxy_pass http://auth_service/health;
+            proxy_set_header Host $host;
+        }
+        
+        location /health/users {
+            proxy_pass http://user_service/health;
+            proxy_set_header Host $host;
+        }
+        
+        location /health/appointments {
+            proxy_pass http://appointment_service/health;
+            proxy_set_header Host $host;
+        }
+        
+        location /health/notifications {
+            proxy_pass http://notification_service/health;
+            proxy_set_header Host $host;
+        }
+        
+        # ====== SWAGGER DOCS ======
+        location /docs {
+            proxy_pass http://auth_service/docs;
+            proxy_set_header Host $host;
+        }
+        
+        location /user-docs {
+            proxy_pass http://user_service/docs;
+            proxy_set_header Host $host;
+        }
+        
+        location /appointment-docs {
+            proxy_pass http://appointment_service/docs;
+            proxy_set_header Host $host;
+        }
+        
+        # ====== ERROR PAGES ======
+        error_page 404 /404.html;
+        location = /404.html {
+            internal;
+        }
+        
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            internal;
+        }
+    }
+}

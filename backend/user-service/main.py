@@ -1,121 +1,115 @@
-﻿# backend/user-service/main.py - VERSIÓN CORREGIDA
-from fastapi import FastAPI, Depends, HTTPException, Body  # ✅ Body agregado
-from src.protected_routes import router as protected_router
-from sqlalchemy.orm import Session
-import models, schemas
-from database import engine, get_db, Base
-from typing import List
-import uuid
+﻿# -*- coding: utf-8 -*-
 
-# Create tables in database
-Base.metadata.create_all(bind=engine)
+"""
+User Service - Main application file
+"""
 
-app = FastAPI(title="User Service", version="1.0.0")
+import logging
+import sys
+import os
 
-# ✅ INCLUIR RUTAS PROTEGIDAS
-app.include_router(protected_router)
+# Configurar path para shared-libraries
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
+sys.path.insert(0, "/app")  # Para shared-libraries en Docker
 
+# IMPORTAR DE SHARED-LIBRARIES
+from hduce_shared.config import settings
 
-@app.get("/")
-def read_root():
-    return {"service": "user-service", "status": "running", "database": "postgresql"}
+import os
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# Cargar variables de entorno PRIMERO
+load_dotenv()
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# Importar rutas (DESPUES de cargar .env)
+try:
+    from routes import router as user_router
+    from database import get_db, init_db, engine
+    logger.info("Imports de user-service cargados correctamente")
+except ImportError as e:
+    logger.error(f"Error importando modulos de user-service: {e}")
+    raise
+
+# Crear aplicacion
+app = FastAPI(
+    title="User Service API",
+    version="1.0.0",
+    description="Microservicio para gestion de usuarios"
+)
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Incluir rutas
+app.include_router(user_router, tags=["users"])
+
+# Endpoint de salud
 @app.get("/health")
-def health_check(db: Session = Depends(get_db)):
-    # Verify database connection
-    try:
-        db.execute("SELECT 1")
-        db_status = "connected"
-    except Exception:
-        db_status = "disconnected"
-    
+async def health_check():
     return {
-        "status": "healthy", 
+        "status": "healthy",
         "service": "user-service",
-        "database": db_status
+        "database": "connected via shared-libraries",
+        "using_shared_libraries": True
     }
 
-@app.post("/users", response_model=schemas.UserResponse)
-def create_user(user: schemas.UserCreate = Body(...), db: Session = Depends(get_db)):  # ✅ CORREGIDO
-    # Check if email already exists
-    existing_user = db.query(models.UserDB).filter(models.UserDB.email == user.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    # Create new user
-    db_user = models.UserDB(**user.dict())
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    
-    return db_user
+@app.get("/")
+async def root():
+    return {
+        "message": "User Service API",
+        "version": "1.0.0",
+        "using_shared_libraries": True,
+        "endpoints": [
+            "/api/v1/users/health",
+            "/api/v1/users/",
+            "/api/v1/users/me",
+            "/api/v1/users/{user_id}"
+        ]
+    }
 
-@app.get("/users", response_model=List[schemas.UserResponse])
-def get_all_users(db: Session = Depends(get_db)):
-    users = db.query(models.UserDB).all()
-    return users
-
-@app.get("/users/{user_id}", response_model=schemas.UserResponse)
-def get_user(user_id: str, db: Session = Depends(get_db)):
+# Inicializar base de datos al iniciar
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Iniciando User Service...")
+    
     try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid user ID format")
+        logger.info("Inicializando base de datos...")
+        init_db()
+        logger.info("Base de datos inicializada correctamente")
+    except Exception as e:
+        logger.error(f"Error inicializando base de datos: {e}")
     
-    user = db.query(models.UserDB).filter(models.UserDB.id == user_uuid).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    return user
-
-@app.put("/users/{user_id}", response_model=schemas.UserResponse)
-def update_user(user_id: str, user_data: schemas.UserCreate, db: Session = Depends(get_db)):
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid user ID format")
-    
-    # Find user
-    user = db.query(models.UserDB).filter(models.UserDB.id == user_uuid).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Check if new email is taken by another user
-    if user_data.email != user.email:
-        existing = db.query(models.UserDB).filter(
-            models.UserDB.email == user_data.email,
-            models.UserDB.id != user_uuid
-        ).first()
-        if existing:
-            raise HTTPException(status_code=400, detail="Email already registered by another user")
-    
-    # Update user data
-    for key, value in user_data.dict().items():
-        setattr(user, key, value)
-    
-    db.commit()
-    db.refresh(user)
-    
-    return user
-
-@app.delete("/users/{user_id}")
-def delete_user(user_id: str, db: Session = Depends(get_db)):
-    try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid user ID format")
-    
-    user = db.query(models.UserDB).filter(models.UserDB.id == user_uuid).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    db.delete(user)
-    db.commit()
-    
-    return {"message": "User deleted successfully"}
+    logger.info("User Service listo y funcionando en puerto 8001")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    
+    port = int(os.getenv("PORT", "8001"))
+    host = os.getenv("HOST", "0.0.0.0")
+    
+    logger.info(f"Iniciando servidor en {host}:{port}")
+    uvicorn.run(
+        app,
+        host=host,
+        port=port,
+        log_level="info"
+    )
 
 

@@ -1,0 +1,109 @@
+﻿name: Deploy Monitoring & IoT
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/mqtt-service/**'
+      - 'backend/metrics-service/**'
+      - 'monitoring/**'
+  workflow_dispatch:
+
+env:
+  SSH_USER: ec2-user
+  BASTION_HOST: 54.225.90.119
+  MONITORING_INSTANCE: 172.31.83.90
+  IOT_INSTANCE: 172.31.37.79
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start SSH Agent and load key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add Bastion to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $BASTION_HOST >> ~/.ssh/known_hosts
+
+      - name: Test SSH to Bastion
+        run: |
+          ssh -A $SSH_USER@$BASTION_HOST "echo 'SSH OK - Bastion reachable'"
+
+      - name: Deploy Monitoring Stack
+        run: |
+          ssh -A $SSH_USER@$BASTION_HOST << EOF
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$MONITORING_INSTANCE << 'MONITORING'
+              set -e
+              echo "Deploying Monitoring..."
+
+              mkdir -p ~/monitoring/grafana/provisioning/{datasources,dashboards}
+              cd ~/monitoring
+
+              cat > docker-compose.yml << 'COMPOSE'
+              version: '3.8'
+              services:
+                prometheus:
+                  image: prom/prometheus:latest
+                  container_name: prometheus
+                  ports:
+                    - "9090:9090"
+                  restart: unless-stopped
+
+                grafana:
+                  image: grafana/grafana:latest
+                  container_name: grafana
+                  ports:
+                    - "3000:3000"
+                  environment:
+                    GF_SECURITY_ADMIN_PASSWORD: admin123
+                  restart: unless-stopped
+              COMPOSE
+
+              docker compose down || true
+              docker compose up -d
+              echo "Monitoring deployed successfully"
+            MONITORING
+          EOF
+
+      - name: Deploy IoT Stack
+        run: |
+          ssh -A $SSH_USER@$BASTION_HOST << EOF
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$IOT_INSTANCE << 'IOT'
+              set -e
+              echo "Deploying IoT..."
+
+              mkdir -p ~/iot/config ~/iot/data
+
+              cat > ~/iot/config/mosquitto.conf << 'CONF'
+              listener 1883
+              allow_anonymous true
+              persistence true
+              persistence_location /mosquitto/data/
+              CONF
+
+              cat > ~/iot/docker-compose.yml << 'COMPOSE'
+              version: '3.8'
+              services:
+                mosquitto:
+                  image: eclipse-mosquitto:latest
+                  container_name: mosquitto
+                  ports:
+                    - "1883:1883"
+                    - "9001:9001"
+                  restart: unless-stopped
+              COMPOSE
+
+              cd ~/iot
+              docker compose down || true
+              docker compose up -d
+              echo "IoT deployed successfully"
+            IOT
+          EOF

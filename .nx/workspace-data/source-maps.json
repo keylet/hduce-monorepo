@@ -1,1 +1,634 @@
-{}
+{
+  "frontend": {
+    "root": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "frontend/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "projectType": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.continuous": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.options": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.executor": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.options.cwd": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.options.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.technologies": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.technologies.0": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.description": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.help": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.help.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.dev.metadata.help.example": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.continuous": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.dependsOn": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.options": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.executor": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.options.cwd": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.options.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.technologies": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.technologies.0": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.description": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.help": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.help.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.preview.metadata.help.example": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.cache": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.inputs": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.options": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.executor": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.options.cwd": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.options.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.description": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.technologies": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.technologies.0": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.help": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.help.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.typecheck.metadata.help.example": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps.continuous": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps.dependsOn": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps.executor": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps.options": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "targets.watch-deps.options.command": [
+      "frontend/vite.config.mts",
+      "@nx/vite/plugin"
+    ],
+    "name": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.defaultConfiguration": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.development.hmr": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.buildTarget": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.configurations.production.hmr": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.defaultConfiguration": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.development.mode": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.configurations.production.mode": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.outputs": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.jestConfig": [
+      "frontend/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/auth-service": {
+    "root": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/auth-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/notification-service": {
+    "root": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/notification-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/notification-service/shared-libraries": {
+    "root": [
+      "backend/notification-service/shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/notification-service/shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/notification-service/shared-libraries/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "backend/user-service": {
+    "root": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.serve.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.docker-build.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.executor": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.command": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.test.options.cwd": [
+      "backend/user-service/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "shared-libraries": {
+    "root": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "shared-libraries/project.json",
+      "nx/core/project-json"
+    ]
+  }
+}

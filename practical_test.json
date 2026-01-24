@@ -1,0 +1,7 @@
+{
+    "patient_id": "practical-test-5678",
+    "doctor_id": 1,
+    "appointment_date": "2026-02-11T11:00:00",
+    "reason": "Test pr?ctico definitivo",
+    "notes": "Verificar RabbitMQ completamente"
+}

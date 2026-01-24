@@ -49,4 +49,4 @@ backup_*.sql
 *.pem
 *.crt
 *.key
-.ps1
+.ps1/hduce-deployment-aws/keys/

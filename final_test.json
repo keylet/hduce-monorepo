@@ -1,0 +1,7 @@
+{
+    "patient_id": "final-verification-test",
+    "doctor_id": 1,
+    "appointment_date": "2026-01-30T14:00:00",
+    "reason": "Verificaci?n final del sistema HDUCE",
+    "notes": "?Integraci?n Appointment ? Notification COMPLETADA!"
+}

@@ -1,0 +1,75 @@
+﻿import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import LoginPage from "../pages/LoginPage";
+import DashboardPage from "../pages/DashboardPage";
+import ProtectedRoute from "../components/Auth/ProtectedRoute";
+
+// Componente principal de la aplicación
+function AppContent() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Cargando HDuce Medical...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      {/* Ruta raíz - Redirige a login o dashboard según autenticación */}
+      <Route
+        path="/"
+        element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+        }
+      />
+      
+      {/* Ruta pública - Login */}
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
+        }
+      />
+      
+      {/* Ruta protegida - Dashboard */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Ruta comodín - Redirige a página principal */}
+      <Route
+        path="*"
+        element={
+          <Navigate to="/" replace />
+        }
+      />
+    </Routes>
+  );
+}
+
+// Componente App principal que envuelve todo con AuthProvider y Router
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <AppContent />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;
